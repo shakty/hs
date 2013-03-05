@@ -7,5 +7,6 @@ stefan
 lib/simulation.m
 conf/TESTS
 
+log
 
 lsf.*
