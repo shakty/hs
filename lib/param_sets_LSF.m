@@ -13,7 +13,8 @@ dumpFolder = [ dumpDir simName];
 sched = findResource('scheduler','type','lsf');
 emails = 'sbalietti@ethz.ch';
 %submitArgs = ['-o ' logFolder '/' simName '.log -u ' emails];
-submitArgs = ['-o ' logFolder '/' simName '.log -B'];
+%submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
+submitArgs = ['-o ' logFolder '/' simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);
 
