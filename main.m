@@ -34,7 +34,7 @@ DUMP = 1;
 %load([confDir 'few_big_groups_do_not_find_truth']);
 
 MYSIM = 'size-alpha-R-tau-vscaling';
-MYSIM = 'alpha-R-k-A-B-tau-sigma';
+MYSIM = 'sigma_tau';
 
 load([confDir 'OK/' MYSIM]);
 

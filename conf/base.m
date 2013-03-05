@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'test';
+simName = 'sigma_tau';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -17,10 +17,10 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 % MODEL Conf
 
-nRuns = 1;             % Number of simulation runs with same param set
+nRuns = 10;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [2];          % running time
+t_ends = [30];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -56,7 +56,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1:2:10];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0:0.1:1];       	% Std. deviation of white noise term
+sigmas = [0:0.2:1];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities
