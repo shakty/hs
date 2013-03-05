@@ -41,7 +41,7 @@ load([confDir 'OK/' MYSIM]);
 
 
 % Force Local Computation
-% COMPUTATION = compLOCAL;
+ COMPUTATION = compLOCAL;
 
 simName = createSimName(simName,DUMP,dumpDir);
 
