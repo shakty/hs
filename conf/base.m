@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'sigma_tau';
+simName = 'test';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -17,10 +17,10 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 % MODEL Conf
 
-nRuns = 10;             % Number of simulation runs with same param set
+nRuns = 1;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [30];          % running time
+t_ends = [2];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -53,7 +53,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [1:2:10];     		% coupling coefficient (divisor)
+taus   = [1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
 sigmas = [0:0.2:1];       	% Std. deviation of white noise term
@@ -75,7 +75,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,5); vGrid];
 
-%truths = [0.5;0.5];
+truths = [0.5;0.5];
 
 % BOUNDARY CONDITIONS
 bBounce = 0;
