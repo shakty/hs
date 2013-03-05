@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'size-alpha-R-tau-vscaling';
+simName = 'alpha-R-k-A-B-tau-sigma';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -24,7 +24,7 @@ t_ends = [30];          % running time
 
 n_agents = [100];       % number of agents
 
-ideas_space_sizes = [1,5];% size of ideas space
+ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
 
 % If A = B repulsion and attraction nullify
@@ -43,12 +43,12 @@ Rs     = [0.1:0.1:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
-ks     = [0.001];           % Power of distance in force term
+ks     = [0.001, 0.01, 0.1, 1];           % Power of distance in force term
 
-As     = [5];           % Constant in attractive force term
+As     = [0:0.5:2];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [0];           % Constant in repulsive force term
+Bs     = [0:0.5:2];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 
@@ -56,10 +56,10 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1:2:10];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0.1];       	% Std. deviation of white noise term
+sigmas = [0:0.1:1];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [1,5];     	% Scaling factor for initial (random) velocities
+vScalings = [1];     	% Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions
