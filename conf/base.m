@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'R-alpha-noA-noB';
+simName = 'alpha-A-B';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -39,16 +39,16 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0:0.2:1];       	% weighting of velocity terms
-Rs     = [0:0.2:1];       	% cut-off radius
+Rs     = [0];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
 ks     = [1];           % Power of distance in force term
 
-As     = [0];           % Constant in attractive force term
+As     = [0,1,2];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [0];           % Constant in repulsive force term
+Bs     = [0,1,2];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 

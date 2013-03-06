@@ -16,12 +16,25 @@ hs.source <- function(sourcefile) {
 }
 
 setwd("/opt/MATLAB_WORKSPACE/hs/dump/few_big_groups-DIM-vs-ALPHA/")
+setwd("/opt/MATLAB_WORKSPACE/hs/dump/sigma_tau_sigma_tau-2013-3-6-10-36")
 
-params <- read.table('params.csv', head=TRUE, sep=",")
+
+params <- read.table('params2.csv', head=TRUE, sep=",")
 
 clusters <- read.table('clusters.csv', head=TRUE, sep=",")
 
-clu <- merge(params, clusters, by=c("sim","run"))
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+
+
+
+clusters$simname <- as.factor(clusters$simname)
+clusters$simcount <- as.factor(clusters$simcount)
+clusters$run <- as.factor(clusters$run)
+
+
+clu <- merge(params, clusters, by=c("simname","simcount","run"))
 
 p <- ggplot(clu, aes(t, count))
 

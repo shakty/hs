@@ -16,7 +16,7 @@ PLOT_POS = 0;
 PLOT_CLU= 0;
 
 DIR = 'few_big_groups-DIM-vs-ALPHA';
-
+DIR = 'sigma_tau-2013-3-6-10-36';
 tocsv(DIR, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU);
 
 %%
