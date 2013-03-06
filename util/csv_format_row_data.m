@@ -1,6 +1,6 @@
-function [ row ] = csv_format_row_params( name, run, t, id, pos)
+function [ row ] = csv_format_row_params( name, nameidx, run, t, id, pos)
     
-    row = [ '"' name '", "' num2str(run) '", ' num2str(t) ] ;
+    row = [ '"' name '", "' nameidx '", "' num2str(run) '", ' num2str(t) ] ;
     row = [row, ', ' num2str(id), ', ' num2str(pos(1,1)) ', ' num2str(pos(2,1))];
  
 end
