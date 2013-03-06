@@ -15,7 +15,7 @@ CSV_POS = 0;
 PLOT_POS = 0;
 PLOT_CLU= 0;
 
-DIR = 'testcsv-2013-3-5-9-47';
+DIR = 'few_big_groups-DIM-vs-ALPHA';
 
 tocsv(DIR, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU);
 

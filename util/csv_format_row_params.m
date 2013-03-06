@@ -1,6 +1,6 @@
-function [ row ] = csv_format_row_params( name, run, simTime, params, truth, finalConv )
+function [ row ] = csv_format_row_params( name, filename, run, simTime, params, truth, finalConv )
     
-    row = [ '"' name '", "' num2str(run) '", "' simTime '"' ] ;
+    row = [ '"' name '", "' filename '", "'  num2str(run) '", "' simTime '"' ] ;
 
     % There is no matching between headers and data if I use the for loop
     %cellParams = struct2cell(params);

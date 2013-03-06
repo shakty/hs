@@ -4,6 +4,7 @@ function [ output_args ] = tocsv( simName, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU 
 
     headers_pos = {
         'sim', ...
+        'file', ...
         'run', ...
         't', ...
         'id', ...
@@ -110,7 +111,7 @@ function [ output_args ] = tocsv( simName, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU 
         nRounds = size(rounds,3);
 
         if (CSV_CLU || CSV_POS)
-            param_string = csv_format_row_params(simName, dump.run, mytimestamp, dump.parameters, dump.truth, dump.conv);
+            param_string = csv_format_row_params(simName, NAME, dump.run, mytimestamp, dump.parameters, dump.truth, dump.conv);
             % append the param string to the file
             fprintf(fidParam,'%s\n', param_string);
         end
