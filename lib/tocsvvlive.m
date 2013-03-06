@@ -1,4 +1,4 @@
-function [ output_args ] = tocsv( simName, agentpos)
+function [ output_args ] = tocsv( simName, simidx, agentpos)
 
     %% Param
 
