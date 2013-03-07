@@ -94,7 +94,7 @@ saveOrPlot <- function(save, p, title, path) {
   }
 }
 
-
+PATH <- "/tmp/"
 
 # TIME EVOLUTION
 
@@ -107,7 +107,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
     plotScaleCount + plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
   
 #size
   title <- paste0("Cluster sizes in time by ", v1)
@@ -116,7 +116,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
     plotScaleSize + plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
 
 #from truth
   title <- paste0("Convergenge in time by ", v1)
@@ -125,7 +125,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
     plotScaleDis +  plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
 }
 
 boxplot2by2 <- function (v1, v2, save = TRUE) {
@@ -139,7 +139,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
     plotScaleCount + 
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
   
 #size
   title <- paste0("Distribution of cluster sizes by ", v1)
@@ -148,7 +148,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
     plotScaleSize + 
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
 
 #from truth
   title <- paste0("Distribution of convergence levels by ", v1)
@@ -157,7 +157,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
     plotScaleDis +  
       hs.makeggtitle(title, c(v1, v2))
 
-  saveOrPlot(save, p, title, "/tmp/")
+  saveOrPlot(save, p, title, PATH)
     
 }
 
@@ -168,12 +168,20 @@ p.conv + geom_point(aes(colour = sigma)) + geom_jitter(aes(colour = sigma)) + pl
 
 ## FACETS
 
+facets2by2 <- function (v1, v2, save = TRUE) {
 
 #count ts
-p <- ggplot(clu, aes(t, count, group=sigma, colour=sigma))
-p.facets <- p + geom_smooth() + facet_grid(sigma ~ tau, margins = T) + plotScaleCount + reducedXScale
-p.facets <- p.facets + ggtitle("Number of clusters as a function of sigma and tau")
-p.facets 
+  title <- paste0(" by ", v1)
+  facetFormula <- as.formula(sprintf('%s~%s', v2, v1))
+  p <- ggplot(clu, aes_string(x="t", y="count", group=v1, colour=v1))
+  p <- p + geom_smooth()
+  p <- p + facet_grid(facetFormula, margins = T)
+  p <- p + plotScaleCount + reducedXScale
+  p <- p + ggtitle("Number of clusters as a function of sigma and tau")
+  p
+  #saveOrPlot(save, p, title, PATH)
+    
+}
 
 #count boxplot
 p <- ggplot(clu, aes(t, count, group=sigma, colour=sigma))
