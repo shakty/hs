@@ -33,7 +33,7 @@ clusters$run <- as.factor(clusters$run)
 
 
 clu <- merge(params, clusters, by=c("simname","simcount","run"))
-for (n in names(clu[-1:-23])) {
+for (n in names(clu[1:23])) {
   clu[, n] <- as.factor(clu[, n])      
 }
 clu$t <- as.factor(clu$t)
@@ -60,8 +60,8 @@ printParams <- function(varlist) {
 # START
 
 
-paramAnnotate <- annotation_custom(grob = paramString,  xmin = 8, xmax = 8, ymin = -3, ymax = -3)
-plotMargins <- theme(plot.margin = unit(c(1,3,8,1), "lines"))
+#paramAnnotate <- annotation_custom(grob = paramString,  xmin = 8, xmax = 8, ymin = -3, ymax = -3)
+#plotMargins <- theme(plot.margin = unit(c(1,3,8,1), "lines"))
 
 
 ## AXIS SCALES
@@ -75,6 +75,11 @@ reducedXScale <- scale_x_discrete(breaks=seq(5, 25, 10))
 reducedYScaleCount <- scale_y_discrete(breaks=seq(0, 100, 10))
 reducedYScaleDis <- scale_y_discrete(breaks=seq(0, 1, 0.2))
 reducedYScaleSize <- scale_y_discrete(breaks=seq(0, 100, 10))
+
+## X and Y LABS
+yLabCount <- ylab('number of clusters')
+yLabSize <- ylab('cluster size')
+yLabDis <- ylab('distance from truth')
 
 hs.makeggtitle <- function(text, vars) {
   paramString <- printParams(vars)
@@ -103,7 +108,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
 #count
   title <- paste0("Cluster counts in time by ", v1)
   p <- ggplot(clu, aes_string(x="t", y="count", group=v1, colour=v1))
-  p <- p + geom_smooth() + ylab('number of clusters') +
+  p <- p + geom_smooth() + yLabCount +
     plotScaleCount + plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
@@ -112,7 +117,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
 #size
   title <- paste0("Cluster sizes in time by ", v1)
   p <- ggplot(clu, aes_string(x="t", y="size.avg", group=v1, colour=v1))
-  p <- p + geom_smooth() + ylab('cluster size') +
+  p <- p + geom_smooth() + yLabSize +
     plotScaleSize + plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
@@ -121,7 +126,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
 #from truth
   title <- paste0("Convergenge in time by ", v1)
   p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_smooth() + ylab('distance from truth') +
+  p <- p + geom_smooth() + yLabDis +
     plotScaleDis +  plotXscale +
       hs.makeggtitle(title, c(v1, v2))
 
@@ -135,7 +140,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
 #count
   title <- paste0("Distribution of cluster counts by ", v1)
   p <- ggplot(clu, aes_string(x=v1, y="count", group=v1, colour=v1))
-  p <- p + geom_boxplot() + ylab('number of clusters') +
+  p <- p + geom_boxplot() + yLabCount +
     plotScaleCount + 
       hs.makeggtitle(title, c(v1, v2))
 
@@ -144,7 +149,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
 #size
   title <- paste0("Distribution of cluster sizes by ", v1)
   p <- ggplot(clu, aes_string(x=v1, y="size.avg", group=v1, colour=v1))
-  p <- p + geom_boxplot() + ylab('cluster size') +
+  p <- p + geom_boxplot() + yLabSize +
     plotScaleSize + 
       hs.makeggtitle(title, c(v1, v2))
 
@@ -153,7 +158,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
 #from truth
   title <- paste0("Distribution of convergence levels by ", v1)
   p <- ggplot(clu, aes_string(x=v1, y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_boxplot() + ylab('distance from truth') +
+  p <- p + geom_boxplot() + yLabDis +
     plotScaleDis +  
       hs.makeggtitle(title, c(v1, v2))
 
@@ -170,24 +175,70 @@ p.conv + geom_point(aes(colour = sigma)) + geom_jitter(aes(colour = sigma)) + pl
 
 facets2by2 <- function (v1, v2, save = TRUE) {
 
-#count ts
-  title <- paste0(" by ", v1)
   facetFormula <- as.formula(sprintf('%s~%s', v2, v1))
+  
+#count ts
+  title <- paste0("Cluster counts in time by ", v1, " and ", v2)
   p <- ggplot(clu, aes_string(x="t", y="count", group=v1, colour=v1))
   p <- p + geom_smooth()
   p <- p + facet_grid(facetFormula, margins = T)
   p <- p + plotScaleCount + reducedXScale
-  p <- p + ggtitle("Number of clusters as a function of sigma and tau")
-  p
-  #saveOrPlot(save, p, title, PATH)
-    
+  p <- p + yLabCount + hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, paste0("facets_", title), PATH)
+
+  #count boxplot
+  title <- paste0("Distributions of cluster counts in time by ", v1, " and ", v2)
+  p <- ggplot(clu, aes_string(x=v1, y="count", group=v1, colour=v1))
+  p <- p + geom_boxplot()
+  p <- p + facet_grid(facetFormula, margins = T)
+  p <- p + plotScaleCount + reducedXScale
+  p <- p + yLabCount + hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, paste0("facets_", title), PATH)
+                                        
 }
 
-#count boxplot
-p <- ggplot(clu, aes(t, count, group=sigma, colour=sigma))
-p.facets <- p + geom_boxplot() + facet_grid(sigma ~ tau, margins = T) + plotScaleCount + reducedXScale
+#heatmap
+
+heatmap2by2 <- function(v1, v2) {
+  
+#size.avg  
+  clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1),right = FALSE)
+
+  title <- paste0("Cluster counts by combinations of ", v1, " and ", v2)
+  p <- ggplot(clu, aes_string(v1, v2))
+  p + geom_tile(aes(fill=size.avg.cut), colour = "white") +
+    scale_fill_brewer() +
+      yLabCount + hs.makeggtitle(title, c(v1, v2))
+#size.avg  
+  clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5),right = FALSE)
+
+  title <- paste0("Cluster sizes by combinations of ", v1, " and ", v2)
+  p <- ggplot(clu, aes_string(v1,v2))
+  p + geom_tile(aes(fill=size.avg.cut), colour = "white") +
+    scale_fill_brewer() +
+      yLabCount + hs.makeggtitle(title, c(v1, v2))
+}
+
+
+
+
+
+p <- ggplot(clu, aes(sigma, tau))
+p + stat_bin(aes(fill=..count..), geom="tile", binwidth=3, position="identity")
+
+
+
+
+
+
+
+
++ facet_grid(sigma ~ tau, margins = T) 
 p.facets <- p.facets + ggtitle("Number of clusters as a function of sigma and tau")
-p.facets
+p.facets 
+
 
 #size ts
 p <- ggplot(clu, aes(t, size.avg, group=sigma, colour=sigma))
