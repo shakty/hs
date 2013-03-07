@@ -69,6 +69,7 @@ plotScaleDis <- scale_y_discrete(breaks=seq(0, 1, 0.05))
 plotScaleSize <- scale_y_discrete(breaks=seq(0, 100, 5))
 plotScaleCount <- scale_y_discrete(breaks=seq(0, 100, 5))
 
+plotXscale <- scale_x_discrete(breaks=seq(0, 30, 5))
 reducedXScale <- scale_x_discrete(breaks=seq(5, 25, 10))
 
 reducedYScaleCount <- scale_y_discrete(breaks=seq(0, 100, 10))
@@ -77,42 +78,88 @@ reducedYScaleSize <- scale_y_discrete(breaks=seq(0, 100, 10))
 
 hs.makeggtitle <- function(text, vars) {
   paramString <- printParams(vars)
-  return(ggtitle(paste0(text,paramString)))
+  return(ggtitle(paste0(text,"\n\n",paramString)))
 }
+
+saveOrPlot <- function(save, p, title, path) {
+  if (save) {
+    filename <- gsub(" ", "_", title)
+    filename <- gsub("/n", "", filename)
+    filename = tolower(paste0(filename,".jpg"))
+    path <- paste0(path, filename)
+    ggsave(filename=path, plot=p)
+  }
+  else {
+    p
+  }
+}
+
+
 
 # TIME EVOLUTION
 
+plotTS2by2 <- function (v1, v2, save = TRUE) {
+  
 #count
-p <- ggplot(clu, aes(t, count, group=sigma, colour=sigma))
-p <- p + geom_smooth() + ylab('number of clusters') + plotScaleCount
-p + hs.makeggtitle("Cluster as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Cluster counts in time by ", v1)
+  p <- ggplot(clu, aes_string(x="t", y="count", group=v1, colour=v1))
+  p <- p + geom_smooth() + ylab('number of clusters') +
+    plotScaleCount + plotXscale +
+      hs.makeggtitle(title, c(v1, v2))
 
+  saveOrPlot(save, p, title, "/tmp/")
+  
 #size
-p <- ggplot(clu, aes(t, size.avg, group=sigma, colour=sigma))
-p + geom_smooth() + ylab('cluster size') + plotScaleSize +
-  hs.makeggtitle("Avg cluster size as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Cluster sizes in time by ", v1)
+  p <- ggplot(clu, aes_string(x="t", y="size.avg", group=v1, colour=v1))
+  p <- p + geom_smooth() + ylab('cluster size') +
+    plotScaleSize + plotXscale +
+      hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, title, "/tmp/")
 
 #from truth
-p <- ggplot(clu, aes(t, fromtruth.avg, group=sigma, colour=sigma))
-p + geom_smooth() + ylab('distance from truth') + plotScaleDis + hs.makeggtitle("Distance from truth as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Convergenge in time by ", v1)
+  p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
+  p <- p + geom_smooth() + ylab('distance from truth') +
+    plotScaleDis +  plotXscale +
+      hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, title, "/tmp/")
+}
+
+boxplot2by2 <- function (v1, v2, save = TRUE) {
 
 # BOXPLOTS
 
 #count
-p <- ggplot(clu, aes(sigma, count, group=sigma, colour=sigma))
-p + geom_boxplot() + ylab('number of clusters') + plotScaleCount +
-  hs.makeggtitle("Cluster as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Distribution of cluster counts by ", v1)
+  p <- ggplot(clu, aes_string(x=v1, y="count", group=v1, colour=v1))
+  p <- p + geom_boxplot() + ylab('number of clusters') +
+    plotScaleCount + 
+      hs.makeggtitle(title, c(v1, v2))
 
+  saveOrPlot(save, p, title, "/tmp/")
+  
 #size
-p <- ggplot(clu, aes(sigma, size.avg, group=sigma, colour=sigma))
-p + geom_boxplot() + ylab('cluster size') + plotScaleSize +
-  hs.makeggtitle("Avg cluster size as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Distribution of cluster sizes by ", v1)
+  p <- ggplot(clu, aes_string(x=v1, y="size.avg", group=v1, colour=v1))
+  p <- p + geom_boxplot() + ylab('cluster size') +
+    plotScaleSize + 
+      hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, title, "/tmp/")
 
 #from truth
-p <- ggplot(clu, aes(sigma, fromtruth.avg, group=sigma, colour=sigma))
-p + geom_boxplot() + ylab('distance from truth') + plotScaleDis + 
-  hs.makeggtitle("Distance from truth as function of noise\n\n", c("sigma", "tau"))
+  title <- paste0("Distribution of convergence levels by ", v1)
+  p <- ggplot(clu, aes_string(x=v1, y="fromtruth.avg", group=v1, colour=v1))
+  p <- p + geom_boxplot() + ylab('distance from truth') +
+    plotScaleDis +  
+      hs.makeggtitle(title, c(v1, v2))
 
+  saveOrPlot(save, p, title, "/tmp/")
+    
+}
 
 # POINTS
 
