@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'alpha-A-B';
+simName = 'alpha-k';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -43,12 +43,12 @@ Rs     = [0];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
-ks     = [1];           % Power of distance in force term
+ks     = [0.1, 0.5, 1, 2];           % Power of distance in force term
 
-As     = [0,1,2];           % Constant in attractive force term
+As     = [1];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [0,1,2];           % Constant in repulsive force term
+Bs     = [1];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 

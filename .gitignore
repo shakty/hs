@@ -10,3 +10,6 @@ conf/TESTS
 log
 
 lsf.*
+
+\#*
+.\#*
