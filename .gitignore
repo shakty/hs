@@ -9,6 +9,8 @@ conf/TESTS
 
 log
 
+videos
+
 lsf.*
 
 \#*

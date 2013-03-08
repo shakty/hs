@@ -33,12 +33,12 @@ DUMP = 1;
 
 %load([confDir 'few_big_groups_do_not_find_truth']);
 
-MYSIM = 'size-alpha-R-tau-vscaling';
-MYSIM = 'sigma_tau';
+%MYSIM = 'size-alpha-R-tau-vscaling';
+%MYSIM = 'sigma_tau';
 
-load([confDir 'OK/' MYSIM]);
+%load([confDir 'OK/' MYSIM]);
 
-%load([confDir 'aa']);
+load([confDir 'TESTS/' 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters']);
 
 
 % Force Local Computation

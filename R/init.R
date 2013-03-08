@@ -139,10 +139,6 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
 
 #HEATMAP
 
-clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
-clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
-clu$count.cut <- cut(clu$count, seq(0,100,5))
-
 heatmap2by2 <- function(v1, v2, save = TRUE) {
   
 #count.avg  
