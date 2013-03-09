@@ -17,7 +17,7 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 % MODEL Conf
 
-nRuns = 4;             % Number of simulation runs with same param set
+nRuns = 1;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [30];          % running time
