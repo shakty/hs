@@ -10,8 +10,8 @@ VIDEO = 1;
 MPEG  = 1;
 DEBUG = 0;
 
-DUMPDIR = '../dump/';
-VIDEODIR = '../videos/';
+DUMPDIR = 'dump/';
+VIDEODIR = 'videos/';
 
 %'the_loop-2013-3-8-16-13/';
 %MYDIR = 'circle_maybe-2013-3-8-13-22/';
@@ -23,7 +23,12 @@ VIDEODIR = '../videos/';
 % WITH THE BUG (full) 'the_loop-2013-3-8-16-13/'
 % WITH THE BUG (withtout A and B) 'the_loop-2013-3-9-16-23/'
 % WITHOUT THE BUG (no alpha - R): 'the_loop-2013-3-9-16-29/'
-MYDIR = 'the_loop-2013-3-9-16-59/'; % the_loop-2013-3-9-16-42-a/
+% the_loop-2013-3-9-16-42-a/
+
+
+MYDIR = 'R-alpha-noA-noB-2013-3-6-20-8/'; 
+
+MYDIR = 'tests/the_loop-2013-3-9-22-40/'
 
 dumpDir = [DUMPDIR MYDIR]; 
 
@@ -152,7 +157,9 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
 
             % no need for pause when plotting numbers
             %pause(0.01);
-            clf
+            if (j ~= size(allStepsAgents,3)-1)
+                clf
+            end
             
         end
     end

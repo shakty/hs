@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'tau-sigma-by-alpha-R-noA-noB-truth_middle';
+simName = 'A-B-alpha-R-tau';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -43,12 +43,12 @@ Rs     = [0:0.1:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
-ks     = [1];           % Power of distance in force term
+ks     = [10];           % Power of distance in force term
 
-As     = [0];           % Constant in attractive force term
+As     = [0.1,2];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [0];           % Constant in repulsive force term
+Bs     = [0,1,2];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 
@@ -56,7 +56,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1:2:10];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0:0.1:1];       	% Std. deviation of white noise term
+sigmas = [0.1];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities

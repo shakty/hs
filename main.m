@@ -50,7 +50,18 @@ DUMP = 1;
 COMPUTATION = compLOCAL;
 nRuns = 1;
 t_ends = 10;
-As = [0];
+As = [5];
+Bs = [1]
+
+taus = 1;
+vScalings = 3;
+alphas = [0.7];       	% weighting of velocity terms
+Rs     = [0.05];
+truths = [0.5;0.5];
+ks=10
+
+dumpDir = 'dump/tests/'
+simName = 'xxx';
 
 simName = createSimName(simName,DUMP,dumpDir);
 

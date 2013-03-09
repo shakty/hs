@@ -1,18 +1,16 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
-#PATH = "/opt/MATLAB_WORKSPACE/hs/dump/circle_maybe-2013-3-8-13-22/"
-
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/few_big_groups-DIM-vs-ALPHA/"
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/sigma_tau-2013-3-6-10-36/"
 
 
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/R-alpha-noA-noB-2013-3-6-20-8/"
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 
-#PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/sigma_tau-2013-3-6-10-36/"
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/space-tau-many-little-groups-2013-3-8-18-10/"
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/few_big_groups-DIM-vs-ALPHA/"
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/tau-sigma-by-alpha-R-noA-noB-truth_middle-2013-3-9-18-42/"
+
+
 
 setwd(PATH)
 IMGPATH <- paste0(PATH, "img/");
@@ -38,7 +36,7 @@ clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 
 
-allPlots("alpha","spacesize")
+allPlots("tau","sigma")
 
 ## TODO CHANGE YSCALE for DIS in facets
 
@@ -48,10 +46,12 @@ allPlots("alpha","spacesize")
 
 v1="sigma"
 v2="tau"
-facetFormula <- as.formula(sprintf('%s~%s', v2, v1))
+v3="R"
+v4="alpha"
+facetFormula <- as.formula(sprintf('%s~%s~%s~%s', v2, v1, v3, v4))
 title <- paste0("Convergence levels in time by ", v1, " and ", v2)
   p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_smooth() +
+  p <- p + geom_smooth()
   p <- p + facet_grid(facetFormula, margins = T)
   p <- p + reducedXScale + yLabDis
   p <- p  + hs.makeggtitle(title, c(v1, v2))
