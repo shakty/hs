@@ -4,18 +4,27 @@ close all
 clc
 clear
 
-%path(path,'../../FUZZCLUST');
+path(path,'../util/');
 
 VIDEO = 1;
 MPEG  = 1;
 DEBUG = 0;
 
-DUMPDIR = 'dump/';
+DUMPDIR = '../dump/';
+VIDEODIR = '../videos/';
 
 %'the_loop-2013-3-8-16-13/';
 %MYDIR = 'circle_maybe-2013-3-8-13-22/';
 %MYDIR = 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters-2013-3-8-17-29/'
-MYDIR = 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together-2013-3-8-18-28/';
+%MYDIR = 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together-2013-3-8-18-28/';
+
+%MYDIR = 'few_big_groups-DIM-vs-ALPHA/';
+
+% WITH THE BUG (full) 'the_loop-2013-3-8-16-13/'
+% WITH THE BUG (withtout A and B) 'the_loop-2013-3-9-16-23/'
+% WITHOUT THE BUG (no alpha - R): 'the_loop-2013-3-9-16-29/'
+MYDIR = 'the_loop-2013-3-9-16-59/'; % the_loop-2013-3-9-16-42-a/
+
 dumpDir = [DUMPDIR MYDIR]; 
 
 %dumpDir = [DUMPDIR '2011-5-30-15-48/'];
@@ -40,11 +49,12 @@ end
 
 %%
 
-
+colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
 %%
 
-for i = 1:length(fileIndex)
+%for i = 1:length(fileIndex)
     
+    i=1
     
     append = files(fileIndex(i)).name;
     fileName = [dumpDir, append];
@@ -86,7 +96,7 @@ for i = 1:length(fileIndex)
 
         if (MPEG)
             % Prepare the new file.
-            vidObj = VideoWriter(['videos/' append '.avi']);
+            vidObj = VideoWriter([VIDEODIR append '.avi']);
             open(vidObj);
         end
         
@@ -96,16 +106,32 @@ for i = 1:length(fileIndex)
         for j=1:size(allStepsAgents,3)
             truth = dump.truth;
             agents = allStepsAgents(:,:,j);
-            plot(agents(1,:),agents(2,:),'rx'); 
+            
+            % PLOT red crosses
+            %plot(agents(1,:),agents(2,:),'rx'); 
+            
+            
+            % PLOT COLORED NUMBERS
+            %points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
+            %text(agents(1,:),agents(2,:), points');
+            
+            % PLOT BLACK NUMBERS
+            text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
+            
             hold on;
             %plot(agents_average(1),agents_average(2),'bo');
             plot(truth(1),truth(2),'go');
             title(['T: ' int2str(j) ' ' paramString]);
             
             hold off;
-            xlim([0 dump.parameters.iss]);
-            ylim([0 dump.parameters.iss]);
-
+            
+            % LIMITS for plotting red crosses
+            %xlim([0 dump.parameters.iss]);
+            %ylim([0 dump.parameters.iss]);
+            
+            % LIMITS when plotting numbers
+            axis([0 dump.parameters.iss 0 dump.parameters.iss])
+            
             if (MPEG)
                 % Get the very last frame
                 currFrame = getframe();
@@ -124,7 +150,10 @@ for i = 1:length(fileIndex)
                 legend(energy);
             end
 
-            pause(0.01);
+            % no need for pause when plotting numbers
+            %pause(0.01);
+            clf
+            
         end
     end
  
@@ -138,4 +167,4 @@ for i = 1:length(fileIndex)
         %save movie1.mat A
     end
     
-end    
+%end    

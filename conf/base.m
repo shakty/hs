@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'tau-sigma-by-alpha-R-truth_middle';
+simName = 'tau-sigma-by-alpha-R-noA-noB-truth_middle';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -45,10 +45,10 @@ Rs     = [0:0.1:1];       	% cut-off radius
 
 ks     = [1];           % Power of distance in force term
 
-As     = [2];           % Constant in attractive force term
+As     = [0];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [2];           % Constant in repulsive force term
+Bs     = [0];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 

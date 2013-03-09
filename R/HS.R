@@ -11,7 +11,8 @@ PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 
 #PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/sigma_tau-2013-3-6-10-36/"
-
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/space-tau-many-little-groups-2013-3-8-18-10/"
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/few_big_groups-DIM-vs-ALPHA/"
 
 setwd(PATH)
 IMGPATH <- paste0(PATH, "img/");
@@ -37,7 +38,7 @@ clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 
 
-allPlots("sigma","tau")
+allPlots("alpha","spacesize")
 
 ## TODO CHANGE YSCALE for DIS in facets
 

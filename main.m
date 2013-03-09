@@ -38,15 +38,19 @@ DUMP = 1;
 
 %load([confDir 'OK/' MYSIM]);
 
-load([confDir 'TESTS/' 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together']);
+load([confDir 'TESTS/' 'the_loop']);
 
 % FORCE FOR NOW...
-VIDEO = 1;
+VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
 
+
 % Force Local Computation
- COMPUTATION = compLOCAL;
+COMPUTATION = compLOCAL;
+nRuns = 1;
+t_ends = 10;
+As = [0];
 
 simName = createSimName(simName,DUMP,dumpDir);
 
