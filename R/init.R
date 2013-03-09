@@ -97,8 +97,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
 #from truth
   title <- paste0("Convergenge in time by ", v1)
   p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_smooth() + yLabDis +
-    plotScaleDis +  plotXscale +
+  p <- p + geom_smooth() + yLabDis + plotXscale + # no plotScaleDis
       hs.makeggtitle(title, c(v1, v2))
 
   saveOrPlot(save, p, paste0("ts_", title), IMGPATH)
@@ -129,9 +128,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
 #from truth
   title <- paste0("Distribution of convergence levels by ", v1)
   p <- ggplot(clu, aes_string(x=v1, y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_boxplot() + yLabDis +
-    plotScaleDis +  
-      hs.makeggtitle(title, c(v1, v2))
+  p <- p + geom_boxplot() + yLabDis + hs.makeggtitle(title, c(v1, v2)) # no plotScaleDis
 
   saveOrPlot(save, p, paste0("boxplot_", title), IMGPATH)
     
@@ -225,7 +222,7 @@ facets2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
   p <- p + geom_smooth()
   p <- p + facet_grid(facetFormula, margins = T)
-  p <- p + reducedYScaleDis + reducedXScale + yLabDis
+  p <- p + reducedXScale + yLabDis # no reducedYScaleDis
   p <- p  + hs.makeggtitle(title, c(v1, v2))
   
   saveOrPlot(save, p, paste0("facets_", title), IMGPATH)
@@ -235,7 +232,7 @@ facets2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x=v1, y="fromtruth.avg", group=v1, colour=v1))
   p <- p + geom_boxplot()
   p <- p + facet_grid(facetFormula, margins = T)
-  p <- p + reducedYScaleDis + reducedXScale + yLabDis
+  p <- p + reducedXScale + yLabDis # no reducedYScaleDis
   p <- p  + hs.makeggtitle(title, c(v1, v2))
 
   saveOrPlot(save, p, paste0("facets_", title), IMGPATH) 

@@ -4,7 +4,7 @@
 %Clear workspace
 close all
 clear
-clc
+%clc
 
 %% Add other directories to path
 path(path,'util/'); % Help functions
@@ -38,8 +38,12 @@ DUMP = 1;
 
 %load([confDir 'OK/' MYSIM]);
 
-load([confDir 'TESTS/' 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters']);
+load([confDir 'TESTS/' 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together']);
 
+% FORCE FOR NOW...
+VIDEO = 1;
+DEBUG = 0;
+DUMP = 1;
 
 % Force Local Computation
  COMPUTATION = compLOCAL;

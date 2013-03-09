@@ -17,6 +17,7 @@ PLOT_CLU= 0;
 
 DIR = 'few_big_groups-DIM-vs-ALPHA';
 DIR = 'circle_maybe-2013-3-8-13-22';
+
 tocsv(DIR, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU);
 
 %%

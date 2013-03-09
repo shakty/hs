@@ -14,9 +14,10 @@ DUMPDIR = 'dump/';
 
 %'the_loop-2013-3-8-16-13/';
 %MYDIR = 'circle_maybe-2013-3-8-13-22/';
-MYDIR = 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters-2013-3-8-17-29/'
-
+%MYDIR = 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters-2013-3-8-17-29/'
+MYDIR = 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together-2013-3-8-18-28/';
 dumpDir = [DUMPDIR MYDIR]; 
+
 %dumpDir = [DUMPDIR '2011-5-30-15-48/'];
 %dumpDir = [DUMPDIR '2011-5-30-15-54/'];
 %dumpDir = [DUMPDIR '2011-5-30-15-56/'];
