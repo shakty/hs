@@ -10,7 +10,7 @@ PATH = "/opt/MATLAB_WORKSPACE/hs/dump/R-alpha-noA-noB-2013-3-6-20-8/"
 
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/tau-sigma-by-alpha-R-noA-noB-truth_middle-2013-3-9-18-42/"
 
-
+PATH = "/opt/MATLAB_WORKSPACE/hs/dump/A-B-alpha-R-tau-2013-3-10-0-29/"
 
 setwd(PATH)
 IMGPATH <- paste0(PATH, "img/");
@@ -36,7 +36,7 @@ clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 
 
-allPlots("tau","sigma")
+allPlots("A","R")
 
 ## TODO CHANGE YSCALE for DIS in facets
 
@@ -58,3 +58,11 @@ title <- paste0("Convergence levels in time by ", v1, " and ", v2)
 
   saveOrPlot(TRUE, p, "STE2", IMGPATH)
 #  saveOrPlot(save, p, paste0("facets_", title), IMGPATH)
+
+
+p <- ggplot(clu, aes(x=alpha, y=count))
+p <- p + geom_smooth(aes(group=R))
+p
+
+
+plot.ts(clu$alpha, clu$count)

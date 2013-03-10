@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'A-B-alpha-R-tau';
+simName = 'A-alpha-R';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -38,22 +38,22 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0:0.1:1];       	% weighting of velocity terms
-Rs     = [0:0.1:1];       	% cut-off radius
+alphas = [0.01,0.1,0.9,0.95];       	% weighting of velocity terms
+Rs     = [0.05:0.1:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
 ks     = [10];           % Power of distance in force term
 
-As     = [0.1,2];           % Constant in attractive force term
+As     = [0,1,2];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
-Bs     = [0,1,2];           % Constant in repulsive force term
+Bs     = [0];           % Constant in repulsive force term
 d1s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [1:2:10];     		% coupling coefficient (divisor)
+taus   = [2];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
 sigmas = [0.1];       	% Std. deviation of white noise term
