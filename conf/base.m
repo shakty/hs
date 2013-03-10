@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'A-alpha-R';
+simName = 'R-alpha-01';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -17,7 +17,7 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 % MODEL Conf
 
-nRuns = 1;             % Number of simulation runs with same param set
+nRuns = 2;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [30];          % running time
@@ -38,14 +38,14 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01,0.1,0.9,0.95];       	% weighting of velocity terms
-Rs     = [0.05:0.1:1];       	% cut-off radius
+alphas = [0:0.01:0.3];       	% weighting of velocity terms
+Rs     = [0:0.01:0.3];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
 ks     = [10];           % Power of distance in force term
 
-As     = [0,1,2];           % Constant in attractive force term
+As     = [0];           % Constant in attractive force term
 d0s    = [1];       	% Express the range of the interaction force (exponent divisor)
 
 Bs     = [0];           % Constant in repulsive force term

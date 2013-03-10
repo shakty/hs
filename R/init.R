@@ -38,15 +38,30 @@ hs.source <- function(sourcefile) {
 
 printParams <- function(varlist) {
   out <- '';
-  for (n in names(params[c(-1:-9,-19:-length(params))])) {
+  for (n in names(params[c(-1:-9,-20:-length(params))])) {
     if (!(n %in% varlist)) {
-      value <- params[1, n]
-      if (class(params[,n]) == "integer") {
-        out <- sprintf('%s %s: %d, ', out, n, value)
+      
+      if (n == "init.vscaling") {
+        N <- "V"
       }
       else {
-         out <- sprintf('%s %s: %2.3f, ', out, n, value)
-       }
+        N <- n
+      }
+
+      if (sd(params[, n]) == 0) {
+        V = params[1, n]
+      }
+      else {
+        minN <- min(params[, n])
+        maxN <- max(params[, n])
+        if (class(params[,n]) != "integer") {
+          minN <- sprintf('%2.3f',minN)
+          maxN <- sprintf('%2.3f',maxN)
+        }
+        V = paste0("[", minN, "-", maxN, "]")
+      }
+     
+      out <- sprintf('%s %s: %s, ', out, N, V)
     }
   }
   
@@ -81,7 +96,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x="t", y="count", group=v1, colour=v1))
   p <- p + geom_smooth() + yLabCount +
     plotScaleCount + plotXscale +
-      hs.makeggtitle(title, c(v1, v2))
+      hs.makeggtitle(title, c(v1))
 
   saveOrPlot(save, p, paste0("ts_", title), IMGPATH)
   
@@ -90,7 +105,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x="t", y="size.avg", group=v1, colour=v1))
   p <- p + geom_smooth() + yLabSize +
     plotScaleSize + plotXscale +
-      hs.makeggtitle(title, c(v1, v2))
+      hs.makeggtitle(title, c(v1))
 
   saveOrPlot(save, p, paste0("ts_", title), IMGPATH)
 
@@ -98,7 +113,7 @@ plotTS2by2 <- function (v1, v2, save = TRUE) {
   title <- paste0("Convergenge in time by ", v1)
   p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
   p <- p + geom_smooth() + yLabDis + plotXscale + # no plotScaleDis
-      hs.makeggtitle(title, c(v1, v2))
+      hs.makeggtitle(title, c(v1))
 
   saveOrPlot(save, p, paste0("ts_", title), IMGPATH)
 }
@@ -112,7 +127,7 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x=v1, y="count", group=v1, colour=v1))
   p <- p + geom_boxplot() + yLabCount +
     plotScaleCount + 
-      hs.makeggtitle(title, c(v1, v2))
+      hs.makeggtitle(title, c(v1))
 
   saveOrPlot(save, p, paste0("boxplot_", title), IMGPATH)
   
@@ -121,14 +136,14 @@ boxplot2by2 <- function (v1, v2, save = TRUE) {
   p <- ggplot(clu, aes_string(x=v1, y="size.avg", group=v1, colour=v1))
   p <- p + geom_boxplot() + yLabSize +
     plotScaleSize + 
-      hs.makeggtitle(title, c(v1, v2))
+      hs.makeggtitle(title, c(v1))
 
   saveOrPlot(save, p, paste0("boxplot_", title), IMGPATH)
 
 #from truth
   title <- paste0("Distribution of convergence levels by ", v1)
   p <- ggplot(clu, aes_string(x=v1, y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_boxplot() + yLabDis + hs.makeggtitle(title, c(v1, v2)) # no plotScaleDis
+  p <- p + geom_boxplot() + yLabDis + hs.makeggtitle(title, c(v1)) # no plotScaleDis
 
   saveOrPlot(save, p, paste0("boxplot_", title), IMGPATH)
     

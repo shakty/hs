@@ -41,24 +41,24 @@ DUMP = 1;
 load([confDir 'TESTS/' 'the_loop']);
 
 % FORCE FOR NOW...
-VIDEO = 0;
+VIDEO = 1;
 DEBUG = 0;
-DUMP = 1;
+DUMP = 0;
 
 
 % Force Local Computation
 COMPUTATION = compLOCAL;
 nRuns = 1;
 t_ends = 10;
-As = [5];
+As = [1];
 Bs = [1]
 
-taus = 1;
-vScalings = 3;
+taus = 2;
+vScalings = 1;
 alphas = [0.7];       	% weighting of velocity terms
-Rs     = [0.05];
+Rs     = [0.2];
 truths = [0.5;0.5];
-ks=10
+ks=1
 
 dumpDir = 'dump/tests/'
 simName = 'xxx';
