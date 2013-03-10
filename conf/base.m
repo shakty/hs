@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'R-alpha-01';
+simName = 'R-alpha-99';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -38,8 +38,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0:0.01:0.3];       	% weighting of velocity terms
-Rs     = [0:0.01:0.3];       	% cut-off radius
+alphas = [0.95:0.01:1];       	% weighting of velocity terms
+Rs     = [0:0.01:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
