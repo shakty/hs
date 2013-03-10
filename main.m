@@ -54,9 +54,9 @@ As = [1];
 Bs = [1]
 
 taus = 2;
-vScalings = 1;
-alphas = [0.7];       	% weighting of velocity terms
-Rs     = [0.2];
+vScalings = [0:0.1:3]
+alphas = [0.1];       	% weighting of velocity terms
+Rs     = [0.1];
 truths = [0.5;0.5];
 ks=1
 
