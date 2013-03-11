@@ -16,8 +16,9 @@ DIR = "A-B-alpha-R-tau-2013-3-10-0-29/"
 
 
 DIR = "R-alpha-99-2013-3-10-21-37/"
-DIR = "vscaling-2013-3-10-22-3/"
 DIR = "R-alpha-01-2013-3-10-21-4/"
+
+DIR = "vscaling-2013-3-10-22-3/"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -47,10 +48,39 @@ clu.orig <- clu
 
 clu <- clu[clu$t == 31,]
 
-heatmap2by2Detail("R","alpha")
+heatmap2by2Detail("init.vscaling","t")
+
+# Spinning 3d Scatterplot
+library(rgl)
+
+plot3d(clu$init.vscaling, clu$t, clu$count, col="red", size=3) 
+
+plot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, col="red", size=3) 
+
+clu2 <- clu
+clu2$init.vscaling <- as.numeric(clu2$init.vscaling)
+
+scatter3d(clu2$init.vscaling, clu2$fromtruth.avg, clu2$t) 
 
 
+# 3D Scatterplot with Coloring and Vertical Lines
+# and Regression Plane
+library(scatterplot3d)
 
+s3d <-scatterplot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, pch=16, highlight.3d=TRUE, type="h", main="3D Scatterplot")
+
+
+fit <- lm(mpg ~ wt+disp)
+s3d$plane3d(fit)
+##
+
+attach(mtcars)
+s3d <-scatterplot3d(wt,disp,mpg, pch=16, highlight.3d=TRUE,
+  type="h", main="3D Scatterplot")
+fit <- lm(mpg ~ wt+disp)
+s3d$plane3d(fit)
+detach(mtcars)
+                    
 plotTS2by2("init.vscaling", "R")
 
 boxplot2by2("init.vscaling")
