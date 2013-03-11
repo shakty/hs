@@ -9,16 +9,20 @@ PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
 
 DIR = "R-alpha-noA-noB-2013-3-6-20-8/"
 DIR = "A-alpha-R-2013-3-10-10-25/"
-DIR = "sigma_tau-2013-3-6-10-36/"
+
 DIR = "tau-sigma-by-alpha-R-noA-noB-truth_middle-2013-3-9-18-42/"
 
 DIR = "A-B-alpha-R-tau-2013-3-10-0-29/"
 
-
+DIR = "sigma_tau-2013-3-6-10-36/"
 DIR = "R-alpha-99-2013-3-10-21-37/"
 DIR = "R-alpha-01-2013-3-10-21-4/"
 
 DIR = "vscaling-2013-3-10-22-3/"
+DIR = "vscaling-tau-easy-to-converge-2013-3-11-9-31/"
+
+
+
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -48,7 +52,7 @@ clu.orig <- clu
 
 clu <- clu[clu$t == 31,]
 
-heatmap2by2Detail("init.vscaling","t")
+heatmap2by2Detail("init.vscaling","tau")
 
 # Spinning 3d Scatterplot
 library(rgl)
@@ -57,29 +61,21 @@ plot3d(clu$init.vscaling, clu$t, clu$count, col="red", size=3)
 
 plot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, col="red", size=3) 
 
-clu2 <- clu
+
 clu2$init.vscaling <- as.numeric(clu2$init.vscaling)
+clu2$tau <- as.numeric(clu2$tau)
+clu2$t <- as.numeric(clu2$t)
+clu2 <- clu2[clu2$t == 31,]
 
-scatter3d(clu2$init.vscaling, clu2$fromtruth.avg, clu2$t) 
+scatter3d(clu2$init.vscaling, clu2$fromtruth.avg, clu2$tau) 
 
-
-# 3D Scatterplot with Coloring and Vertical Lines
-# and Regression Plane
-library(scatterplot3d)
-
-s3d <-scatterplot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, pch=16, highlight.3d=TRUE, type="h", main="3D Scatterplot")
-
-
-fit <- lm(mpg ~ wt+disp)
+## JUST FOR A FEW POINTS
+s3d <-scatterplot3d(clu2$init.vscaling, clu2$tau, clu2$fromtruth.avg, highlight.3d=TRUE,
+  type="h", main="3D Scatterplot")
+fit <- lm(fromtruth.avg ~ tau+init.vscaling, data=clu2)
 s3d$plane3d(fit)
 ##
 
-attach(mtcars)
-s3d <-scatterplot3d(wt,disp,mpg, pch=16, highlight.3d=TRUE,
-  type="h", main="3D Scatterplot")
-fit <- lm(mpg ~ wt+disp)
-s3d$plane3d(fit)
-detach(mtcars)
                     
 plotTS2by2("init.vscaling", "R")
 
