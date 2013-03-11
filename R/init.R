@@ -171,6 +171,7 @@ heatmap2by2 <- function(v1, v2, save = TRUE) {
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
+  
 #fromtruth.avg  
   title <- paste0("Convergence levels by combinations of ", v1, " and ", v2)
   p <- ggplot(clu, aes_string(x=v1, y=v2))
@@ -184,31 +185,54 @@ heatmap2by2 <- function(v1, v2, save = TRUE) {
 }
 
 
-heatmap2by2Detail <- function(v1, v2, save = TRUE) {
+heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
+
+  
   
 #count.avg  
   title <- paste0("Cluster counts by combinations of ", v1, " and ", v2)
-  p <- ggplot(clu, aes_string(x=v1, y=v2))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=count), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(1,max(clu$count)), breaks= seq(0,100,1), low='lightblue',high='red')
+  p <- p + scale_fill_continuous(limits=c(1,max(data$count)), breaks= seq(0,100,1), low='lightblue',high='red')
   p <- p + hs.makeggtitle(title, c(v1, v2))
   
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
+
   
 #size.avg  
   title <- paste0("Cluster sizes by combinations of ", v1, " and ", v2)
-  p <- ggplot(clu, aes_string(x=v1,y=v2))
+  p <- ggplot(data, aes_string(x=v1,y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(1,max(clu$size.avg)), breaks= seq(0,100,1), low='lightblue',high='red')
+  p <- p + scale_fill_continuous(limits=c(1,max(data$size.avg)), breaks= seq(0,100,1), low='lightblue',high='red')
   p <- p + hs.makeggtitle(title, c(v1, v2))
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
+#size.sd
+  title <- paste0("Std. dev. cluster sizes by combinations of ", v1, " and ", v2)
+  p <- ggplot(data, aes_string(x=v1,y=v2))
+  p <- p + geom_tile(aes(fill=size.sd), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(1,max(data$size.sd)), breaks= seq(0,100,1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
+
+  
 #fromtruth.avg  
   title <- paste0("Convergence levels by combinations of ", v1, " and ", v2)
-  p <- ggplot(clu, aes_string(x=v1, y=v2))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=fromtruth.avg), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(0,max(clu$fromtruth.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2))
+
+  saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
+
+
+#fromtruth.avg  
+  title <- paste0("Std. dev. of convergence levels by combinations of ", v1, " and ", v2)
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=fromtruth.sd), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.sd)), breaks= seq(0,1,0.1), low='lightblue',high='red')
   p <- p + hs.makeggtitle(title, c(v1, v2))
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)

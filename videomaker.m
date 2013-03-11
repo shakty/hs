@@ -4,7 +4,7 @@ close all
 clc
 clear
 
-path(path,'../util/');
+path(path,'util/');
 
 VIDEO = 1;
 MPEG  = 1;
@@ -28,9 +28,19 @@ VIDEODIR = 'videos/';
 
 MYDIR = 'R-alpha-noA-noB-2013-3-6-20-8/'; 
 
-MYDIR = 'tests/the_loop-2013-3-9-22-40/'
+MYDIR = 'tests/the_loop-2013-3-9-22-40/';
 
-dumpDir = [DUMPDIR MYDIR]; 
+MYDIR = 'tests/motus_perpetuous-2013-3-11-12-40-a/';
+
+MYDIR = 'tests/quick_convergence-2013-3-11-12-54/';
+
+MYDIR = 'tests/average_clusters-2013-3-11-13-2/';
+
+MYDIR = 'tests/big_clusters-2013-3-11-13-8/';
+
+MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/'
+
+dumpDir = [DUMPDIR MYDIR]
 
 %dumpDir = [DUMPDIR '2011-5-30-15-48/'];
 %dumpDir = [DUMPDIR '2011-5-30-15-54/'];
@@ -113,7 +123,7 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
             agents = allStepsAgents(:,:,j);
             
             % PLOT red crosses
-            %plot(agents(1,:),agents(2,:),'rx'); 
+            plot(agents(1,:),agents(2,:),'rx'); 
             
             
             % PLOT COLORED NUMBERS
@@ -121,7 +131,7 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
             %text(agents(1,:),agents(2,:), points');
             
             % PLOT BLACK NUMBERS
-            text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
+            %text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
             
             hold on;
             %plot(agents_average(1),agents_average(2),'bo');
@@ -131,11 +141,11 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
             hold off;
             
             % LIMITS for plotting red crosses
-            %xlim([0 dump.parameters.iss]);
-            %ylim([0 dump.parameters.iss]);
+            xlim([0 dump.parameters.iss]);
+            ylim([0 dump.parameters.iss]);
             
             % LIMITS when plotting numbers
-            axis([0 dump.parameters.iss 0 dump.parameters.iss])
+            %axis([0 dump.parameters.iss 0 dump.parameters.iss])
             
             if (MPEG)
                 % Get the very last frame
@@ -155,11 +165,12 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
                 legend(energy);
             end
 
+            pause(0.01);
             % no need for pause when plotting numbers
-            %pause(0.01);
-            if (j ~= size(allStepsAgents,3)-1)
-                clf
-            end
+            
+            %if (j ~= size(allStepsAgents,3)-1)
+            %    clf
+            %end
             
         end
     end

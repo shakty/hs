@@ -4,11 +4,48 @@
 %Clear workspace
 close all
 clear
-clc
+%clc
 
 %% Add other directories to path
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
+
+
+
+    headers_clusters = {
+        'sim', ...
+        'run', ...
+        't', ...
+        'count', ...
+        'size.avg', ...
+        'size.sd', ...
+        'fromtruth.avg', ...
+        'fromtruth.sd'};
+
+    headers_params = {
+        'sim', ...
+        'run', ...
+        'timestamp', ...
+        't.end', ...
+        'dt', ...
+        'nagents', ...
+        'spacesize',...
+        'spacedim', ...
+        'alpha', ... % Own velocity
+        'R', ...
+        'k', ... % Exponent forces
+        'A', ... % Attractive force
+        'd0', ... 
+        'B', ... % Repulsive force
+        'd1', ... 
+        'tau', ... % Truth strength
+        'sigma', ... % Std noise
+        'init.vscaling', ...
+        'init.nclusters', ...
+        'init.clusterradio', ...
+        'truth.x', ...
+        'truth.y', ...
+        'conv'};
 
 % Default Values
 
@@ -22,11 +59,8 @@ compLSF = 2;
 COMPUTATION = compLOCAL;
 
 VIDEO = 1;
-DEBUG = 1;
-DUMP = 0;
-
-% CHANGE AFTER!!!!!
-
+DEBUG = 0;
+DUMP = 1;
 
 % Conf to execute
 %movingTau_LOCAL;
@@ -34,38 +68,54 @@ DUMP = 0;
 %velocity_still_LOCAL;
 
 %load([confDir 'few_big_groups_do_not_find_truth']);
-%load([confDir 'sigma_tau']);
-%load([confDir 'R-alpha-noA-noB']);
-%load([confDir 'alpha-A-B']);
-%load([confDir 'alpha-k']);
-load([confDir 'TESTS/circle_maybe']);
 
+%MYSIM = 'size-alpha-R-tau-vscaling';
+%MYSIM = 'sigma_tau';
+
+%load([confDir 'OK/' MYSIM]);
+
+load([confDir 'TESTS/' 'the_loop']);
+
+% FORCE FOR NOW...
 VIDEO = 1;
+DEBUG = 0;
 DUMP = 0;
+
+
+% Force Local Computation
 COMPUTATION = compLOCAL;
-
-% Force Local Computation
-%COMPUTATION = compLOCAL;
-
-% Force Local Computation
-
 nRuns = 1;
-t_ends = 30;
-As = [0];
-Bs = [0]
+t_ends = 10;
+As = [1];
+Bs = [1]
 
 taus = 2;
-vScalings = [1]
-alphas = [0.9999];       	% weighting of velocity terms
-Rs     = [0.04];
+vScalings = [0:0.1:3]
+alphas = [0.1];       	% weighting of velocity terms
+Rs     = [0.1];
 truths = [0.5;0.5];
-ideas_space_sizes = 1;
 ks=1
 
 dumpDir = 'dump/tests/'
-simName = 'slow_formation_of_clusters';
+simName = 'xxx';
 
 simName = createSimName(simName,DUMP,dumpDir);
+
+folderName = [dumpDir simName];
+[status,message,messageid] = mkdir(folderName);  
+%% ToCSV params
+
+   % params (for both)
+   paramFileName = [folderName '/params.csv']
+   write_csv_headers(paramFileName, headers_params);
+
+
+% Open CSV cluster
+
+  clusterFileName = [folderName '/clusters.csv']
+  write_csv_headers(clusterFileName, headers_clusters);
+
+
 
 %set(gcf, 'DoubleBuffer', 'on');
 
