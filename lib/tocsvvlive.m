@@ -2,14 +2,6 @@ function [ output_args ] = tocsv( simName, simidx, agentpos)
 
     %% Param
 
-    headers_pos = {
-        'sim', ...
-        'run', ...
-        't', ...
-        'id', ...
-        'x', ...
-        'y'};
-
     headers_clusters = {
         'sim', ...
         'run', ...
@@ -63,7 +55,7 @@ function [ output_args ] = tocsv( simName, simidx, agentpos)
 
 
    
-        % params (for both)
+   % params (for both)
         paramFileName = [dumpDir 'params.csv'];
         write_csv_headers(paramFileName, headers_params);
         fidParam = fopen(paramFileName,'a');

@@ -15,6 +15,10 @@ DIR = "tau-sigma-by-alpha-R-noA-noB-truth_middle-2013-3-9-18-42/"
 DIR = "A-B-alpha-R-tau-2013-3-10-0-29/"
 
 
+DIR = "R-alpha-99-2013-3-10-21-37/"
+DIR = "vscaling-2013-3-10-22-3/"
+DIR = "R-alpha-01-2013-3-10-21-4/"
+
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -32,15 +36,40 @@ clu <- merge(params, clusters, by=c("simname","simcount","run"))
 for (n in names(clu[1:23])) {
   clu[, n] <- as.factor(clu[, n])      
 }
-clu$t <- as.factor(clu$t)
+#clu$t <- as.factor(clu$t)
 clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
 clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
 clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 # START
 
+clu.orig <- clu
+
+clu <- clu[clu$t == 31,]
+
+heatmap2by2Detail("R","alpha")
+
+
+
+plotTS2by2("init.vscaling", "R")
+
+boxplot2by2("init.vscaling")
+
+boxplot(clu$fromtruth.avg ~ clu$init.vscaling)
+
+boxplot(clu$count ~ clu$init.vscaling)
+
+boxplot(clu$size.avg ~ clu$init.vscaling)
+
+clu0 <- clu[clu$alpha == 0,]
+
+plot.ts(clu0$R, clu0$fromtruth.avg)
+
+
 # when B fucks it up
 clu <- clu[clu$B == 0,]
+
+
 
 allPlots("R","sigma")
 
