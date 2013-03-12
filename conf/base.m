@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'upper-R-alpha';
+simName = 'limited_sigma_R';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -17,10 +17,10 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 % MODEL Conf
 
-nRuns = 5;             % Number of simulation runs with same param set
+nRuns = 2;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [30];          % running time
+t_ends = [20];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -38,8 +38,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.51:0.01:1];       	% weighting of velocity terms
-Rs     = [0:0.01:1];       	% cut-off radius
+alphas = [0.6];       	% weighting of velocity terms
+Rs     = [0:0.01:1.01];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -56,7 +56,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [2];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0.1];       	% Std. deviation of white noise term
+sigmas = [0:0.05:0.2];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities

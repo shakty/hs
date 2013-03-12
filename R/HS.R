@@ -25,9 +25,9 @@ DIR = "R-alpha-01-2013-3-10-21-4/"
 
 DIR = "R-alpha-99-2013-3-10-21-37/"
 
-DIR = "upper-R-alpha-2013-3-11-17-45/"
-
 DIR ="bottom-R-alpha-2013-3-11-10-33/"
+
+DIR = "upper-R-alpha-2013-3-11-17-45/"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -55,6 +55,7 @@ clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 allPlots("R","sigma")
 
+image(clu$R, clu$sigma, clu$fromtruth.avg)
 
 heatmap2by2Detail("R","alpha")
 
@@ -68,20 +69,23 @@ clu2$R <- as.numeric(clu2$R)
 clu2$run <- as.numeric(clu2$run)
 clu2$simcount <- as.numeric(clu2$simcount)
 
-cluB <- clu2[clu2$run == 1 & clu2$simcount == 1,]
+cluB <- clu2[clu2$alpha == 0.1 | clu2$alpha == 0.2 | clu2$alpha == 0.05,]
 
 plot.ts(cluB$t, cluB$fromtruth.avg)
 
 
-  p <- ggplot(cluB, aes_string(x="t", y="fromtruth.avg", group="alpha", colour="alpha"))
-  p <- p + geom_smooth()
-  p <- p + facet_grid(alpha~.)
-  p <- p + reducedXScale + yLabDis
+p <- ggplot(cluB, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+p <- p + geom_smooth()
+p <- p + facet_grid(alpha ~ ., margins = T)
+p
 
+  p <- p + reducedXScale + yLabDis
 p
 
 
-cluB <- clu2[clu2$t == 31 & clu2$R == 0.6,]
+cluB <- clu2[clu2$t == 31 & clu2$run==1 & clu2$alpha == 0.2,]
+
+plot(cluB$R, cluB$fromtruth.avg)
 
 heatmap2by2Detail("R","alpha", data=cluB)
 
