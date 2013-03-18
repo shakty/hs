@@ -7,7 +7,7 @@ clear
 path(path,'util/');
 
 VIDEO = 1;
-MPEG  = 1;
+MPEG  = 0;
 DEBUG = 0;
 
 DUMPDIR = 'dump/';
@@ -38,7 +38,9 @@ MYDIR = 'tests/average_clusters-2013-3-11-13-2/';
 
 MYDIR = 'tests/big_clusters-2013-3-11-13-8/';
 
-MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/'
+MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/';
+
+MYDIR = 'limited_sigma_R/'
 
 dumpDir = [DUMPDIR MYDIR]
 
@@ -69,7 +71,7 @@ colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
 
 %for i = 1:length(fileIndex)
     
-    i=1
+    i=14
     
     append = files(fileIndex(i)).name;
     fileName = [dumpDir, append];
