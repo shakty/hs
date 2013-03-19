@@ -6,6 +6,11 @@ close all
 clear
 clc
 
+%% Set Random Seed
+
+%s = RandStream('mcg16807','Seed',0);
+%RandStream.setGlobalStream(s)
+
 %% Add other directories to path
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
@@ -54,16 +59,19 @@ t_ends = 30;
 As = [0];
 Bs = [0]
 
+%n_agents  = 2;
+
 taus = 2;
 vScalings = [1]
-alphas = [0.6];       	% weighting of velocity terms
-Rs     = [0.3];
+alphas = [0.99];       	% weighting of velocity terms
+Rs     = [0.04];
 truths = [0.5;0.5];
 ideas_space_sizes = 1;
 ks=1
+sigmas = 0.001
 
 dumpDir = 'dump/tests/'
-simName = 'slow_formation_of_clusters';
+simName = 'testtest';
 
 simName = createSimName(simName,DUMP,dumpDir);
 

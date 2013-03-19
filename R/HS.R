@@ -5,8 +5,6 @@ PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
 
 
-
-
 DIR = "R-alpha-noA-noB-2013-3-6-20-8/"
 DIR = "A-alpha-R-2013-3-10-10-25/"
 
@@ -31,6 +29,22 @@ DIR = "upper-R-alpha-2013-3-11-17-45/"
 
 DIR = "limited_sigma_R/"
 
+DIR = "limited_sigma_R_matlab13/"
+
+DIR = "limited_sigma_R_sequantial_random_avv1/"
+
+DIR = "limited_sigma_R_seq_rnd_avv1/"
+DIR = "limited_sigma_R_seq_rnd_avv0/"
+
+DIR = "limited_sigma_R_sim_avv0_B/"
+DIR = "limited_sigma_R_sim_avv1/"
+
+DIR = "limited_sigma_R_seq_det_avv0/"
+DIR = "limited_sigma_R_seq_det_avv1/"
+
+DIR = "limited_sigma_R_sim_avv0_SEED/"
+
+
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -47,7 +61,7 @@ clusters$run <- as.factor(clusters$run)
 clu <- merge(params, clusters, by=c("simname","simcount","run"))
 #for (n in names(clu[1:23])) {
 #  clu[, n] <- as.factor(clu[, n])      
-}
+#}
 #clu$t <- as.factor(clu$t)
 clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
 clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
@@ -63,11 +77,12 @@ clu$Rjump <- clu$truthdiff > 0.02
 
 # START
 
-allPlots("R","sigma")
-
-image(clu$R, clu$sigma, clu$fromtruth.avg)
-
 heatmap2by2Detail("R","sigma")
+
+#image(clu$R, clu$sigma, clu$fromtruth.avg)
+
+# ALL PLOTS
+#allPlots("R","sigma")
 
 ### Print Convergence by R
 # We need to have sigma and t as numeric, not as factors
@@ -75,22 +90,33 @@ heatmap2by2Detail("R","sigma")
 AA <- clu[clu$t == 21,]
 
 selected <- AA[AA$sigma == 0, ]
-p <- ggplot(AA, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+p <- ggplot(selected, aes(R, fromtruth.avg, group=alpha, colour=alpha))
 p <- p + geom_line()
 p
+
 ggsave(filename=paste0(PATH,"convergence_by_r_alpha=.6_full.jpg"), plot=p)
 
 selected <- AA[AA$sigma == 0 & AA$R < 0.6 & AA$R > 0.3,]
 p <- ggplot(selected, aes(R, fromtruth.avg, group=alpha, colour=alpha))
 p <- p + geom_line()
 p
+
 ggsave(filename=paste0(PATH,"convergence_by_r_alpha=.6_zoom.jpg"), plot=p)
 
 
-selected <- AA[AA$sigma == 0.2 AA$R < 0.6 & AA$R > 0.3,]
-p <- ggplot(selected, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+
+
+selected <- AA #[AA$sigma == 0.1,]
+selected$sigma <- as.factor(selected$sigma)
+p <- ggplot(selected, aes(R, fromtruth.avg, group=sigma, colour=sigma))
+p <- p + geom_line() + facet_grid(sigma~.)
+p
+
+selected$sigma <- as.factor(selected$sigma)
+p <- ggplot(selected, aes(R, fromtruth.avg, group=sigma, colour=sigma))
 p <- p + geom_line()
 p
+
 
 ### End
 
