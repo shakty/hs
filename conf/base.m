@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'alpha1_tau_vinit_R';
+simName = 'alpha1_tau_vinit';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -39,7 +39,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [1];       	% weighting of velocity terms
-Rs     = [0,0.4,0.1,0.2,0.3];       	% cut-off radius
+Rs     = [0];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -59,7 +59,7 @@ taus   = [0.1,0.5,1,2,3,4,5];     		% coupling coefficient (divisor)
 sigmas = [0:0.1:0.5];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [1:10];     	% Scaling factor for initial (random) velocities
+vScalings = [0,0.1,1:10,20];     	% Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions
