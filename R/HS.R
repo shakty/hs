@@ -5,8 +5,6 @@ PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
 
 
-
-
 DIR = "R-alpha-noA-noB-2013-3-6-20-8/"
 DIR = "A-alpha-R-2013-3-10-10-25/"
 
@@ -25,9 +23,29 @@ DIR = "R-alpha-01-2013-3-10-21-4/"
 
 DIR = "R-alpha-99-2013-3-10-21-37/"
 
+DIR ="bottom-R-alpha-2013-3-11-10-33/"
+
 DIR = "upper-R-alpha-2013-3-11-17-45/"
 
-DIR ="bottom-R-alpha-2013-3-11-10-33/"
+DIR = "limited_sigma_R/"
+
+DIR = "limited_sigma_R_matlab13/"
+
+DIR = "limited_sigma_R_sequantial_random_avv1/"
+
+DIR = "limited_sigma_R_seq_rnd_avv1/"
+DIR = "limited_sigma_R_seq_rnd_avv0/"
+
+DIR = "limited_sigma_R_sim_avv0_B/"
+DIR = "limited_sigma_R_sim_avv1/"
+
+DIR = "limited_sigma_R_seq_det_avv0/"
+DIR = "limited_sigma_R_seq_det_avv1/"
+
+DIR = "limited_sigma_R_sim_avv0_SEED/"
+
+DIR = "cluster_zone_sigma_R_alpha/"
+DIR = "cluster_zone_sigma_R_alpha_av1/"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -43,20 +61,87 @@ clusters$simcount <- as.factor(clusters$simcount)
 clusters$run <- as.factor(clusters$run)
 # Transforms params in factors
 clu <- merge(params, clusters, by=c("simname","simcount","run"))
-#for (n in names(clu[1:23])) {
-#  clu[, n] <- as.factor(clu[, n])      
-#}
+for (n in names(clu[1:23])) {
+  clu[, n] <- as.factor(clu[, n])      
+}
 #clu$t <- as.factor(clu$t)
 clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
 clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
 clu$count.cut <- cut(clu$count, seq(0,100,5))
 
+#lagging
+
+clu$fromtruth.lag <- lagg(clu$fromtruth.avg)
+clu$truthdiff <- (clu$fromtruth.avg - clu$fromtruth.lag)
+clu$ratediff <- clu$truthdiff / clu$fromtruth.avg
+clu$Rjump <- clu$truthdiff > 0.02
+
+
 # START
 
-allPlots("R","sigma")
+
+OLDPATH = IMGPATH
+for (S in unique(params$sigma)) {
+  curDir <-  paste0("sigma_",S,"/")
+  dir.create(file.path(OLDPATH, curDir), showWarnings = FALSE)
+  IMGPATH <- paste0(OLDPATH, curDir)
+  heatmap2by2Detail("R","alpha", data = clu[clu$sigma == S,], paramsData = params[params$sigma == S,])
+}
+IMGPATH = OLDPATH
 
 
-heatmap2by2Detail("R","alpha")
+
+v1 <- "R"
+v2 <- "alpha"
+v3 <- "sigma"
+data <- clu
+paramsData <- params
+
+
+heatmapFacets(v1,v2,v3)
+
+
+#image(clu$R, clu$sigma, clu$fromtruth.avg)
+
+# ALL PLOTS
+#allPlots("R","sigma")
+
+### Print Convergence by R
+# We need to have sigma and t as numeric, not as factors
+
+AA <- clu[clu$t == 21,]
+
+selected <- AA[AA$sigma == 0, ]
+p <- ggplot(selected, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+p <- p + geom_line()
+p
+
+ggsave(filename=paste0(PATH,"convergence_by_r_alpha=.6_full.jpg"), plot=p)
+
+selected <- AA[AA$sigma == 0 & AA$R < 0.6 & AA$R > 0.3,]
+p <- ggplot(selected, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+p <- p + geom_line()
+p
+
+ggsave(filename=paste0(PATH,"convergence_by_r_alpha=.6_zoom.jpg"), plot=p)
+
+
+
+
+selected <- AA #[AA$sigma == 0.1,]
+selected$sigma <- as.factor(selected$sigma)
+p <- ggplot(selected, aes(R, fromtruth.avg, group=sigma, colour=sigma))
+p <- p + geom_line() + facet_grid(sigma~.)
+p
+
+selected$sigma <- as.factor(selected$sigma)
+p <- ggplot(selected, aes(R, fromtruth.avg, group=sigma, colour=sigma))
+p <- p + geom_line()
+p
+
+
+### End
+
 
 
 clu2 <- clu
@@ -68,20 +153,17 @@ clu2$R <- as.numeric(clu2$R)
 clu2$run <- as.numeric(clu2$run)
 clu2$simcount <- as.numeric(clu2$simcount)
 
-cluB <- clu2[clu2$run == 1 & clu2$simcount == 1,]
+
+cluB <- clu2[clu2$alpha == 0.1 | clu2$alpha == 0.2 | clu2$alpha == 0.05,]
 
 plot.ts(cluB$t, cluB$fromtruth.avg)
 
 
-  p <- ggplot(cluB, aes_string(x="t", y="fromtruth.avg", group="alpha", colour="alpha"))
-  p <- p + geom_smooth()
-  p <- p + facet_grid(alpha~.)
-  p <- p + reducedXScale + yLabDis
-
-p
 
 
-cluB <- clu2[clu2$t == 31 & clu2$R == 0.6,]
+cluB <- clu2[clu2$t == 31 & clu2$run==1 & clu2$alpha == 0.2,]
+
+plot(cluB$R, cluB$fromtruth.avg)
 
 heatmap2by2Detail("R","alpha", data=cluB)
 
@@ -92,13 +174,9 @@ plot3d(clu$init.vscaling, clu$t, clu$count, col="red", size=3)
 plot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, col="red", size=3) 
 
 
-
-
 plot3d(clu2$R, clu2$alpha, clu2$count, col="red", size=3)
 
-
 plot3d(clu2$R, clu2$alpha, clu2$fromtruth.avg, col="red", size=3) 
-
 
 
 scatter3d(clu2$R, clu2$fromtruth.avg, clu2$alpha)
@@ -138,16 +216,12 @@ clu <- clu[clu$B == 0,]
 
 
 
-## TODO CHANGE YSCALE for DIS in facets
-
-# POINTS
-#p.conv <- ggplot(clu[clu$tau==1,], aes(t, fromtruth.avg))
-#p.conv + geom_point(aes(colour = sigma)) + geom_jitter(aes(colour = sigma)) + plotScaleDis
 
 
 cluB <- clu[clu$B != 0,]
 
 R <- summarySE(clu, c("fromtruth.avg"), c("R","sigma"))
+
 sort(R,partial=c(4))
 
 v1="R"
@@ -177,3 +251,46 @@ p
 
 cl <- clu[clu$B == 0 & clu$A == 0.1 & clu$tau == 9 & clu$R == 0,]
 plot.ts(cl$alpha, cl$count)
+
+
+
+
+R <- summarySE(clu, c("fromtruth.avg"), c("R","alpha", "sigma"))
+
+
+last <- clu[clu$t == 21,]
+R <- summarySE(last, c("fromtruth.avg"), c("R","alpha","sigma"))
+
+A <- R[order(R$fromtruth.avg),]
+
+A$ratio = as.numeric(A$alpha) / as.numeric(A$R)
+
+p <- ggplot(A, aes(R, sigma))
+p + geom_tile(aes(fill=fromtruth.avg)) + scale_fill_continuous(limits=c(0,max(clu$fromtruth.avg)), guide="legend", breaks= seq(0,1,0.05), low='lightblue',high='red')
+
+obs=nrow(R)
+
+
+
+plot.ts(1:nrow(R), R$truthdiff)
+
+p <- ggplot(A[A$sigma == 0,], aes(R, fromtruth.avg, group=sigma, colour=sigma))
+p + geom_line() + scale_fill_continuous(limits=c(0,max(clu$fromtruth.avg)), guide="legend", breaks= seq(0,1,0.05), low='lightblue',high='red')
+
+
++ geom_text(data = labeled.dat, aes(R, fromtruth.avg, label = R), size=4)
+
+
+jumpR <- R[R$truthdiff > 0.02 & R$sigma == 0,]$R
+
+
+
+
+plot.ts(1:nrow(A), A$R)
+
+
+B <- A[sample(nrow(A)),]
+
+#B$ratio = as.numeric(B$alpha) / as.numeric(B$R)
+
+plot.ts(1:nrow(B), B$R)

@@ -7,7 +7,7 @@ clear
 path(path,'util/');
 
 VIDEO = 1;
-MPEG  = 1;
+MPEG  = 0;
 DEBUG = 0;
 
 DUMPDIR = '/mnt/tmp/dump/';
@@ -44,7 +44,7 @@ MYDIR = 'limited_sigma_R_seq_rnd_avv1/';
 
 MYDIR = 'cluster_zone_sigma_R_alpha/';
 
-MYDIR = 'alpha1_tau_vinit_av1/';
+MYDIR = 'alpha1_tau_vinit_av0/';
 
 dumpDir = [DUMPDIR MYDIR]
 
@@ -62,8 +62,6 @@ fileIndex = find(~[files.isdir]);
 
 
 %%
-
-
 
 display(['Files Found: ' num2str(length(fileIndex))]);
 

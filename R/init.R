@@ -4,7 +4,7 @@ library(gridExtra)
 library(reshape)
 library(MASS)
 library(car)
-
+library(plm)
 
 ## AXIS SCALES
 plotScaleDis <- scale_y_discrete(breaks=seq(0, 1, 0.05))
@@ -13,6 +13,8 @@ plotScaleCount <- scale_y_discrete(breaks=seq(0, 100, 5))
 
 plotXscale <- scale_x_discrete(breaks=seq(0, 30, 5))
 reducedXScale <- scale_x_discrete(breaks=seq(5, 25, 10))
+
+RXScale <- scale_x_discrete(breaks=seq(0,1,0.05))
 
 reducedYScaleCount <- scale_y_discrete(breaks=seq(0, 100, 10))
 reducedYScaleDis <- scale_y_discrete(breaks=seq(0, 1, 0.2))
@@ -35,10 +37,13 @@ hs.source <- function(sourcefile) {
 }
 
 
+lagg <- function(series, nlag=1) {
+  return(c(rep(NA,nlag),series[1:obs-nlag]))
+}
 
-printParams <- function(varlist) {
+printParams <- function(varlist, paramsData = params) {
   out <- '';
-  for (n in names(params[c(-1:-9,-20:-length(params))])) {
+  for (n in names(paramsData[c(-1:-9,-20:-length(paramsData))])) {
     if (!(n %in% varlist)) {
       
       if (n == "init.vscaling") {
@@ -48,13 +53,13 @@ printParams <- function(varlist) {
         N <- n
       }
 
-      if (sd(params[, n]) == 0) {
-        V = params[1, n]
+      if (sd(paramsData[, n]) == 0) {
+        V = paramsData[1, n]
       }
       else {
-        minN <- min(params[, n])
-        maxN <- max(params[, n])
-        if (class(params[,n]) != "integer") {
+        minN <- min(paramsData[, n])
+        maxN <- max(paramsData[, n])
+        if (class(paramsData[,n]) != "integer") {
           minN <- sprintf('%2.3f',minN)
           maxN <- sprintf('%2.3f',maxN)
         }
@@ -68,9 +73,9 @@ printParams <- function(varlist) {
   return(substr(out, 2, nchar(out)-2))
 }
 
-hs.makeggtitle <- function(text, vars) {
-  paramString <- printParams(vars)
-  return(ggtitle(paste0(text,"\n\n",paramString)))
+hs.makeggtitle <- function(text, vars, paramsData = params) {
+  paramString <- printParams(vars, paramsData)
+  return(ggtitle(paste0(text,"\n\n", paramString)))
 }
 
 saveOrPlot <- function(save, p, title, path) {
@@ -185,16 +190,15 @@ heatmap2by2 <- function(v1, v2, save = TRUE) {
 }
 
 
-heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
+heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu, paramsData = params) {
 
-  
   
 #count.avg  
   title <- paste0("Cluster counts by combinations of ", v1, " and ", v2)
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=count), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(1,max(data$count)), breaks= seq(0,100,1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2))
+  p <- p + scale_fill_continuous(limits=c(1,max(data$count)), breaks= seq(0,100,5), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2), paramsData) + RXScale
   
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
@@ -203,8 +207,8 @@ heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
   title <- paste0("Cluster sizes by combinations of ", v1, " and ", v2)
   p <- ggplot(data, aes_string(x=v1,y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(1,max(data$size.avg)), breaks= seq(0,100,1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2))
+  p <- p + scale_fill_continuous(limits=c(1,max(data$size.avg)), breaks= seq(0,100,10), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2), paramsData) + RXScale
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
@@ -212,8 +216,8 @@ heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
   title <- paste0("Std. dev. cluster sizes by combinations of ", v1, " and ", v2)
   p <- ggplot(data, aes_string(x=v1,y=v2))
   p <- p + geom_tile(aes(fill=size.sd), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(1,max(data$size.sd)), breaks= seq(0,100,1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2))
+  p <- p + scale_fill_continuous(limits=c(1,max(data$size.sd)), breaks= seq(0,100,10), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2), paramsData) + RXScale
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
@@ -223,7 +227,7 @@ heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=fromtruth.avg), colour = "white")
   p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2))
+  p <- p + hs.makeggtitle(title, c(v1, v2), paramsData) + RXScale
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
@@ -233,7 +237,7 @@ heatmap2by2Detail <- function(v1, v2, save = TRUE, data = clu) {
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=fromtruth.sd), colour = "white")
   p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.sd)), breaks= seq(0,1,0.1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2))
+  p <- p + hs.makeggtitle(title, c(v1, v2), paramsData) + RXScale
 
   saveOrPlot(save, p, paste0("heat_", title), IMGPATH)
 
@@ -314,4 +318,99 @@ allPlots <- function(v1, v2, save = TRUE) {
    boxplot2by2(v1,v2,save)
    facets2by2(v1,v2,save)
    heatmap2by2(v1,v2,save)
+}
+
+
+## Summarizes data.
+## Gives count, mean, standard deviation, standard error of the mean, and confidence interval (default 95%).
+##   data: a data frame.
+##   measurevar: the name of a column that contains the variable to be summariezed
+##   groupvars: a vector containing names of columns that contain grouping variables
+##   na.rm: a boolean that indicates whether to ignore NA's
+##   conf.interval: the percent range of the confidence interval (default is 95%)
+summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE, conf.interval=.95, .drop=TRUE) {
+    require(plyr)
+
+    # New version of length which can handle NA's: if na.rm==T, don't count them
+    length2 <- function (x, na.rm=FALSE) {
+        if (na.rm) sum(!is.na(x))
+        else       length(x)
+    }
+
+    # This is does the summary; it's not easy to understand...
+    datac <- ddply(data, groupvars, .drop=.drop,
+                   .fun= function(xx, col, na.rm) {
+                           c( N    = length2(xx[,col], na.rm=na.rm),
+                              mean = mean   (xx[,col], na.rm=na.rm),
+                              sd   = sd     (xx[,col], na.rm=na.rm)
+                              )
+                          },
+                    measurevar,
+                    na.rm
+             )
+
+    # Rename the "mean" column    
+    datac <- rename(datac, c("mean"=measurevar))
+
+    datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+
+    # Confidence interval multiplier for standard error
+    # Calculate t-statistic for confidence interval: 
+    # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+    ciMult <- qt(conf.interval/2 + .5, datac$N-1)
+    datac$ci <- datac$se * ciMult
+
+    return(datac)
+}
+
+heatmapFacets<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+
+  pt <- heatmapFacets_fromtruth(v1,v2,v3)
+  saveOrPlot(save, pt$p, paste0("hf_", pt$t), imgpath)
+
+  pt <- heatmapFacets_count(v1,v2,v3)
+  saveOrPlot(save, pt$p, paste0("hf_", pt$t), imgpath)
+
+  pt <- heatmapFacets_size(v1,v2,v3)
+  saveOrPlot(save, pt$p, paste0("hf_", pt$t), imgpath)
+
+}
+
+heatmapFacets_fromtruth<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+
+  title <- paste0("Convergence levels by combinations of ", v1, ", ", v2, ", and ", v3)
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=fromtruth.avg), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
+heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+
+  title <- paste0("Cluster counts by combinations of ", v1, ", ", v2, ", and ", v3)
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=count), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(1,max(data$count)), breaks= seq(0,1,0.1), high='lightblue',low='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
+heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+
+  title <- paste0("Cluster sizes  by combinations of ", v1, ", ", v2, ", and ", v3)
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=size.avg), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(1,max(data$size.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
 }
