@@ -10,8 +10,8 @@ VIDEO = 1;
 MPEG  = 1;
 DEBUG = 0;
 
-DUMPDIR = 'dump/';
-VIDEODIR = 'videos/';
+DUMPDIR = '/mnt/tmp/dump/';
+
 
 %'the_loop-2013-3-8-16-13/';
 %MYDIR = 'circle_maybe-2013-3-8-13-22/';
@@ -38,23 +38,32 @@ MYDIR = 'tests/average_clusters-2013-3-11-13-2/';
 
 MYDIR = 'tests/big_clusters-2013-3-11-13-8/';
 
-MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/'
+MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/';
+
+MYDIR = 'limited_sigma_R_seq_rnd_avv1/';
+
+MYDIR = 'cluster_zone_sigma_R_alpha/';
+
+MYDIR = 'alpha1_tau_vinit_av1/';
 
 dumpDir = [DUMPDIR MYDIR]
 
-%dumpDir = [DUMPDIR '2011-5-30-15-48/'];
-%dumpDir = [DUMPDIR '2011-5-30-15-54/'];
-%dumpDir = [DUMPDIR '2011-5-30-15-56/'];
-%dumpDir = [DUMPDIR '2011-5-30-16-3/'];
+VIDEODIR = '/tmp/';%dumpDir;
+
+simNumber = 495;
+simCount = 1;
+
+makevideo([dumpDir '13-1.mat'],0,0)
+
 
 files = dir(dumpDir);
 fileIndex = find(~[files.isdir]);
 
+
+
 %%
 
-paramOrder = {' agents=',' A=',' B=',' k=',' d0=','d1=',...
-    ' alpha=',' tau=',' R=',' sigma=',' velocity scaling=',...
-    ' n. of clusters='};
+
 
 display(['Files Found: ' num2str(length(fileIndex))]);
 
@@ -64,125 +73,17 @@ end
 
 %%
 
-colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
-%%
-
-%for i = 1:length(fileIndex)
-    
-    i=1
-    
+for i = 1:length(fileIndex)
+     
     append = files(fileIndex(i)).name;
     fileName = [dumpDir, append];
     
-     % We load only .mat
-     [PATH,NAME,EXT] = fileparts(fileName);
-     if (~strcmpi(EXT,'.mat')) 
+    % We load only .mat
+    [PATH,NAME,EXT] = fileparts(fileName);
+    if (~strcmpi(EXT,'.mat')) 
         continue;
-     end
-    
-    load(fileName);
-    
-    simParameters = cell2mat(struct2cell(dump.parameters));
-    allStepsAgents = dump.agents;
-
-    % Creating a string with the description of the parameters
-    paramString = ['File: ' append];
-    paramString = [paramString create_params_string(dump.parameters, dump.truth)];
-    
-    %for j=1:size(paramOrder,2)
-     %   paramString = [paramString ';' paramOrder{j} ...
-      %      int2str(simParameters(j)) ];
-    %end
-    
-    paramString
-    
-    %% Video Plotting
-
-    
-    xlim([0 1]);
-    ylim([0 1]);
-    
-         
-    
-    if (VIDEO)
-        
-        % Get the handle of the figure
-        %h = figure();
-
-        if (MPEG)
-            % Prepare the new file.
-            vidObj = VideoWriter([VIDEODIR append '.avi']);
-            open(vidObj);
-        end
-        
-        %A = allStepsAgents;  
-        %figure
-        close all
-        for j=1:size(allStepsAgents,3)
-            truth = dump.truth;
-            agents = allStepsAgents(:,:,j);
-            
-            % PLOT red crosses
-            plot(agents(1,:),agents(2,:),'rx'); 
-            
-            
-            % PLOT COLORED NUMBERS
-            %points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
-            %text(agents(1,:),agents(2,:), points');
-            
-            % PLOT BLACK NUMBERS
-            %text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
-            
-            hold on;
-            %plot(agents_average(1),agents_average(2),'bo');
-            plot(truth(1),truth(2),'go');
-            title(['T: ' int2str(j) ' ' paramString]);
-            
-            hold off;
-            
-            % LIMITS for plotting red crosses
-            xlim([0 dump.parameters.iss]);
-            ylim([0 dump.parameters.iss]);
-            
-            % LIMITS when plotting numbers
-            %axis([0 dump.parameters.iss 0 dump.parameters.iss])
-            
-            if (MPEG)
-                % Get the very last frame
-                currFrame = getframe();
-                writeVideo(vidObj,currFrame);
-                %A(j)=getframe();
-            end 
-
-            if (DEBUG)
-                % Debugging: Calculate energy and control...
-                % whether it is constant
-                E=0;
-                for ii=1:n_agents
-                    E=E+0.5*(v(:,ii))'*v(:,ii);
-                end
-                energy=num2str(E);
-                legend(energy);
-            end
-
-            pause(0.01);
-            % no need for pause when plotting numbers
-            
-            %if (j ~= size(allStepsAgents,3)-1)
-            %    clf
-            %end
-            
-        end
-    end
- 
-%%    
-    % sscanf(paramString,'%s')
-    if (MPEG)
-        % Close the video file.
-        close(vidObj)
-        
-        %movie2avi(A, ['videos/' append '.avi'],'fps',60);
-        %save movie1.mat A
     end
     
-%end    
+    fileOut = [VIDEODIR append '.avi'];
+    makevideo(fileName, fileOut, MPEG);
+end
