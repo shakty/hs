@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'alpha1_tau_vinit';
+simName = 'truth_corner_alpha_R';
 dumpDir = 'dump/';
 
 VIDEO = 0;
@@ -38,8 +38,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [1];       	% weighting of velocity terms
-Rs     = [0];       	% cut-off radius
+alphas = [0:0.01:1];       	% weighting of velocity terms
+Rs     = [0:0.01:0.3];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -53,13 +53,13 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [0.1,0.5,1,2,3,4,5];     		% coupling coefficient (divisor)
+taus   = [2];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
 sigmas = [0:0.1:0.5];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0,0.1,1:10,20];     	% Scaling factor for initial (random) velocities
+vScalings = [1];     	% Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions
@@ -77,7 +77,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.5; 0.5];
+truths = [0.1; 0.1];
 
 truths
 
