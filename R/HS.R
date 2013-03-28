@@ -47,6 +47,9 @@ DIR = "limited_sigma_R_sim_avv0_SEED/"
 DIR = "cluster_zone_sigma_R_alpha/"
 DIR = "cluster_zone_sigma_R_alpha_av1/"
 
+DIR = 'alpha1_tau_vinit_av0/'
+DIR = 'alpha1_tau_vinit_av1/'
+
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -64,12 +67,12 @@ clu <- merge(params, clusters, by=c("simname","simcount","run"))
 for (n in names(clu[1:23])) {
   clu[, n] <- as.factor(clu[, n])      
 }
-#clu$t <- as.factor(clu$t)
+# clu$t <- as.factor(clu$t)
 clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
 clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
 clu$count.cut <- cut(clu$count, seq(0,100,5))
 
-#lagging
+# lagging
 
 clu$fromtruth.lag <- lagg(clu$fromtruth.avg)
 clu$truthdiff <- (clu$fromtruth.avg - clu$fromtruth.lag)
@@ -80,25 +83,27 @@ clu$Rjump <- clu$truthdiff > 0.02
 # START
 
 
-OLDPATH = IMGPATH
-for (S in unique(params$sigma)) {
-  curDir <-  paste0("sigma_",S,"/")
-  dir.create(file.path(OLDPATH, curDir), showWarnings = FALSE)
-  IMGPATH <- paste0(OLDPATH, curDir)
-  heatmap2by2Detail("R","alpha", data = clu[clu$sigma == S,], paramsData = params[params$sigma == S,])
-}
-IMGPATH = OLDPATH
 
 
-
-v1 <- "R"
-v2 <- "alpha"
+v1 <- "init.vscaling"
+v2 <- "tau"
 v3 <- "sigma"
 data <- clu
 paramsData <- params
 
 
 heatmapFacets(v1,v2,v3)
+
+
+
+OLDPATH = IMGPATH
+for (S in unique(params$sigma)) {
+  curDir <-  paste0("sigma_",S,"/")
+  dir.create(file.path(OLDPATH, curDir), showWarnings = FALSE)
+  IMGPATH <- paste0(OLDPATH, curDir)
+  heatmap2by2Detail(v1,v2, data = clu[clu$sigma == S,], paramsData = params[params$sigma == S,])
+}
+IMGPATH = OLDPATH
 
 
 #image(clu$R, clu$sigma, clu$fromtruth.avg)

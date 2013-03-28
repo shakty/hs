@@ -14,7 +14,7 @@ plotScaleCount <- scale_y_discrete(breaks=seq(0, 100, 5))
 plotXscale <- scale_x_discrete(breaks=seq(0, 30, 5))
 reducedXScale <- scale_x_discrete(breaks=seq(5, 25, 10))
 
-RXScale <- scale_x_discrete(breaks=seq(0,1,0.05))
+RXScale <- scale_x_discrete(breaks=seq(0,100,0.05))
 
 reducedYScaleCount <- scale_y_discrete(breaks=seq(0, 100, 10))
 reducedYScaleDis <- scale_y_discrete(breaks=seq(0, 1, 0.2))
@@ -383,7 +383,7 @@ heatmapFacets_fromtruth<- function(v1,v2,v3,data = clu, paramsData = params, img
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=fromtruth.avg), colour = "white")
   p <- p + scale_fill_continuous(limits=c(0,max(data$fromtruth.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
   p <- p + facet_grid(facetFormula)
 
   return(list(p=p,t=title))
@@ -396,7 +396,7 @@ heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=count), colour = "white")
   p <- p + scale_fill_continuous(limits=c(1,max(data$count)), breaks= seq(0,1,0.1), high='lightblue',low='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
   p <- p + facet_grid(facetFormula)
 
   return(list(p=p,t=title))
@@ -409,7 +409,7 @@ heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath 
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
   p <- p + scale_fill_continuous(limits=c(1,max(data$size.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,1,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
   p <- p + facet_grid(facetFormula)
 
   return(list(p=p,t=title))
