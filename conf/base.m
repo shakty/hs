@@ -4,8 +4,8 @@
 
 % GLOBAL Conf
 
-simName = 'truth_corner_alpha_R';
-dumpDir = 'dump/';
+simName = 'truth_corner_alpha_R_sigma_av1';
+dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 VIDEO = 0;
 DEBUG = 0;

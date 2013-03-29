@@ -50,6 +50,8 @@ DIR = 'alpha1_tau_vinit_av0/'
 DIR = "cluster_zone_sigma_R_alpha_av1/"
 DIR = "cluster_zone_sigma_R_alpha/"
 
+DIR = "truth_corner_alpha_R_sigma_av0/"
+DIR = "truth_corner_alpha_R_sigma_av1/"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -91,8 +93,8 @@ as.numeric(a$simcount)
 
 
 
-v1 <- "init.vscaling"
-v2 <- "tau"
+v1 <- "R"
+v2 <- "alpha"
 v3 <- "sigma"
 data <- clu
 paramsData <- params
