@@ -42,19 +42,41 @@ MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/';
 
 MYDIR = 'limited_sigma_R_seq_rnd_avv1/';
 
-MYDIR = 'cluster_zone_sigma_R_alpha/';
-
 MYDIR = 'alpha1_tau_vinit_av0/';
+
+MYDIR = 'cluster_zone_sigma_R_alpha/';
 
 dumpDir = [DUMPDIR MYDIR]
 
-VIDEODIR = '/tmp/';%dumpDir;
+VIDEODIR = '/home/stefano/hs/videos/';
 
-simNumber = 495;
-simCount = 1;
+parentDir = '/home/stefano/hs/dump/tests/';
 
-makevideo([dumpDir '13-1.mat'],0,0)
 
+
+myFiles = {
+    'cluster_zone_R0.2_av1-2013-3-28-11-33', ...
+    'cluster_zone_R0.2_sigma.1_av0-2013-3-28-12-6', ...
+    'cluster_zone_R0.2_sigma.5_av0-2013-3-28-11-53', ...
+    'cluster_zone_R0.2_sigma.5_av1-2013-3-28-11-40', ...
+    'cluster_zone_R0.2_sigma.9_av0-2013-3-28-11-50', ...
+    'cluster_zone_R0.2_sigma.9_av1-2013-3-28-11-44'
+};
+
+videoSubDir = 'av1_av0_smallR/';
+
+for i=1:length(myFiles)  
+    videoFile = [VIDEODIR videoSubDir myFiles{i} '.avi'];
+    makevideo([parentDir myFiles{i} '/1-1.mat'], 1, videoFile);
+end
+
+
+videoSubDir = 'av1_av0_smallR/';
+videoFile = [VIDEODIR videoSubDir 'alpha1_tightdistr_t0.1_v1_sigma0.avi'];
+makevideo([dumpDir '3435-1.mat'], 0, videoFile);
+
+
+ded = ded
 
 files = dir(dumpDir);
 fileIndex = find(~[files.isdir]);
@@ -83,5 +105,5 @@ for i = 1:length(fileIndex)
     end
     
     fileOut = [VIDEODIR append '.avi'];
-    makevideo(fileName, fileOut, MPEG);
+    makevideo(fileName, MPEG, fileOut);
 end

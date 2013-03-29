@@ -44,11 +44,12 @@ DIR = "limited_sigma_R_seq_det_avv1/"
 
 DIR = "limited_sigma_R_sim_avv0_SEED/"
 
-DIR = "cluster_zone_sigma_R_alpha/"
-DIR = "cluster_zone_sigma_R_alpha_av1/"
-
-DIR = 'alpha1_tau_vinit_av0/'
 DIR = 'alpha1_tau_vinit_av1/'
+DIR = 'alpha1_tau_vinit_av0/'
+
+DIR = "cluster_zone_sigma_R_alpha_av1/"
+DIR = "cluster_zone_sigma_R_alpha/"
+
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -78,6 +79,11 @@ clu$fromtruth.lag <- lagg(clu$fromtruth.avg)
 clu$truthdiff <- (clu$fromtruth.avg - clu$fromtruth.lag)
 clu$ratediff <- clu$truthdiff / clu$fromtruth.avg
 clu$Rjump <- clu$truthdiff > 0.02
+
+# SimCount
+
+a <- params[params$alpha == 0.5 & params$sigma == 0.1 & params$R == 0.02,]
+as.numeric(a$simcount)       
 
 
 # START

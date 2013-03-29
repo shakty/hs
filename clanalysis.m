@@ -17,7 +17,9 @@ PLOT_CLU= 0;
 
 DIR = 'few_big_groups-DIM-vs-ALPHA';
 DIR = 'circle_maybe-2013-3-8-13-22';
-DIR = 'tests/the_loop-2013-3-9-22-40/'
+DIR = 'tests/the_loop-2013-3-9-22-40/';
+
+DIR = 'truth_corner_alpha_R_sigma_av0'
 
 tocsv(DIR, CSV_CLU, CSV_POS, PLOT_POS, PLOT_CLU);
 

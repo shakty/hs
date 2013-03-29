@@ -1,4 +1,4 @@
-function makevideo( fileIn, fileOut, MPEG )
+function makevideo( fileIn, MPEG, fileOut )
 
     DEBUG = 0;
 
@@ -35,7 +35,8 @@ function makevideo( fileIn, fileOut, MPEG )
     close all
     for j=1:size(allStepsAgents,3)
 
-        if (j < 4)
+        if (j > 1400)
+            break;
             continue;
         end
 

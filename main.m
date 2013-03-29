@@ -26,9 +26,9 @@ compPARALLEL = 1;
 compLSF = 2;
 COMPUTATION = compLOCAL;
 
-VIDEO = 1;
+VIDEO = 0;
 DEBUG = 1;
-DUMP = 0;
+DUMP = 1;
 
 % CHANGE AFTER!!!!!
 
@@ -45,8 +45,8 @@ DUMP = 0;
 %load([confDir 'alpha-k']);
 load([confDir 'TESTS/circle_maybe']);
 
-VIDEO = 1;
-DUMP = 0;
+VIDEO = 0;
+DUMP = 1;
 COMPUTATION = compLOCAL;
 
 % Force Local Computation
@@ -61,18 +61,18 @@ Bs = [0]
 
 %n_agents  = 2;
 
-taus = 3;
-vScalings = [0]
-alphas = [1];       	% weighting of velocity terms
-Rs     = [0];
+taus = 2;
+vScalings = [1]
+alphas = [0.5];       	% weighting of velocity terms
+Rs     = [0.02];
 truths = [0.5;0.5];
 ideas_space_sizes = 1;
 ks=1
-sigmas = 0
+sigmas = 0.1;
 n_agents = 100
 
 dumpDir = 'dump/tests/'
-simName = 'testtest';
+simName = 'cluster_zone_R0.2_sigma.1_av0';
 
 simName = createSimName(simName,DUMP,dumpDir);
 
