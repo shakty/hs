@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'truth_corner_alpha_R_sigma_av1';
+simName = 'truth_corner_alpha_Rright_sigma_av1';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 VIDEO = 0;
@@ -39,7 +39,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0:0.01:1];       	% weighting of velocity terms
-Rs     = [0:0.01:0.3];       	% cut-off radius
+Rs     = [0.7:0.01:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
