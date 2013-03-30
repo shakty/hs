@@ -1,6 +1,7 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
+
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
 
@@ -50,8 +51,8 @@ DIR = 'alpha1_tau_vinit_av0/'
 DIR = "cluster_zone_sigma_R_alpha_av1/"
 DIR = "cluster_zone_sigma_R_alpha/"
 
-DIR = "truth_corner_alpha_R_sigma_av0/"
 DIR = "truth_corner_alpha_R_sigma_av1/"
+DIR = "truth_corner_alpha_R_sigma_av0/"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -84,7 +85,7 @@ clu$Rjump <- clu$truthdiff > 0.02
 
 # SimCount
 
-a <- params[params$alpha == 0.5 & params$sigma == 0.1 & params$R == 0.02,]
+a <- params[params$alpha == 0.9 & params$sigma == 0 & params$R == 0.3,]
 as.numeric(a$simcount)       
 
 

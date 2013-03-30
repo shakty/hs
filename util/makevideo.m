@@ -35,10 +35,10 @@ function makevideo( fileIn, MPEG, fileOut )
     close all
     for j=1:size(allStepsAgents,3)
 
-        if (j > 1400)
-            break;
-            continue;
-        end
+        %if (j > 1400)
+        %    break;
+        %    continue;
+        %end
 
         agents = allStepsAgents(:,:,j);
 
