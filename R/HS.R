@@ -54,6 +54,9 @@ DIR = "cluster_zone_sigma_R_alpha/"
 DIR = "truth_corner_alpha_R_sigma_av1/"
 DIR = "truth_corner_alpha_R_sigma_av0/"
 
+DIR = "truth_corner_alpha_Rright_sigma_av1/"
+DIR = "truth_corner_alpha_Rright_sigma_av0/"
+
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
