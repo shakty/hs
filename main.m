@@ -72,7 +72,7 @@ sigmas = 0.1;
 n_agents = 100
 
 dumpDir = 'dump/tests/'
-simName = 'cluster_zone_R0.2_sigma.1_av0';
+simName = 'xxx';
 
 simName = createSimName(simName,DUMP,dumpDir);
 
