@@ -46,7 +46,7 @@ MYDIR = 'alpha1_tau_vinit_av0/';
 
 MYDIR = 'cluster_zone_sigma_R_alpha/';
 
-MYDIR = 'truth_corner_alpha_R-2013-3-28-14-22/';
+MYDIR = 'truth_corner_alpha_R_av1/';
 
 dumpDir = [DUMPDIR MYDIR]
 
@@ -73,9 +73,9 @@ parentDir = '/home/stefano/hs/dump/tests/';
 %end
 
 
-videoSubDir = 'truth_corner_av0/';
-videoFile = [VIDEODIR videoSubDir '2_clusters_becoming_one_longer_time_needed_R=.05_alpha=0_sigma=.2.avi'];
-makevideo([dumpDir '16921-1.mat'], 0, videoFile);
+videoSubDir = 'truth_corner_av1/';
+videoFile = [VIDEODIR videoSubDir 'R=0.01_clusters_noise=0.avi'];
+makevideo([dumpDir '9307-1.mat'], 1, videoFile);
 
 
 ded = ded
