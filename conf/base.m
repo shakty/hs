@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'truth_corner_alpha_Rleft_sigma_av1_noise_v';
+simName = 'truth_middle_alpha_Rleft_sigma_av1_noise_v';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 VIDEO = 0;
@@ -77,7 +77,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.1; 0.1];
+truths = [0.5; 0.5];
 
 truths
 

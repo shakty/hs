@@ -75,7 +75,7 @@ parentDir = '/home/stefano/hs/dump/tests/';
 
 videoSubDir = 'truth_corner_av1/';
 videoFile = [VIDEODIR videoSubDir 'R=0.01_clusters_noise=0.avi'];
-makevideo([dumpDir '9307-1.mat'], 1, videoFile);
+makevideo([dumpDir '9331-1.mat'], 0, videoFile);
 
 
 ded = ded

@@ -1,9 +1,8 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
-
-
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
 PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
+
 
 DIR = "R-alpha-noA-noB-2013-3-6-20-8/"
 DIR = "A-alpha-R-2013-3-10-10-25/"
@@ -54,9 +53,13 @@ DIR = "truth_corner_alpha_Rright_sigma_av0/"
 DIR = "truth_corner_alpha_Rright_sigma_av1/"
 
 DIR = "truth_corner_alpha_R_av0/"
-DIR = "truth_corner_alpha_R_av1/"
 
 DIR = "truth_corner_alpha_Rmiddle_sigma_av1/"
+
+# too big
+#DIR = "truth_corner_alpha_R_sigma_av1_ALL/"
+
+DIR = "truth_corner_alpha_R_av1/"
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
