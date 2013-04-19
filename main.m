@@ -45,8 +45,8 @@ DUMP = 1;
 %load([confDir 'alpha-k']);
 load([confDir 'TESTS/circle_maybe']);
 
-VIDEO = 0;
-DUMP = 1;
+VIDEO = 1;
+DUMP = 0;
 COMPUTATION = compLOCAL;
 
 % Force Local Computation
@@ -61,7 +61,7 @@ Bs = [0]
 
 %n_agents  = 2;
 
-taus = 2;
+taus = 1;
 vScalings = [1]
 alphas = [0.5];       	% weighting of velocity terms
 Rs     = [0.02];

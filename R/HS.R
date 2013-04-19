@@ -61,6 +61,9 @@ DIR = "truth_corner_alpha_Rmiddle_sigma_av1/"
 
 DIR = "truth_corner_alpha_R_av1/"
 
+DIR = "noisev_truth_corner_alpha_Rleft_sigma_av1/"
+DIR = "noisev_truth_middle_alpha_Rleft_sigma_av1/"
+
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -93,7 +96,7 @@ clu$Rjump <- clu$truthdiff > 0.02
 
 # SimCount
 
-a <- params[params$alpha == 0.5 & params$sigma == 0.5 & params$R == 0.01,]
+a <- params[params$alpha == 0.4 & params$sigma == 0.2 & params$R == 0.19,]
 as.numeric(a$simcount)       
 
 
