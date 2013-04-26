@@ -63,13 +63,13 @@ Bs = [0]
 
 taus = 1;
 vScalings = [1]
-alphas = [0.5];       	% weighting of velocity terms
-Rs     = [0.02];
-truths = [0.5;0.5];
+alphas = [0.4];       	% weighting of velocity terms
+Rs     = [0.3];
+truths = [0.1;0.1];
 ideas_space_sizes = 1;
 ks=1
 sigmas = 0.1;
-n_agents = 100
+n_agents = 2
 
 dumpDir = 'dump/tests/'
 simName = 'xxx';

@@ -1,8 +1,5 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-k-2013-3-8-9-59/"
-PATH = "/opt/MATLAB_WORKSPACE/hs/dump/alpha-A-B-2013-3-6-23-16/"
-
 
 DIR = "R-alpha-noA-noB-2013-3-6-20-8/"
 DIR = "A-alpha-R-2013-3-10-10-25/"
@@ -65,6 +62,11 @@ DIR = "noisev_truth_corner_alpha_Rleft_sigma_av1/"
 DIR = "noisev_truth_middle_alpha_Rleft_sigma_av1/"
 
 
+DIR = "simul_noisev_truth_corner_av1_Rleft/"
+DIR = "simul_noisev_truth_exact_corner_av1_Rleft/"
+
+DIR = "simul_noisev_truth_middle_av1_Rleft/"
+
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -96,23 +98,20 @@ clu$Rjump <- clu$truthdiff > 0.02
 
 # SimCount
 
-a <- params[params$alpha == 0.4 & params$sigma == 0.2 & params$R == 0.19,]
+a <- params[params$alpha == 0.4 & params$sigma == 0 & params$R == 0.07,]
 as.numeric(a$simcount)       
 
 
 # START
 
 
-
-
 v1 <- "R"
 v2 <- "alpha"
 v3 <- "sigma"
-data <- clu
+#data <- clu
+data <- clu[clu$t == 21,]
 paramsData <- params
-
-
-heatmapFacets(v1,v2,v3)
+heatmapFacets(v1,v2,v3, data)
 
 
 

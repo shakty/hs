@@ -48,14 +48,15 @@ MYDIR = 'cluster_zone_sigma_R_alpha/';
 
 MYDIR = 'truth_corner_alpha_R_av1/';
 
+
+MYDIR = 'truth_middle_alpha_Rleft_sigma_av1_noisev_simul/';
+
 dumpDir = [DUMPDIR MYDIR]
 
 VIDEODIR = '/home/stefano/hs/videos/';
 
-parentDir = '/home/stefano/hs/dump/tests/';
 
-
-
+% parentDir = '/home/stefano/hs/dump/tests/';
 %myFiles = {
 %    'cluster_zone_R0.2_av1-2013-3-28-11-33', ...
 %    'cluster_zone_R0.2_sigma.1_av0-2013-3-28-12-6', ...
@@ -64,18 +65,18 @@ parentDir = '/home/stefano/hs/dump/tests/';
 %    'cluster_zone_R0.2_sigma.9_av0-2013-3-28-11-50', ...
 %    'cluster_zone_R0.2_sigma.9_av1-2013-3-28-11-44'
 %};
-
 %videoSubDir = 'truth_corner_av0/';
-
 %for i=1:length(myFiles)  
 %    videoFile = [VIDEODIR videoSubDir myFiles{i} '.avi'];
 %    makevideo([parentDir myFiles{i} '/1-1.mat'], 1, videoFile);
 %end
 
 
-videoSubDir = 'noisev_truth_middle_alpha_Rleft_sigma_av1/';
-videoFile = [VIDEODIR videoSubDir 'R=0.01_clusters_noise=0.avi'];
-makevideo([dumpDir '5140-1.mat'], 0, videoFile);
+
+
+videoSubDir = 'sim_nv_tm_av1/';
+videoFile = [VIDEODIR videoSubDir 'few_little_cluster_R=.07_n=0_a=.4.avi'];
+makevideo([dumpDir '7483-1.mat'], 1, videoFile);
 
 
 ded = ded
