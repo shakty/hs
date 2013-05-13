@@ -62,10 +62,11 @@ DIR = "noisev_truth_corner_alpha_Rleft_sigma_av1/"
 DIR = "noisev_truth_middle_alpha_Rleft_sigma_av1/"
 
 
-DIR = "simul_noisev_truth_corner_av1_Rleft/"
-DIR = "simul_noisev_truth_exact_corner_av1_Rleft/"
+DIR = "simul_tmiddle_noisev_av1_rleft/"
+DIR = "simul_tcorner_noisev_av1_rleft/"
+DIR = "simul_texactcorner_noisev_av1_rleft/"
 
-DIR = "simul_noisev_truth_middle_av1_Rleft/"
+
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
@@ -112,7 +113,6 @@ v3 <- "sigma"
 data <- clu[clu$t == 21,]
 paramsData <- params
 heatmapFacets(v1,v2,v3, data)
-
 
 
 OLDPATH = IMGPATH
