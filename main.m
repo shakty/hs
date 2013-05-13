@@ -61,10 +61,10 @@ Bs = [0]
 
 %n_agents  = 2;
 
-taus = 0.5;
+taus = 2;
 vScalings = [1]
 alphas = [0.05];       	% weighting of velocity terms
-Rs     = [0.07];
+Rs     = [0.03];
 truths = [0.5;0.5];
 ideas_space_sizes = 1;
 ks=1

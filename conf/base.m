@@ -4,7 +4,7 @@
 
 % GLOBAL Conf
 
-simName = 'thmiddle_av1_nv_seqrnd_notattr';
+simName = 'thmiddle_av1_nv_seqrnd_attrK_tau.1';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 VIDEO = 0;
@@ -53,7 +53,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [2];     		% coupling coefficient (divisor)
+taus   = [0.1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
 sigmas = [0:0.1:0.5];       	% Std. deviation of white noise term
