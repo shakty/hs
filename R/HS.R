@@ -103,6 +103,15 @@ clu$Rjump <- clu$truthdiff > 0.02
 a <- params[params$alpha == 0.4 & params$sigma == 0 & params$R == 0.07,]
 as.numeric(a$simcount)       
 
+a <- clu[clu$fromtruth.avg > 0.6,]
+
+max.dist.from.truth <- which(clu$fromtruth.avg == max(clu$fromtruth.avg))
+
+clu[max.dist.from.truth,]
+
+
+
+nrow(a)
 
 # START
 

@@ -1,11 +1,11 @@
-%% Conf parameters new Model with Anna
+%% Conf parameters
 
 %%%%%%%%%%%%%
 
 % GLOBAL Conf
 
 %simName = 'thmiddle_av1_nv_seqrnd_attrK_tau.1';
-simName = 'attr0_av1_nv_seqrnd_Rmiddle';
+simName = 'attr0_av1_nv_seqrnd_Rright';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 VIDEO = 0;
@@ -40,7 +40,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0:0.01:1];       	% weighting of velocity terms
-Rs     = [0.3:0.01:0.6];       	% cut-off radius
+Rs     = [0.6:0.01:1];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
