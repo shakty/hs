@@ -60,7 +60,7 @@ DIR = "truth_corner_alpha_R_av1/"
 
 DIR = "noisev_truth_corner_alpha_Rleft_sigma_av1/"
 DIR = "noisev_truth_middle_alpha_Rleft_sigma_av1/"
-
+DIR = "noisev_truth_exactcorner_alpha_Rleft_sigma_av1/"
 
 DIR = "simul_tmiddle_noisev_av1_rleft/"
 DIR = "simul_tcorner_noisev_av1_rleft/"
