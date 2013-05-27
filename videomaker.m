@@ -49,7 +49,7 @@ MYDIR = 'cluster_zone_sigma_R_alpha/';
 MYDIR = 'truth_corner_alpha_R_av1/';
 
 
-MYDIR = 'truth_middle_alpha_Rleft_sigma_av1_noisev_simul/';
+MYDIR = 'simul_tcorner_noisev_av1_rleft/';
 
 dumpDir = [DUMPDIR MYDIR]
 
@@ -74,9 +74,9 @@ VIDEODIR = '/home/stefano/hs/videos/';
 
 
 
-videoSubDir = 'sim_nv_tm_av1/';
+videoSubDir = 'simul_tcorner_noisev_av1_rleft/';
 videoFile = [VIDEODIR videoSubDir 'few_little_cluster_R=.07_n=0_a=.4.avi'];
-makevideo([dumpDir '7483-1.mat'], 1, videoFile);
+makevideo([dumpDir '1592-1.mat'], 0, videoFile);
 
 
 ded = ded
