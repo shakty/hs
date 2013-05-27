@@ -66,6 +66,7 @@ DIR = "simul_tmiddle_noisev_av1_rleft/"
 DIR = "simul_tcorner_noisev_av1_rleft/"
 DIR = "simul_texactcorner_noisev_av1_rleft/"
 
+DIR = "attr0_av1_nv_seqrnd_thm/"
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
