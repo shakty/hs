@@ -42,25 +42,25 @@ COMPUTATION = compLOCAL;
 % Force Local Computation
 
 nRuns = 1;
-t_ends = 30;
+t_ends = 1;
 As = [0];
-Bs = [0]
+Bs = [0];
 
 %n_agents  = 2;
 
 taus = 2;
-vScalings = [1]
+vScalings = [1];
 alphas = [0.05];       	% weighting of velocity terms
 Rs     = [0.03];
 truths = [0.5;0.5];
 ideas_space_sizes = 1;
-ks=1
+ks=1;
 sigmas = 0.1;
 n_agents = 100;
 
 load([confDir 'refactor']);
 %simParamsStruct.VIDEO=1;
-simName = createSimName(simParamsStruct.simName,simParamsStruct.DUMP,simParamsStruct.dumpDir);
+simParamsStruct.simName = createSimName(simParamsStruct.simName,simParamsStruct.DUMP,simParamsStruct.dumpDir);
 
 %set(gcf, 'DoubleBuffer', 'on');
 
@@ -80,6 +80,6 @@ switch (COMPUTATION)
         param_sets_local (simParamsStruct);
 end
 
-fprintf('\n%s: execution completed correctly\n',simName);
+fprintf('\n%s: execution completed correctly\n', simParamsStruct.simName);
 % Exit Matlab when invoked from command line with -r option
 %exit

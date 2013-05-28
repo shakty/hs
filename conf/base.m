@@ -7,15 +7,19 @@
 %simName = 'thmiddle_av1_nv_seqrnd_attrK_tau.1';
 simName = 'refactor';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
-dumpDir = 'dump/refactor'; % dump
+dumpDir = 'dump/refactor/'; % dump
 
 
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 1; % Dump every x steps
+DUMP_RATE = 10; % Dump every x steps
 COMPUTATION = 0; % 0-local, 1-parallel, 2-LSF
 
+% NOISE TYPES
+noise_on_p = 0;
+noise_on_v = 1;
+noise_adaptive_on_v = 2;
 
 %%%%%%%%%%%%%
 
@@ -24,7 +28,7 @@ COMPUTATION = 0; % 0-local, 1-parallel, 2-LSF
 nRuns = 1;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [20];          % running time
+t_ends = [1];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -125,7 +129,8 @@ simParamsStruct = struct( ...
                 'nof_clusters', nClusters, ...
                 'clusterTightness', clusterTightness, ...
                 'truths', truths, ...
-                'attrtype', [attr_zero] ...
+                'attrtype', [attr_zero], ...
+                'noisetype', [noise_on_v] ...
             );
 
 

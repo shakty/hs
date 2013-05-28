@@ -70,6 +70,9 @@ for i1=1:size(params.dts)
     for i17=1:size(params.attrtype,2)
         attrtype = params.attrtype(:,i17)
         
+    for i18=1:size(params.noisetype,2)
+        noisetype = params.noisetype(:,i18);        
+        
         for rCount=1:params.nRuns
         
             fprintf('\n%s\n',params.simName);
@@ -95,6 +98,7 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
             fprintf('%+15s = [%2.3f:%2.3f]\n','truth',truth(1,1),truth(2,1));
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
+            fprintf('%+15s = %d\n', 'Noise. type', noisetype);
             fprintf('------------------------------------\n');
 
             paramsObj = struct( ...
@@ -123,6 +127,7 @@ for i1=1:size(params.dts)
                 'nof_cluster', nof_cluster, ...
                 'clusterTightness', clusterTightness, ...
                 'truth', truth, ...
+                'noisetype', noisetype, ...
                 'attrtype', attrtype ...
             );
             
@@ -133,6 +138,7 @@ for i1=1:size(params.dts)
         end % End n runs with identical param set
              
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end
