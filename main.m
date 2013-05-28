@@ -59,7 +59,7 @@ sigmas = 0.1;
 n_agents = 100;
 
 load([confDir 'refactor']);
-simParamsStruct.VIDEO=1;
+%simParamsStruct.VIDEO=1;
 simName = createSimName(simParamsStruct.simName,simParamsStruct.DUMP,simParamsStruct.dumpDir);
 
 %set(gcf, 'DoubleBuffer', 'on');

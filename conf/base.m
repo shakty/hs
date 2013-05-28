@@ -13,6 +13,7 @@ dumpDir = 'dump/refactor'; % dump
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
+DUMP_RATE = 1; % Dump every x steps
 COMPUTATION = 0; % 0-local, 1-parallel, 2-LSF
 
 
@@ -41,8 +42,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0:0.01:1];       	% weighting of velocity terms
-Rs     = [0:0.01:0.3];       	% cut-off radius
+alphas = [1];       	% weighting of velocity terms
+Rs     = [0.3];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -59,7 +60,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [0.1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0:0.1:0.5];       	% Std. deviation of white noise term
+sigmas = [0.1];       	% Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities
@@ -104,6 +105,7 @@ simParamsStruct = struct( ...
                 'VIDEO', VIDEO, ...
                 'DEBUG', DEBUG, ...
                 'DUMP', DUMP, ...
+                'DUMP_RATE', DUMP_RATE, ...
                 'nRuns', nRuns, ...
                 'dts', dts, ...
                 't_ends', t_ends, ...
