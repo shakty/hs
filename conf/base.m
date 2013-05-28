@@ -78,7 +78,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.5; 0.5];
+truths = [0.0; 0.0];
 
 truths
 
