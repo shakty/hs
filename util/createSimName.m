@@ -7,6 +7,9 @@ else
     simName = ['noname' '-' time2name()];
 end
 
+dumpDir
+simName
+
 if(DUMP) 
     simName = createUniqueDumpDir(dumpDir,simName);
 end

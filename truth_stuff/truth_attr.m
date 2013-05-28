@@ -3,6 +3,18 @@
 
 f = inline('x.*sin(x.*y)','x','y')
 
+% tau = 0.2
+% x position => x-0.5 = dist
+% y speed
+% if f < 0 the agent is attracted
+f = inline('y-((x- 0.5)/0.2)','x','y')
+[X,Y] = meshgrid(0:.01:1,0:20);
+Z = f(X,Y)
+surface(X,Y,Z)
+mesh(X,Y,Z)
+
+contour(X,Y,Z)
+colorbar
 
 f = inline('y-(x- 0.5)/0.2','x','y')
 [X,Y] = meshgrid(0:.01:1,0:20);
@@ -11,6 +23,8 @@ Z = f(X,Y)
 %mesh(X,Y,Z)
 contour(X,Y,Z)
 colorbar
+
+
 
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 truth = [0.5;0.5]

@@ -32,19 +32,6 @@ DUMP = 1;
 
 % CHANGE AFTER!!!!!
 
-
-% Conf to execute
-%movingTau_LOCAL;
-%path(path,'conf/'); % Configuration files 
-%velocity_still_LOCAL;
-
-%load([confDir 'few_big_groups_do_not_find_truth']);
-%load([confDir 'sigma_tau']);
-%load([confDir 'R-alpha-noA-noB']);
-%load([confDir 'alpha-A-B']);
-%load([confDir 'alpha-k']);
-load([confDir 'TESTS/circle_maybe']);
-
 VIDEO = 1;
 DUMP = 0;
 COMPUTATION = compLOCAL;
@@ -71,10 +58,9 @@ ks=1
 sigmas = 0.1;
 n_agents = 100;
 
-dumpDir = 'dump/tests/'
-simName = 'xxx';
-
-simName = createSimName(simName,DUMP,dumpDir);
+load([confDir 'refactor']);
+simParamsStruct.VIDEO=1;
+simName = createSimName(simParamsStruct.simName,simParamsStruct.DUMP,simParamsStruct.dumpDir);
 
 %set(gcf, 'DoubleBuffer', 'on');
 
@@ -82,22 +68,16 @@ simName = createSimName(simName,DUMP,dumpDir);
 
 switch (COMPUTATION)
     case compLSF
-         param_sets_LSF (dumpDir,simName,VIDEO,DEBUG,DUMP,...
-            nRuns, dts,t_ends,n_agents,ideas_space_sizes,ideas_space_dims,...
-            As,Bs,ks,d0s,d1s,alphas,taus,Rs,sigmas,...
-            vScalings,nClusters,clusterTightness,truths);
+         param_sets_LSF (simParamsStruct);
         
-    case compPARALLEL
-        param_sets_parallel (dumpDir,simName,VIDEO,DEBUG,DUMP,...
-            nRuns, dts,t_ends,n_agents,ideas_space_sizes,ideas_space_dims,...
-            As,Bs,ks,d0s,d1s,alphas,taus,Rs,sigmas,...
-            vScalings,nClusters,clusterTightness,truths);
+%    case compPARALLEL
+%        param_sets_parallel (dumpDir,simName,VIDEO,DEBUG,DUMP,...
+%            nRuns, dts,t_ends,n_agents,ideas_space_sizes,ideas_space_dims,...
+%            As,Bs,ks,d0s,d1s,alphas,taus,Rs,sigmas,...
+%            vScalings,nClusters,clusterTightness,truths);
         
     case compLOCAL
-        param_sets_local (dumpDir,simName,VIDEO,DEBUG,DUMP,...
-            nRuns, dts,t_ends,n_agents,ideas_space_sizes,ideas_space_dims,...
-            As,Bs,ks,d0s,d1s,alphas,taus,Rs,sigmas,...
-            vScalings,nClusters,clusterTightness,truths);
+        param_sets_local (simParamsStruct);
 end
 
 fprintf('\n%s: execution completed correctly\n',simName);
