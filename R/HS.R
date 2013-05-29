@@ -28,7 +28,7 @@ DIR = "limited_sigma_R/"
 DIR = "limited_sigma_R_matlab13/"
 
 DIR = "limited_sigma_R_sequantial_random_avv1/"
-
+c
 DIR = "limited_sigma_R_seq_rnd_avv1/"
 DIR = "limited_sigma_R_seq_rnd_avv0/"
 
@@ -66,7 +66,16 @@ DIR = "simul_tmiddle_noisev_av1_rleft/"
 DIR = "simul_tcorner_noisev_av1_rleft/"
 DIR = "simul_texactcorner_noisev_av1_rleft/"
 
-DIR = "attr0_av1_nv_seqrnd_thm/"
+# DIFFERENT ATTRACTION FORCES
+
+# no attr
+DIR = "attr0_av1_nv_seqrnd_Rleft/"
+DIR = "attr0_av1_nv_seqrnd_Rmiddle/"
+DIR = "attr0_av1_nv_seqrnd_Rright/"
+
+
+# constant
+DIR = "attrKtauDOT1_av1_nv_seqrnd/"
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
@@ -133,6 +142,17 @@ for (S in unique(params$sigma)) {
   heatmap2by2Detail(v1,v2, data = clu[clu$sigma == S,], paramsData = params[params$sigma == S,])
 }
 IMGPATH = OLDPATH
+
+
+## Temporal plot of cluster sizes
+
+###
+
+
+p <- ggplot(clu, aes(R, fromtruth.avg, group=alpha, colour=alpha))
+p <- p + geom_line()
+p
+
 
 
 #image(clu$R, clu$sigma, clu$fromtruth.avg)
