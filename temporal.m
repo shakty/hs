@@ -19,23 +19,67 @@ colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 
 DUMPDIR = 'dump/';
     
-simName = 'refactor/refactor-2013-5-29-10-31/';%attr0_av1_nv_seqrnd_Rleft';
+simName = 'refactor/refactor-2013-5-29-14-52/';%attr0_av1_nv_seqrnd_Rleft';
 
 dumpDir = [DUMPDIR simName '/'];
 
 simCount = '1-1.mat';
 
+PRECISION = 100;
+TOTAL_CELLS = PRECISION^2;
+
 load([dumpDir simCount]);
 
 v = dump.agentsv;
+pos = dump.agents;
 
 nIter = size(v,3);
+% average velocity of agents at time t
 avgspeeds = zeros(1,nIter);
-for i = 1:nIter
-    avgspeeds(i) = mean(colnorm(v(:,:,i),2));
-end
-plot(1:nIter, avgspeeds)
+% average distance in space from position at time t-1
+avgmovs = zeros(1,nIter);
+% average share of space occupied by agents at time t
+avgcoverage = zeros(1,nIter);
+% cumulative share of space explored by agents at time t
+cumcoverage = zeros(1,nIter);
+% avg occupation of each cell of the grid at time t
+avg_coverage_matrix = zeros(PRECISION, PRECISION, 3);
+% cumulative occupation of each cell of the grid at time t
+cum_coverage_matrix = zeros(PRECISION, PRECISION, 3);
+% cumulative occupation of each cell of the grid at time t
+coverage_matrix = zeros(PRECISION, PRECISION, 3);
 
+for i = 1:nIter
+    %avg speed
+    avgspeeds(i) = mean(colnorm(v(:,:,i),2));
+    % avg movement
+    if (i>1)
+        avgmovs(i) = mean(mean(abs(pos(:,:,i)-pos(:,:,i-1))));
+    end
+    
+    %avg share of space
+    coverage_matrix(:,:,i) = countAgents(pos(:,:,i), PRECISION);
+    avgcoverage(i) = nnz(coverage_matrix(:,:,i)) / TOTAL_CELLS;
+    
+    %cum share of space
+    if (i==1)
+        cum_coverage_matrix(:,:,i) = coverage_matrix(:,:,i);
+    else
+        cum_coverage_matrix(:,:,i) = coverage_matrix(:,:,i) + cum_coverage_matrix(:,:,i-1);
+    end
+    cumcoverage(i) = nnz(cum_coverage_matrix(:,:,i)) / TOTAL_CELLS;
+    
+end
+
+hold on
+%plot(1:nIter, avgspeeds, 'r')
+%plot(1:nIter, avgmovs, 'b')
+plot(1:nIter, avgcoverage, 'g')
+plot(1:nIter, cumcoverage, 'g')
+hold off
+
+
+ed de
 
 % Date and Time
 mytimestamp = datestr ( datevec ( now ), 0 );

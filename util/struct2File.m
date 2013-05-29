@@ -7,8 +7,8 @@ function struct2File( s, dumpDir, simName)
     fields = fieldnames(s)';
 
     fid = fopen(fileName,'wt');
-    if fid==-1
-        error('Could not open %s');
+    if (fid==-1)
+        error(['Could not open fileName ' fileName]);
     end
 
 

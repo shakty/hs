@@ -113,7 +113,8 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
             fprintf('%+15s = [%2.3f:%2.3f]\n','truth',truth(1,1),truth(2,1));
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
-            fprintf('%+15s = %d\n', 'Noise. type', noisetype);
+            fprintf('%+15s = %d\n', 'Noise type', noisetype);
+            fprintf('%+15s = %d\n', 'Plot type', params.plottype);
             fprintf('------------------------------------\n');
 
             paramsObj = struct( ...

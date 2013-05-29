@@ -30,8 +30,11 @@ COMPUTATION = compLOCAL;
 load([confDir 'refactor']);
 
 %% Modifying params locally
-VIDEO = 1;
+VIDEO = 0;
+DUMP = 1;
 %truths = [ 0 1 3 ; 0 1 3 ];
+
+
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir);
 
@@ -63,15 +66,15 @@ simParamsStruct = struct( ...
                 'truths', truths, ...
                 'attrtype', [attr_linear], ...
                 'noisetype', [noise_on_v], ...
-                'plottype', plot_number, ...
+                'plottype', plottype, ...
                 'seedtype', seed_fixed ...
             );
 
 
-%% Store a copy of input params in DIR if DUMP is required        
-struct2File( simParamsStruct, dumpDir, simName);
-        
-de de
+%% Store a copy of input params in DIR if DUMP is required
+if (DUMP)
+    struct2File( simParamsStruct, dumpDir, simName);
+end
 
 %% Start Vectorization of Parameters Sets
 
