@@ -8,13 +8,6 @@ clc;
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
-
-CSV_CLU = 0;
-CSV_POS = 0;
-
-PLOT_POS = 0;
-PLOT_CLU= 0;
-
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 
 DUMPDIR = 'dump/';
@@ -76,8 +69,6 @@ cluster_speeds = cell(nIter,1);
 cluster_movs = cell(nIter,1);
 % Distance from truth at time t
 cluster_fromtruths = cell(nIter,1);
-
-
 
 for i = 1:nIter
     %avg speed

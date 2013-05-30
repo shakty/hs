@@ -8,7 +8,7 @@ function [ distances, groupCounts, avgGroupDist, avgGroupSpeed, avgGroupMove ] =
     avgGroupMove = zeros(nGroups,1);
 
     distances = zeros(size(posagents,2),1);
-
+    
     for j=1:size(posagents,2)
        distances(j) = norm(posagents(:,j)-truth);
        groupId = T(j);
