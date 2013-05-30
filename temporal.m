@@ -36,8 +36,12 @@ pos = dump.agents;
 nIter = size(v,3);
 % average velocity of agents at time t
 avgspeeds = zeros(1,nIter);
-% average distance in space from position at time t-1
+
+% vector of movements of agents at time t
+movs = zeros(size(pos,2),1);
+% average movement from position at time t-1
 avgmovs = zeros(1,nIter);
+
 % average share of space occupied by agents at time t
 avgcoverage = zeros(1,nIter);
 % cumulative share of space explored by agents at time t
@@ -49,12 +53,39 @@ cum_coverage_matrix = zeros(PRECISION, PRECISION, 3);
 % cumulative occupation of each cell of the grid at time t
 coverage_matrix = zeros(PRECISION, PRECISION, 3);
 
+% Counts the number of clusters
+cluster_count = zeros(1,nIter);              
+% Average cluster size
+mean_cluster_size = zeros(1,nIter);          
+% Standard deviations of the size of clusters
+sd_cluster_size = zeros(1,nIter);          	
+% Average distance from truth
+mean_from_truth = zeros(1, nIter);    
+% Standard deviation of distance from truth
+sd_from_truth = zeros(1, nIter);    
+
+
+% Following cell arrays containing vector of variable length at each iteration
+
+% Size of the clusters at time t
+cluster_sizes = cell(nIter,1);
+% Speed of clusters at time t
+cluster_speeds = cell(nIter,1);
+% Spatial displacement of the cluster compared with time t-1
+% It is the average displacement of the agents within in
+cluster_movs = cell(nIter,1);
+% Distance from truth at time t
+cluster_fromtruths = cell(nIter,1);
+
+
+
 for i = 1:nIter
     %avg speed
     avgspeeds(i) = mean(colnorm(v(:,:,i),2));
     % avg movement
     if (i>1)
-        avgmovs(i) = mean(mean(abs(pos(:,:,i)-pos(:,:,i-1))));
+        movs = abs(pos(:,:,i)-pos(:,:,i-1));
+        avgmovs(i) = mean(mean(movs));
     end
     
     %avg share of space
@@ -69,7 +100,26 @@ for i = 1:nIter
     end
     cumcoverage(i) = nnz(cum_coverage_matrix(:,:,i)) / TOTAL_CELLS;
     
+    % Z the results of HCLUST 
+    % T the cluster of each agent
+    % C the number of clusters
+    [Z, T, C] = clusterize(pos(:,:,i));
+    cluster_count(i) = C;
+
+    [d, Gc, AvgGDist, avgGroupSpeed, avgGroupMove] = cluster_stats(T, dump.truth, pos(:,:,i), v(:,:,i), movs);
+
+    mean_cluster_size(i) = mean(Gc);
+    sd_cluster_size(i) = std(Gc);
+    mean_from_truth(i) = mean(AvgGDist);
+    sd_from_truth(i) = std(AvgGDist);
+    
+    cluster_sizes{i} = Gc;
+    cluster_fromtruths{i} = AvgGDist;
+    cluster_speeds{i} = avgGroupSpeed;
+    cluster_movs{i} = avgGroupMove;
+    
 end
+
 
 hold on
 %plot(1:nIter, avgspeeds, 'r')
@@ -104,7 +154,7 @@ for i = 1:length(fileIndex)
     roundsIdx = [1:(1 /dump.parameters.dt):length(dump.agents)];
     rounds = dump.agents(:,:,roundsIdx);
 
-    nRounds = size(rounds,3);
+    nIter = size(rounds,3);
 
     if (CSV_CLU || CSV_POS)
         param_string = csv_format_row_params(simName, simnameidx, dump.run, mytimestamp, dump.parameters, dump.truth, dump.conv);
@@ -113,24 +163,24 @@ for i = 1:length(fileIndex)
     end
 
 
-    Ccount = zeros(1,nRounds);              % Counts the number of clusters
-    Csize_mean = zeros(1,nRounds);          % Average cluster size
-    Csize_sd = zeros(1,nRounds);          	% Standard deviations of the size of clusters
+    cluster_count = zeros(1,nIter);              % Counts the number of clusters
+    mean_cluster_size = zeros(1,nIter);          % Average cluster size
+    sd_cluster_size = zeros(1,nIter);          	% Standard deviations of the size of clusters
 
-    Cfromtruth_mean = zeros(1, nRounds);    % Average distance from truth
-    Cfromtruth_sd = zeros(1, nRounds);      % Standard deviation of distance from truth
+    mean_from_truth = zeros(1, nIter);    % Average distance from truth
+    sd_from_truth = zeros(1, nIter);      % Standard deviation of distance from truth
 
     % Vectors variable length
-    % Csize = zeros(1, nRounds);            % Vector of the size of clusters
-    % Cfromtruth = zeros(1, nRounds);       % 
+    % Csize = zeros(1, nIter);            % Vector of the size of clusters
+    % Cfromtruth = zeros(1, nIter);       % 
 
-    for z=1:nRounds
+    for z=1:nIter
 
-       agentpos = rounds(:,:,z);
+       pos = rounds(:,:,z);
 
        if (PLOT_POS)
             hold on;
-            plot(agentpos(1,:),agentpos(2,:),'rx');
+            plot(pos(1,:),pos(2,:),'rx');
             plot(dump.truth(1),dump.truth(2),'go');
             xlim([0,1])
             ylim([0,1])
@@ -138,20 +188,20 @@ for i = 1:length(fileIndex)
             pause(0.1)
        end
 
-       [Z, T, C] = clusterize(agentpos);
-       Ccount(1,z) = C;
+       [Z, T, C] = clusterize(pos);
+       cluster_count(1,z) = C;
 
-       [d, Gc, AvgGDist] = each_cluster_from_truth(T, dump.truth, agentpos);
+       [d, Gc, AvgGDist] = each_cluster_from_truth(T, dump.truth, pos);
 
-       Csize_mean(1,z) = mean(Gc);
-       Csize_sd(1,z) = std(Gc);
-       Cfromtruth_mean(1,z) = mean(AvgGDist);
-       Cfromtruth_sd(1,z) = std(AvgGDist);
+       mean_cluster_size(1,z) = mean(Gc);
+       sd_cluster_size(1,z) = std(Gc);
+       mean_from_truth(1,z) = mean(AvgGDist);
+       sd_from_truth(1,z) = std(AvgGDist);
 
 
        if (CSV_POS)
-            for id = 1:size(agentpos,2)         
-                clu_string = csv_format_row_clusters(simName, simnameidx, dump.run, z, id, agentpos(:,id));
+            for id = 1:size(pos,2)         
+                clu_string = csv_format_row_clusters(simName, simnameidx, dump.run, z, id, pos(:,id));
                 fprintf(fidClusters,'%s\n', clu_string);
             end
        end
@@ -159,8 +209,8 @@ for i = 1:length(fileIndex)
        if (CSV_CLU)
 
             clu_string = csv_format_row_clusters(simName, simnameidx, dump.run, z, ...
-                C, Csize_mean(1,z), Csize_sd(1,z), Cfromtruth_mean(1,z), ...
-                Cfromtruth_sd(1,z));
+                C, mean_cluster_size(1,z), sd_cluster_size(1,z), mean_from_truth(1,z), ...
+                sd_from_truth(1,z));
             fprintf(fidClusters,'%s\n', clu_string);
        end
 
@@ -169,15 +219,15 @@ for i = 1:length(fileIndex)
 
     if (PLOT_CLU)
         subplot(2,3,1);
-        plot([1:nRounds], Ccount);
+        plot([1:nIter], cluster_count);
         subplot(2,3,2);
-        plot([1:nRounds], Csize_mean);
+        plot([1:nIter], mean_cluster_size);
         subplot(2,3,3);
-        plot([1:nRounds], Csize_sd);
+        plot([1:nIter], sd_cluster_size);
         subplot(2,3,4);
-        plot([1:nRounds], Cfromtruth_mean);
+        plot([1:nIter], mean_from_truth);
         subplot(2,3,5);
-        plot([1:nRounds], Cfromtruth_sd);
+        plot([1:nIter], sd_from_truth);
         pause(0.5)
     end
 
