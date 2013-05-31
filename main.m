@@ -24,7 +24,6 @@ confDir = 'conf/';
 compLOCAL = 0;
 compPARALLEL = 1;
 compLSF = 2;
-COMPUTATION = compLOCAL;
 
 %% Loading Conf
 load([confDir 'refactor']);
@@ -33,7 +32,7 @@ load([confDir 'refactor']);
 VIDEO = 0;
 DUMP = 1;
 alphas = [0.1 0.5 0.9];
-
+COMPUTATION = compLSF;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir);
