@@ -1,5 +1,8 @@
 function param_sets_LSF (params)
 
+path(path,'util/'); % Help functions
+path(path,'lib/'); % Help functions
+
 parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
 TASKS4JOB = 20; % How many tasks group in one job
@@ -16,7 +19,8 @@ emails = 'sbalietti@ethz.ch';
 %submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
 submitArgs = ['-o ' logFolder '/' params.simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
-set(sched, 'DataLocation', [logFolder '/']);
+%set(sched, 'DataLocation', [logFolder '/']);
+set(sched, 'DataLocation', getenv('TMPDIR'));
 
 
 %jobName = genvarname(['j_' int2str(jobCount)]);
