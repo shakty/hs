@@ -71,6 +71,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         error('Invalid Directory Selected');
     end
 
+    validFilesCounter = 0;
+    
     % Date and Time
     mytimestamp = datestr ( datevec ( now ), 0 );
 
@@ -108,6 +110,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         if (~strcmpi(EXT,'.mat')) 
             continue;
         end
+        
+        validFilesCounter = validFilesCounter + 1;
 
         simnameidx = strfind(NAME, '-');
         simnameidx = NAME(1:simnameidx-1);
@@ -161,9 +165,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         % Standard deviations of the size of clusters
         sd_cluster_size = zeros(1,nIter);          	
         % Average distance from truth
-        mean_from_truth = zeros(1, nIter);    
+        mean_cluster_fromtruth = zeros(1, nIter);    
         % Standard deviation of distance from truth
-        sd_from_truth = zeros(1, nIter);    
+        sd_cluster_fromtruth = zeros(1, nIter);    
 
 
         % Following cell arrays containing vector of variable length at each iteration
@@ -209,8 +213,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
 
             mean_cluster_size(i) = mean(Gc);
             sd_cluster_size(i) = std(Gc);
-            mean_from_truth(i) = mean(AvgGDist);
-            sd_from_truth(i) = std(AvgGDist);
+            
+            mean_cluster_fromtruth(i) = mean(AvgGDist);
+            sd_cluster_fromtruth(i) = std(AvgGDist);
+            
             sd_cluster_speed(i) = std(avgGroupSpeed);
             sd_cluster_move(i) = std(avgGroupMove);
 
@@ -220,20 +226,72 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
             clusters_move{i} = avgGroupMove;
 
         end
+        
+        
+        
+        if (PLOTS)
+
+            subplot(2,3,1);
+            hold on
+            plot(1:nIter, avgcoverage, 'r')
+            plot(1:nIter, cumcoverage, 'b')
+            title('Avg and Cum coverage');
+            hold off
+
+            subplot(2,3,2);
+            hold on
+            plot(1:nIter, mean_cluster_speed, 'r')
+            plot(1:nIter, sd_cluster_speed, 'b')
+            title('Mean and Std cluster speed');
+            hold off
+
+            subplot(2,3,3);
+            hold on
+            plot(1:nIter, mean_cluster_move, 'r')
+            plot(1:nIter, sd_cluster_move, 'b')
+            title('Mean and Std cluster move');
+            hold off
+
+            subplot(2,3,4);
+            hold on
+            plot(1:nIter, cluster_count, 'g')
+            plot(1:nIter, mean_cluster_size, 'r')
+            plot(1:nIter, sd_cluster_size, 'b')
+            title('Cluster Count, Mean and Std Size');
+            hold off
+
+            subplot(2,3,5);
+            hold on
+            plot(1:nIter, mean_cluster_fromtruth, 'r')
+            plot(1:nIter, sd_cluster_fromtruth, 'b')
+            title('Mean and Std cluster from truth');
+            hold off
+
+            % Creating a string with the description of the parameters
+
+            paramString = format_sim_params_for_plot_display(simName, NAME, dump.parameters);
+
+
+
+            annotation('textbox', [0.7, 0.45, 0, 0], 'string', paramString, ...
+                'BackgroundColor', 'white', ...
+                'EdgeColor', 'black', ...
+                'LineStyle', '-' ...
+            );
+
+            waitforbuttonpress;
+
+        end
+        
 
     end
     
-    hold on
-    %plot(1:nIter, mean_cluster_speed, 'r')
-    %plot(1:nIter, mean_cluster_move, 'b')
-    plot(1:nIter, avgcoverage, 'g')
-    plot(1:nIter, cumcoverage, 'g')
-    hold off
+
 
 
 
     if (CSV_DUMP)
-        for z = 1:nIter                
+        for z = 1:validFilesCounter
             cluObj = struct(...
                  'name', simName, ...
                  'simnameidx', simnameidx(z), ...
@@ -248,8 +306,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
                  'cumcoverage', cumcoverage(z), ...
                  'mean_cluster_size', mean_cluster_size(z), ... 
                  'sd_cluster_size', sd_cluster_size(z), ... 
-                 'mean_from_truth', mean_from_truth(z), ... 
-                 'sd_from_truth', sd_from_truth(z), ...
+                 'mean_from_truth', mean_cluster_fromtruth(z), ... 
+                 'sd_from_truth', sd_cluster_fromtruth(z), ...
                  'clusters_sizes', clusters_size{z}, ...
                  'clusters_from_fromtruth', clusters_fromtruth{z}, ...
                  'clusters_speed', clusters_speed{z}, ...
@@ -272,8 +330,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
     if (CSV_DUMP)
     
         fclose(fidParam);
-        fclose(fidCorr);
-        fclose(fidClusters);
+        fclose(fidClustersMacro);
+        fclose(fidClustersMicro);
     end
 end
 
