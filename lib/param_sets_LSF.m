@@ -10,7 +10,7 @@ mkdir(logFolder); % The name is unique under the dump directory.
 dumpFolder = [ params.dumpDir params.simName];
 
 sched = findResource('scheduler','type','lsf');
-sched = findResource('scheduler','type','BrutusLSF8h');
+%sched=parcluster('BrutusLSF8h');
 emails = 'sbalietti@ethz.ch';
 %submitArgs = ['-o ' logFolder '/' simName '.log -u ' emails];
 %submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
@@ -19,8 +19,10 @@ set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);
 
 
-jobName = genvarname(['j_' int2str(jobCount)]);
-eval([jobName '= createJob(sched)']);
+%jobName = genvarname(['j_' int2str(jobCount)]);
+%eval([jobName '= createJob(sched)']);
+j = createJob(sched);
+
 jobCount = jobCount + 1;
 
 nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_space_sizes,2)*...
@@ -152,17 +154,19 @@ for i1=1:size(params.dts)
                 'attrtype', attrtype ...
             );
             
-            createTask(eval(jobName), @simulation, 0, {paramsObj});
-
+            %createTask(eval(jobName), @simulation, 0, {paramsObj});
+						createTask(j, @simulation, 0, {paramsObj});
 
            % Submit the job to the scheduler if a sufficient number of task
            % is reached
            if (mod(simCount,TASKS4JOB)==0)
-               submit(eval(jobName))
+              %submit(eval(jobName)) 
+							submit(j);
 
                if (simCount ~= nCombinations)
-                   jobName = genvarname(['j_' int2str(jobCount)]);
-                   eval([jobName '= createJob(sched)']);
+                   %jobName = genvarname(['j_' int2str(jobCount)]);
+                   %eval([jobName '= createJob(sched)']);
+									 j = createJob(sched); 
                    jobCount = jobCount + 1;
                    %[jobName,jobCount] = createJobName(jobCount);
                end
@@ -195,7 +199,8 @@ end
 
 % Submit the left-over tasks
 if (mod(simCount,TASKS4JOB) ~= 1) % 1: it has always one last increment
-    submit(eval(jobName))
+    %submit(eval(jobName))
+		submit(j);
 end
 
 
