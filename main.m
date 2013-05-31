@@ -32,7 +32,7 @@ load([confDir 'refactor']);
 %% Modifying params locally
 VIDEO = 0;
 DUMP = 1;
-%truths = [ 0 1 3 ; 0 1 3 ];
+alphas = [0.1 0.5 0.9];
 
 
 %% Creating simName and Struct

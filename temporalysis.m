@@ -22,7 +22,7 @@ CSV_DUMP = 1;
 PLOTS = 0;
 
 DUMPDIR = 'dump/refactor/';
-simName = 'refactor-2013-5-29-14-52';
+simName = 'refactor-2013-5-31-12-26';
  
 temporal_analysis(DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS);
 

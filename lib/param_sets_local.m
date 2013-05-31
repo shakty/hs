@@ -70,7 +70,7 @@ for i1=1:size(params.dts)
         truth = params.truths(:,i16);
    
     for i17=1:size(params.attrtype,2)
-        attrtype = params.attrtype(:,i17)
+        attrtype = params.attrtype(:,i17);
         
     for i18=1:size(params.noisetype,2)
         noisetype = params.noisetype(:,i18);        
