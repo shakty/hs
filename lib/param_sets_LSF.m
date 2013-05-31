@@ -1,5 +1,7 @@
 function param_sets_LSF (params)
 
+parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
+
 TASKS4JOB = 20; % How many tasks group in one job
 jobCount = 1;
 
@@ -8,6 +10,7 @@ mkdir(logFolder); % The name is unique under the dump directory.
 dumpFolder = [ params.dumpDir params.simName];
 
 sched = findResource('scheduler','type','lsf');
+sched = findResource('scheduler','type','BrutusLSF8h');
 emails = 'sbalietti@ethz.ch';
 %submitArgs = ['-o ' logFolder '/' simName '.log -u ' emails];
 %submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
