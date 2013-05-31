@@ -71,14 +71,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         error('Invalid Directory Selected');
     end
 
-    validFilesCounter = 0;
+    summaryObj = {};
     
     % Date and Time
     mytimestamp = datestr ( datevec ( now ), 0 );
-
-    % this can be longer than needed, but does not matter
-    simnameidxs = zeros(length(fileIndex),1);
-    runs = zeros(length(fileIndex),1);
     
     if (CSV_DUMP)
 
@@ -110,16 +106,14 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         if (~strcmpi(EXT,'.mat')) 
             continue;
         end
-        
-        validFilesCounter = validFilesCounter + 1;
 
         simnameidx = strfind(NAME, '-');
         simnameidx = NAME(1:simnameidx-1);
-        simnameidxs(f) = simnameidx;
+        
         
         load(fileName);
         
-        runs(f) = dump.run;
+        
         
         %dump.parameters
         
@@ -228,6 +222,27 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         end
         
         
+        summaryObj{f} = struct(...
+             'simnameidx', simnameidx, ...
+             'run', dump.run, ...
+             'mean_cluster_speed', mean_cluster_speed, ...
+             'mean_cluster_move', mean_cluster_move, ...
+             'sd_cluster_move', sd_cluster_move, ...
+             'sd_cluster_speed', sd_cluster_speed, ...
+             'cluster_count', cluster_count, ...
+             'avgcoverage', avgcoverage, ...
+             'cumcoverage', cumcoverage, ...
+             'mean_cluster_size', mean_cluster_size, ... 
+             'sd_cluster_size', sd_cluster_size, ... 
+             'mean_from_truth', mean_cluster_fromtruth, ... 
+             'sd_from_truth', sd_cluster_fromtruth, ...
+             'clusters_size', clusters_size, ...
+             'clusters_fromtruth', clusters_fromtruth, ...
+             'clusters_speed', clusters_speed, ...
+             'clusters_move', clusters_move ...
+        );
+        
+        
         
         if (PLOTS)
 
@@ -280,49 +295,57 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
             );
 
             waitforbuttonpress;
+            
+            
+            figure();
+            
+            subplot(2,3,1);
+            hold on
+            for z=1:nIter
+                plot(clusters_size{z}, clusters_speed{z}, 'rx');
+            end
+            hold off
+            title('Cluster size vs speed');
+            
+            subplot(2,3,2);
+            hold on
+            for z=1:nIter
+                plot(clusters_size{z}, clusters_fromtruth{z}, 'rx');
+            end
+            hold off
+            title('Cluster size vs fromtruth');
+
+            subplot(2,3,3);
+            hold on
+            for z=1:nIter
+                 plot(clusters_size{z}, clusters_move{z}, 'rx');
+            end
+            hold off
+            title('Cluster size vs move');
+             
+            waitforbuttonpress;
 
         end
         
-
     end
     
 
-
-
-
     if (CSV_DUMP)
-        for z = 1:validFilesCounter
-            cluObj = struct(...
-                 'name', simName, ...
-                 'simnameidx', simnameidx(z), ...
-                 'run', runs(z), ...
-                 't', z, ...
-                 'mean_cluster_speed', mean_cluster_speed(z), ...
-                 'mean_cluster_move', mean_cluster_move(z), ...
-                 'sd_cluster_move', sd_cluster_move(z), ...
-                 'sd_cluster_speed', sd_cluster_speed(z), ...
-                 'cluster_count', cluster_count(z), ...
-                 'avgcoverage', avgcoverage(z), ...
-                 'cumcoverage', cumcoverage(z), ...
-                 'mean_cluster_size', mean_cluster_size(z), ... 
-                 'sd_cluster_size', sd_cluster_size(z), ... 
-                 'mean_from_truth', mean_cluster_fromtruth(z), ... 
-                 'sd_from_truth', sd_cluster_fromtruth(z), ...
-                 'clusters_sizes', clusters_size{z}, ...
-                 'clusters_from_fromtruth', clusters_fromtruth{z}, ...
-                 'clusters_speed', clusters_speed{z}, ...
-                 'clusters_move', clusters_move{z} ...
-            );
+        for f = 1:length(summaryObj)
+            
+            simData = summaryObj{f};
+            
+            for z = 1:nIter
+                stepData = simData(z);
+                % 1 Line
+                clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
+                fprintf(fidClustersMacro,'%s\n', clu_macro_string);
 
-            clu_macro_string = csv_format_row_clusters_macro(cluObj);
-            fprintf(fidClustersMacro,'%s\n', clu_macro_string);
-            
-            
-            for k = 1:length(clusters_size(z))
-                clu_micro_string = csv_format_row_clusters_macro(cluObj); 
-                fprintf(fidClustersMicro,'%s\n', clu_micro_string);
+                % Multiple Lines
+                clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z); 
+                fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
+                
             end
-            
             
         end
     end

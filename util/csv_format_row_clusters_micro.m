@@ -1,10 +1,12 @@
-function [ row ] = csv_format_row_clusters_micro( obj)
+function [ row ] = csv_format_row_clusters_micro(stepData, simname, t)
     
-    for i=1:length(obj.clusters_speed)
-        row = [ '"' obj.name '","' obj.nameidx '","'  num2str(obj.run) '",' num2str(obj.t) ] ;
-        row = [row, '","' num2str(obj.size(i)), '","' num2str(obj.speed(i)) ];
-        row = [row, '","' num2str(obj.move(i)), '","' num2str(obj.fromtruth(i)) ];
+    for i=1:length(stepData.clusters_speed)
+        row = [ '"' simname '","' stepData.simnameidx '","'  num2str(stepData.run) '",' num2str(t) ] ;
+        row = [row, '","' num2str(stepData.clusters_size(i)), '","' num2str(stepData.clusters_speed(i)) ];
+        row = [row, '","' num2str(stepData.clusters_move(i)), '","' num2str(stepData.clusters_fromtruth(i)) '"' ];
     end
+
+   
     
 end
 
