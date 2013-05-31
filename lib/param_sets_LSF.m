@@ -149,7 +149,7 @@ for i1=1:size(params.dts)
                 'attrtype', attrtype ...
             );
             
-            createTask(eval(jobName), @simulation, 0, paramsObj);
+            createTask(eval(jobName), @simulation, 0, {paramsObj});
 
 
            % Submit the job to the scheduler if a sufficient number of task
