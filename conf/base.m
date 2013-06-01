@@ -5,21 +5,15 @@
 % GLOBAL Conf
 
 %simName = 'thmiddle_av1_nv_seqrnd_attrK_tau.1';
-simName = 'refactor';
+simName = 'attrNormMiddle_nv_rndseq_av1_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
-dumpDir = 'dump/refactor/'; % dump
 
 
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
 DUMP_RATE = 10; % Dump every x steps
-COMPUTATION = 0; % 0-local, 1-parallel, 2-LSF
-
-% NOISE TYPES
-noise_on_p = 0;
-noise_on_v = 1;
-noise_adaptive_on_v = 2;
+COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 %%%%%%%%%%%%%
 
@@ -46,8 +40,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.8];       	% weighting of velocity terms
-Rs     = [0.08];       	% cut-off radius
+alphas = [0:01:1];       	% weighting of velocity terms
+Rs     = [0:01:03];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -64,10 +58,10 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [0.1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0.1];       	% Std. deviation of white noise term
+sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0.1];     	% Scaling factor for initial (random) velocities
+vScalings = [1];     	% Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions
@@ -88,7 +82,7 @@ truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 truths = [0.5; 0.5];
 
 
-% BOUNDARY CONDITIONS
+% BOUNDARY CONDITIONS (not used yet)
 bBounce = 0;
 bStop   = 1;
 bTorus  = 2;
@@ -103,14 +97,14 @@ attr_normal_middle = 3;
 attr_normal_closer_t = 4;
 attr_lognormal = 5;
 
-attrtype = attr_linear;
+attrtype = 3;
 
 % PLOT TYPE
 plot_cross = 0;
 plot_number = 1;
 plot_number_color = 1;
 
-plottype = plot_cross;;
+plottype = plot_cross;
 
 % SEED TYPE
 seed_fixed = 0;
@@ -118,6 +112,12 @@ seed_random = 1;
 
 seedtype = seed_fixed;
 
+% NOISE TYPES
+noise_on_p = 0;
+noise_on_v = 1;
+noise_adaptive_on_v = 2;
+
+noisetype = 1;
 
 % Saving all params
 save(simName);
@@ -128,7 +128,8 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(ideas_space_dims,2)*size(As,2)*size(Bs,2)*size(ks,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(sigmas,2)*size(vScalings,2)*size(nClusters,2)*...
-                size(clusterTightness,2)*size(truths,2);
+                size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
+                size(noisetype,2);
             
                 
             

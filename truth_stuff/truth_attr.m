@@ -62,12 +62,12 @@ d = 0.1;
 v = 0;
 d0 = 1;
 A = 1;
-score = v - A * (1 - exp( -d / d0))
+score = v - A * (1 - exp( -d / d0));
 
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 a = [0:0.05:1;0:0.05:1]
-truth = [0.5;0.5]
-n_agents = length(a)
+truth = [0.5;0.5];
+n_agents = length(a);
 tau = 0.1
 % NORMAL
 ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./4,0.1);
@@ -76,6 +76,9 @@ ths(a)
 % TRUTH Accelerating closer to Truth (LOG-NORMAL)
 ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*lognpdf(abs(repmat(truth,1,n_agents)-x),log(norm(truth)),1);
 ths(a)
+
+
+
 
 x = (10:1000:125010)';
 y = lognpdf(x,log(20000),1.0);
