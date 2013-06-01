@@ -1,5 +1,9 @@
 function conv = simulation (params)
 
+%% Add other directories to path
+path(path,'util/'); % Help functions
+path(path,'lib/'); % Help functions
+
 %params
 
 folderName = params.folderName;
@@ -40,6 +44,8 @@ if (params.seedtype == seed_fixed)
     RandStream.setGlobalStream(s);
 end
 
+
+
 %% Initializations and Definitions
 
 % Row-vector holding agents' positions.
@@ -47,8 +53,6 @@ end
 agents = initial_pos_clustered(nof_cluster,clusterTightness,n_agents,...
                                 ideas_space_size,ideas_space_dim);
 
-
-                            
 colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
   
 % Row-vector holding agents' velocities
@@ -130,7 +134,7 @@ end
 % Start Timer
 tStart = tic; 
 
-
+ 
 for t=0:dt:t_end                      
     
     %% Compute Total Attraction Force
@@ -330,7 +334,6 @@ if (DUMP)
     save(fileName,'dump');
     
 end
-
  
 toc(tStart);
 end

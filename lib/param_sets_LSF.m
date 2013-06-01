@@ -19,8 +19,7 @@ emails = 'sbalietti@ethz.ch';
 %submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
 submitArgs = ['-o ' logFolder '/' params.simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
-%set(sched, 'DataLocation', [logFolder '/']);
-set(sched, 'DataLocation', getenv('TMPDIR'));
+set(sched, 'DataLocation', [logFolder '/']);
 
 
 %jobName = genvarname(['j_' int2str(jobCount)]);
