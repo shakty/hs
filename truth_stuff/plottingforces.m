@@ -6,10 +6,11 @@ d0 = 1;
 A = 1;
 score = v - A * (1 - exp( -d / d0));
 
+DIAG = sqrt(2); 
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
-PRECISION = 0.001;
+PRECISION = 0.01;
 a = [0:PRECISION:1;0:PRECISION:1];
-truth = [0.5;0.5];
+truth = [0.1;0.1];
 n_agents = length(a);
 tau = 0.1;
 
@@ -37,6 +38,38 @@ lognorm = ths(a);
 %ths = @(x) exppdf(abs(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)))./tau);
 ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*exppdf(abs(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)))./tau);
 expo = ths(a);
+
+ %(sign(repmat(truth,1,n_agents)-x)) .* 
+
+
+ 
+% TRUTH Accelerating in the middle (NORMAL)
+ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),DIAG/8,0.1);
+normMid = ths(a);
+
+ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(normpdf(colnorm(repmat(truth,1,n_agents)-x,2),DIAG/8,0.1),2,1);
+normMid = ths(a);
+
+[X,Y] = meshgrid(a(1,:), a(1,:));
+Z = zeros(size(X));
+for i=1:length(X)
+    agents = [X(i,:) ; Y(i,:)];
+    forces = ths(agents);
+%     Z(i,:) = forces(1,:);
+    Z(i,:) = colnorm(forces,2);
+end
+contour(X,Y,Z)
+colorbar
+
+surface(X,Y,Z)
+
+mesh(X,Y,Z)
+
+return;
+
+vv = normpdf(colnorm(repmat(truth,1,n_agents)-a,2))
+%vv = normpdf(a(1,:));
+plot(1:length(vv),vv);
 
 % TRUTH Decaying logaritmically (EXP)
 ths = @(x) (repmat(truth,1,n_agents)-x).*exppdf(abs(repmat(truth,1,n_agents)-x),norm(truth));
@@ -67,24 +100,6 @@ lognorm = ths(a);
 
 lognorm = ths(a);
 
-X = a(1,:);
-Y = a(:,1);
-Z = ths(a);
-
-surf(X,Y,Z);
-
-x = reshape(X,length(X),length(X))';
-
-y = reshape(Y,5,5)';
-z = reshape(Z,5,5)';
-
-
-
-f = inline('y-((x- 0.5)/0.2)','x','y')
-[X,Y] = meshgrid(0:.01:1,0:20);
-Z = f(X,Y)
-surface(X,Y,Z)
-mesh(X,Y,Z)
 
 y = 1
 x = 1
@@ -125,11 +140,11 @@ figure
 hold on
 %plot(a, const(1,:), 'r');
 %plot(a, linear(1,:), 'k-')
-%plot(a, 15*normMid(1,:))
+plot(a, normMid(1,:))
 %plot(a, 15*normMoved(1,:))
 %plot(a, lognorm(1,:));
 %plot(a, 20*expo(1,:));
-plot(a, lognorm(1,:));
+%plot(a, lognorm(1,:));
 line(truth,[-1, 1]);
 line([0, 1],[0,0]);
 hold off

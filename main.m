@@ -33,7 +33,9 @@ VIDEO = 1;
 DUMP = 0;
 % alphas = [0.1 0.5 0.9];
 COMPUTATION = 0;
-
+attrtype = 3;
+alphas = 0.1;
+Rs = 0.07;
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir);
 

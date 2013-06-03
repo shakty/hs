@@ -9,6 +9,7 @@ path(path,'lib/'); % Help functions
 folderName = params.folderName;
 simCount = params.simCount;
 VIDEO = params.VIDEO;
+SHOW_POTENTIAL = 1; % params.SHOW_POTENTIAL;
 DEBUG = params.DEBUG;
 DUMP = params.DUMP;
 DUMP_RATE = params.DUMP_RATE;
@@ -23,7 +24,7 @@ B = params.B;
 k = params.k;
 d0 = params.d0;
 d1 = params.d1;
-alpha = params.alpha;
+alphaParam = params.alpha;
 tau = params.tau;
 R = params.R;
 sigma = params.sigma;
@@ -47,6 +48,7 @@ end
 
 
 %% Initializations and Definitions
+DIAG = norm([ideas_space_size;ideas_space_size]);
 
 % Row-vector holding agents' positions.
 % agents = ideas_space_size.*rand(ideas_space_dim,n_agents);
@@ -89,7 +91,8 @@ switch (params.attrtype)
     
     case attr_normal_middle
     % TRUTH Accelerating in the middle (NORMAL)
-    ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./2,0.1);
+    ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),DIAG/8,0.1),2,1);
+    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./2,0.1);
 
     case attr_normal_closer_t
     % TRUTH Accelerating in the middle (NORMAL) mean closer to TRUTH
@@ -116,8 +119,23 @@ df = @(agents,i,j) ( A*d(agents,i,j)^k * exp( -d(agents,i,j) / d0) - B*d(agents,
 if (VIDEO)
     fig1 = figure(1);
 
-    % Initial Positioning
     hold on
+    
+    % Showing the potential of the attraction to truth
+    if (SHOW_POTENTIAL)
+        PRECISION = 0.01;
+        a = [0:PRECISION:1;0:PRECISION:1];
+        [X,Y] = meshgrid(a(1,:), a(1,:));
+        Z = zeros(size(X));
+        for i=1:length(X)
+            potential_grid = [X(i,:) ; Y(i,:)];
+            forces = ths(potential_grid);
+            Z(i,:) = colnorm(forces,2);
+        end
+        contour(X,Y,Z);
+    end
+    
+    % Initial Positioning
     plot(agents(1,:),agents(2,:),'rx');
     plot(truth(1),truth(2),'go');
     hold off
@@ -174,7 +192,7 @@ for t=0:dt:t_end
         % If not the agent continuous his search undisturbed
         if (nnz(agents_in_cutoff) ~=0) 
             average_velocity=(v*(agents_in_cutoff)') ./ nnz(agents_in_cutoff);  
-            v(:,i) = alpha * v(:,i) + (1-alpha) * average_velocity;   
+            v(:,i) = alphaParam * v(:,i) + (1-alphaParam) * average_velocity;   
         end
        
         
@@ -260,7 +278,14 @@ for t=0:dt:t_end
 
         end
         hold on;
+        
+        if (SHOW_POTENTIAL)
+            [C, h] = contour(X,Y,Z);
+            alpha(.5);
+        end
+        
         plot(truth(1),truth(2),'go');
+        
         hold off;
             
         xlim([0 ideas_space_size]);
