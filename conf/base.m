@@ -102,7 +102,8 @@ attrtype = 3;
 % PLOT TYPE
 plot_cross = 0;
 plot_number = 1;
-plot_number_color = 1;
+plot_number_color = 2;
+plot_arrow = 3;
 
 plottype = plot_cross;
 

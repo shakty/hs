@@ -10,7 +10,9 @@ DIAG = sqrt(2);
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 PRECISION = 0.01;
 a = [0:PRECISION:1;0:PRECISION:1];
-truth = [0.1;0.1];
+truth = [0.5;0.5];
+%truth = [0.1;0.1];
+
 n_agents = length(a);
 tau = 0.1;
 
@@ -21,6 +23,11 @@ const = ths(a);
 % TRUTH Linear
 ths = @(x) (repmat(truth,1,n_agents)-x)./tau;
 linear = ths(a);
+
+% TRUTH Accelerating till the truth (NORMAL)
+ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth),0.1);
+normMid = ths(a);
+
 
 % TRUTH Accelerating in the middle (NORMAL)
 ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./2,0.1);
@@ -43,27 +50,65 @@ expo = ths(a);
 
 
  
-% TRUTH Accelerating in the middle (NORMAL)
-ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),DIAG/8,0.1);
+
+ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(normpdf(colnorm(repmat(truth,1,n_agents)-x,2),norm(truth),1),2,1);
 normMid = ths(a);
 
-ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(normpdf(colnorm(repmat(truth,1,n_agents)-x,2),DIAG/8,0.1),2,1);
+ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(normpdf(colnorm(repmat(truth,1,n_agents)-x,2),0.01,0.1),2,1);
 normMid = ths(a);
 
-[X,Y] = meshgrid(a(1,:), a(1,:));
-Z = zeros(size(X));
-for i=1:length(X)
-    agents = [X(i,:) ; Y(i,:)];
-    forces = ths(agents);
-%     Z(i,:) = forces(1,:);
-    Z(i,:) = colnorm(forces,2);
+% TRUTH Accelerating closer to Truth (LOG-NORMAL)
+ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),log(norm(truth)),1),2,1);
+lognorm = ths(a);
+
+% % TRUTH Decaying exponentially (EXP)
+% ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(exppdf(colnorm(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)),2)),2,1);
+% expo = ths(a);
+
+
+for SIGMA=0.1:0.1:20
+
+    for POS=1:20
+        % TRUTH Accelerating in the middle (NORMAL)
+        %ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),(DIAG -norm(truth))/POS,SIGMA);
+        
+        % LOGNORMAL
+        %ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+        
+        %ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),norm(truth),SIGMA),2,1);
+        
+        % MOVED NORMAL
+        ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),(DIAG -norm(truth))/POS,SIGMA);
+        
+        % EXP
+        %ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(exppdf(colnorm(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)),2),SIGMA),2,1);
+
+
+        [X,Y] = meshgrid(a(1,:), a(1,:));
+        Z = zeros(size(X));
+        for i=1:length(X)
+            agents = [X(i,:) ; Y(i,:)];
+            forces = ths(agents);
+        %     Z(i,:) = forces(1,:);
+            Z(i,:) = colnorm(forces,2);
+        end
+        
+        mesh(X,Y,Z);
+        hold on
+        plot(truth(1), truth(2),'rx');
+        hold off
+        title(['pos: ' num2str(POS) ', sigma: ' num2str(SIGMA)]);
+        input('Enter to next plot')
+    end
 end
+return;
+
 contour(X,Y,Z)
 colorbar
 
 surface(X,Y,Z)
 
-mesh(X,Y,Z)
+
 
 return;
 

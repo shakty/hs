@@ -66,7 +66,9 @@ colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 % PLOT TYPE
 plot_cross = 0;
 plot_number = 1;
-plot_number_color = 1;
+plot_number_color = 2;
+plot_arrow = 3;
+
 
 % Attraction to truth force type
 attr_zero = 0;
@@ -87,20 +89,27 @@ switch (params.attrtype)
 
     case attr_linear
     % TRUTH Linear
-    ths = @(x) (repmat(truth,1,n_agents)-x)./tau;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau;
     
     case attr_normal_middle
     % TRUTH Accelerating in the middle (NORMAL)
-    ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),DIAG/8,0.1),2,1);
     %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./2,0.1);
-
+    ths = @(x) (repmat(truth,1,length(x))-x) .* repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2), DIAG/8,0.1),2,1);
+    
     case attr_normal_closer_t
     % TRUTH Accelerating in the middle (NORMAL) mean closer to TRUTH
-    ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./3,0.1);
+    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./3,0.1);
+    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),log(norm(truth)),1),2,1);
 
+    
     case attr_lognormal
     % TRUTH Accelerating closer to Truth (LOG-NORMAL)
-    ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*lognpdf(abs(repmat(truth,1,n_agents)-x),log(norm(truth)),1);
+    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*lognpdf(abs(repmat(truth,1,n_agents)-x),log(norm(truth)),1);
+    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),log(norm(truth)),1),2,1);
+
+    % TRUTH Decaying exponentially (EXP)
+    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(exppdf(colnorm(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)),2)),2,1);
+
 end
 
 % NOISE TYPES
@@ -122,7 +131,7 @@ if (VIDEO)
     hold on
     
     % Showing the potential of the attraction to truth
-    if (SHOW_POTENTIAL)
+    if (SHOW_POTENTIAL && params.attrtype > 1)
         PRECISION = 0.01;
         a = [0:PRECISION:1;0:PRECISION:1];
         [X,Y] = meshgrid(a(1,:), a(1,:));
@@ -212,23 +221,12 @@ for t=0:dt:t_end
     
     %% Boundary Conditions: reflecting from the walls
     for n=1:n_agents
-    	for m=1:ideas_space_dim 
-            %if (agents(m,n)<=0 || agents(m,n)>=ideas_space_size)
-            %   v(m,n)=-v(m,n);
-            %end
-            if (agents(m,n) <= 0)
-                %agents(m,n)=0;     %ugly but effective. Is this okay?
-                
-                % Important Difference!!! whether Bouncing or Zero v
-                %v(m,n)=0;
+        for m=1:ideas_space_dim 
+            
+            if (agents(m,n) <= 0)    
                 v(m,n)=abs(v(m,n)); %avoid wrong resetting when not yet returned
-            end
-            % STE: was else if
-            if (agents(m,n) >= ideas_space_size)
-                %agents(m,n)=ideas_space_size;
-
-                % Important Difference!!! whether Bouncing or Zero v
-                %v(m,n)=0;
+            
+            elseif (agents(m,n) >= ideas_space_size)
                 v(m,n)=-abs(v(m,n));
             end
         end
@@ -275,11 +273,16 @@ for t=0:dt:t_end
             % PLOT COLORED NUMBERS
             points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
             text(agents(1,:),agents(2,:), points');
+            
+            case plot_arrow
+            % PLOT VELOCITY ARROWS
+            quiver(agents(1,:),agents(2,:),v(1,:),v(2,:));
+            
 
         end
         hold on;
         
-        if (SHOW_POTENTIAL)
+        if (SHOW_POTENTIAL && params.attrtype > 1)
             [C, h] = contour(X,Y,Z);
             alpha(.5);
         end
@@ -302,7 +305,8 @@ for t=0:dt:t_end
             legend(energy);
         end
         
-        pause(0.1);
+        pause(1);
+        
     end
     
     
