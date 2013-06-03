@@ -32,6 +32,7 @@ v_scaling = params.v_scaling;
 nof_cluster = params.nof_cluster;
 clusterTightness = params.clusterTightness;
 truth = params.truth;
+attrtype = params.attrtype;
 
 display('Starting...');
 
@@ -78,7 +79,7 @@ attr_normal_middle = 3;
 attr_normal_closer_t = 4;
 attr_lognormal = 5;
 
-switch (params.attrtype)
+switch (attrtype)
     case attr_zero
     % NO TRUTH
     ths = @(x) (zeros(2, n_agents));
@@ -131,7 +132,7 @@ if (VIDEO)
     hold on
     
     % Showing the potential of the attraction to truth
-    if (SHOW_POTENTIAL && params.attrtype > 1)
+    if (SHOW_POTENTIAL && attrtype > 1)
         PRECISION = 0.01;
         a = [0:PRECISION:1;0:PRECISION:1];
         [X,Y] = meshgrid(a(1,:), a(1,:));
@@ -282,7 +283,7 @@ for t=0:dt:t_end
         end
         hold on;
         
-        if (SHOW_POTENTIAL && params.attrtype > 1)
+        if (SHOW_POTENTIAL && attrtype > 1)
             [C, h] = contour(X,Y,Z);
             alpha(.5);
         end
