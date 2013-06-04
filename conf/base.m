@@ -4,8 +4,9 @@
 
 % GLOBAL Conf
 
-%simName = 'thmiddle_av1_nv_seqrnd_attrK_tau.1';
-simName = 'attrNormMiddle_nv_rndseq_av1_Rleft';
+% always av1
+% attr _ noise _ update _  truth _ parameter sweep
+simName = 'attrExpo_nv_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 
@@ -22,7 +23,7 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 nRuns = 1;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [10];          % running time
+t_ends = [20];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -40,8 +41,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0:01:1];       	% weighting of velocity terms
-Rs     = [0:01:03];       	% cut-off radius
+alphas = [0:0.01:1];       	% weighting of velocity terms
+Rs     = [0:0.01:0.3];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 

@@ -29,19 +29,19 @@ compLSF = 2;
 load([confDir 'attrNormMiddle_nv_rndseq_av1_Rleft']);
 
 %% Modifying params locally
-VIDEO = 0;
-DUMP = 1;
-% alphas = [0.1 0.5 0.9];
-COMPUTATION = 0;
-attrtype = 7;
-alphas = 0.1;
-Rs = 0.07;
-plottype = 3;
-vScalings = 2;
-%n_agents = 10;
-sigmas = 0.2;
-simName = 'test_t';
-dumpDir = 'dump/';
+% VIDEO = 0;
+% DUMP = 1;
+% % alphas = [0.1 0.5 0.9];
+% COMPUTATION = 0;
+% attrtype = 7;
+% alphas = 0.1;
+% Rs = 0.07;
+% plottype = 3;
+% vScalings = 2;
+% %n_agents = 10;
+% sigmas = [0, 0.1, 0.2];
+% simName = 'test_t';
+% dumpDir = 'dump/';
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir);

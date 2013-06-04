@@ -1,4 +1,4 @@
-function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
+function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS)
 
     
     %% Param
@@ -245,7 +245,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
         
         
         if (PLOTS)
-
+            
+            %figure;
+    
             subplot(2,3,1);
             hold on
             plot(1:nIter, avgcoverage, 'r')
@@ -297,28 +299,39 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS)
             waitforbuttonpress;
             
             
-            figure();
+            %figure;
+            
+            % Eliminating groups with only 1 agent
+            % The first iteration (t0) is removed, there is no influence among
+            % clusters 
+            valid_clusters_idx = cell(nIter-1);
             
             subplot(2,3,1);
             hold on
-            for z=1:nIter
-                plot(clusters_size{z}, clusters_speed{z}, 'rx');
+            for z=2:nIter
+                csizes = clusters_size{z};
+                idxs = find(csizes > CLU_CUTOFF);
+                valid_clusters_idx{z} = idxs;
+                
+                plot(clusters_size{z}(idxs), clusters_speed{z}(idxs), 'rx');
             end
             hold off
             title('Cluster size vs speed');
             
             subplot(2,3,2);
             hold on
-            for z=1:nIter
-                plot(clusters_size{z}, clusters_fromtruth{z}, 'rx');
+            for z=2:nIter
+                idxs = valid_clusters_idx{z};
+                plot(clusters_size{z}(idxs), clusters_fromtruth{z}(idxs), 'rx');
             end
             hold off
             title('Cluster size vs fromtruth');
 
             subplot(2,3,3);
             hold on
-            for z=1:nIter
-                 plot(clusters_size{z}, clusters_move{z}, 'rx');
+            for z=2:nIter
+                idxs = valid_clusters_idx{z};
+                plot(clusters_size{z}(idxs), clusters_move{z}(idxs), 'rx');
             end
             hold off
             title('Cluster size vs move');

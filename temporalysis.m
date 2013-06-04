@@ -16,16 +16,20 @@ set(0,'DefaultAxesFontSize', 14)
 set(0,'DefaultTextFontname', 'Times New Roman')
 set(0,'DefaultTextFontSize', 14)
 
+% The minimum size of a cluster to be included in the analysis
+CLU_CUTOFF = 10;
+% When computing the coverage we build a grid on top of the space of cell
+% size = PRECISION
 PRECISION = 100;
 
-CSV_DUMP = 1;
+CSV_DUMP = 0;
 PLOTS = 1;
 
 DUMPDIR = 'dump/';
 
-simName = 'test_t-2013-6-4-12-1/';
+simName = 'test_t-2013-6-4-12-14/';
  
-temporal_analysis(DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS);
+temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
 
 %%
 
