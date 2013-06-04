@@ -29,9 +29,11 @@ DUMPDIR = 'dump/';
 
 simName = 'test_t-2013-6-4-12-14/';
  
+%profile on
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
 toc
+%profile viewer
 %%
 
 
