@@ -18,8 +18,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         'size.avg', ...
         'size.sd', ...
         'fromtruth.avg', ...
-        'fromtruth.sd'};
-    
+        'fromtruth.sd' ...
+        };
+        
     headers_clusters_micro = {
         'simname', ...
         'simcount', ...
@@ -53,8 +54,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         'init.nclusters', ...
         'init.clusterradio', ...
         'truth.x', ...
-        'truth.y', ...
-        'conv'};
+        'truth.y' ...
+        };
     
     
     TOTAL_CELLS = PRECISION^2;
@@ -94,7 +95,6 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
 
     end
     
-
     % Load all parameters matrices in one
     for f = 1:length(fileIndex)
 
@@ -312,7 +312,6 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
                 csizes = clusters_size{z};
                 idxs = find(csizes > CLU_CUTOFF);
                 valid_clusters_idx{z} = idxs;
-                
                 plot(clusters_size{z}(idxs), clusters_speed{z}(idxs), 'rx');
             end
             hold off
@@ -342,6 +341,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         
     end
     
+    % Save summaryObj
+    save([dumpDir 'temporalysis.mat'], 'summaryObj');
+    
+    
 
     if (CSV_DUMP)
         for f = 1:length(summaryObj)
@@ -355,9 +358,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
 
                 % Multiple Lines
-                clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z); 
-                fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
-                
+                for i=1:length(stepData.clusters_speed)
+                    clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, i); 
+                    fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
+                end
             end
             
         end
@@ -369,6 +373,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         fclose(fidClustersMacro);
         fclose(fidClustersMicro);
     end
+    
+    
+    
 end
 
 %%
