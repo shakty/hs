@@ -19,11 +19,11 @@ set(0,'DefaultTextFontSize', 14)
 PRECISION = 100;
 
 CSV_DUMP = 1;
-PLOTS = 0;
+PLOTS = 1;
 
-DUMPDIR = 'dump/refactor/';
-simName = 'refactor-2013-5-31-12-26';
-simName = 'refactor-2013-6-1-12-13/';
+DUMPDIR = 'dump/';
+
+simName = 'test_t-2013-6-4-12-1/';
  
 temporal_analysis(DUMPDIR, simName, PRECISION, CSV_DUMP, PLOTS);
 

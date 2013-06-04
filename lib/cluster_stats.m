@@ -14,7 +14,7 @@ function [ distances, groupCounts, avgGroupDist, avgGroupSpeed, avgGroupMove ] =
        groupId = T(j);
        groupCounts(groupId) = groupCounts(groupId) + 1;
        avgGroupDist(groupId) = avgGroupDist(groupId) + distances(j);
-       avgGroupSpeed(groupId) = avgGroupSpeed(groupId) + v(j);
+       avgGroupSpeed(groupId) = avgGroupSpeed(groupId) + norm(v(j));
        avgGroupMove(groupId) = avgGroupMove(groupId) + movs(j);
     end
 
