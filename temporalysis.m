@@ -22,15 +22,16 @@ CLU_CUTOFF = 10;
 % size = PRECISION
 PRECISION = 100;
 
-CSV_DUMP = 0;
-PLOTS = 1;
+CSV_DUMP = 1;
+PLOTS = 0;
 
 DUMPDIR = 'dump/';
 
 simName = 'test_t-2013-6-4-12-14/';
  
+tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
-
+toc
 %%
 
 
