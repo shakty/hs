@@ -100,7 +100,7 @@ p.speed
 
 title = "Mean and std. agents movements"
 p.move <- ggplot(cl, aes(t))
-p.move <- p.truth + geom_jitter(aes(y = move.avg), alpha=.2)
+p.move <- p.move + geom_jitter(aes(y = move.avg), alpha=.2)
 p.move <- p.move + geom_smooth(aes(y = move.avg, colour="avg"), size=2)
 p.move <- p.move + geom_smooth(aes(y = move.sd, colour="sd"), size=2)
 p.move <- p.move + ggtitle(title) + xlab("Rounds") + ylab("Displacement")

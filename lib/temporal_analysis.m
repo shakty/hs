@@ -54,7 +54,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         'init.nclusters', ...
         'init.clusterradio', ...
         'truth.x', ...
-        'truth.y' ...
+        'truth.y', ...
+        'noisetype', ...
+        'attrtype' ...
         };
     
     
@@ -72,6 +74,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         error('Invalid Directory Selected');
     end
 
+    validFileIdx = 0;
     summaryObj = {};
     
     % Date and Time
@@ -103,7 +106,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
 
         % We load only .mat
         [PATH,NAME,EXT] = fileparts(fileName);
-        if (~strcmpi(EXT,'.mat')) 
+        if (~strcmpi(EXT,'.mat') || strcmp(NAME, 'temporalysis') == 1) 
             continue;
         end
 
@@ -112,8 +115,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         
         
         load(fileName);
-        
-        
+        validFileIdx = validFileIdx + 1;
         
         %dump.parameters
         
@@ -222,7 +224,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         end
         
         
-        summaryObj{f} = struct(...
+        summaryObj{validFileIdx} = struct(...
              'simnameidx', simnameidx, ...
              'run', dump.run, ...
              'mean_cluster_speed', mean_cluster_speed, ...
@@ -339,17 +341,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
 
         end
         
-    end
-    
-    % Save summaryObj
-    save([dumpDir 'temporalysis.mat'], 'summaryObj');
-    
-    
-
-    if (CSV_DUMP)
-        for f = 1:length(summaryObj)
+        
+        if (CSV_DUMP)
             
-            simData = summaryObj{f};
+            simData = summaryObj{validFileIdx};
             
             for z = 1:nIter
                 stepData = simData(z);
@@ -365,7 +360,34 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
             end
             
         end
+        
     end
+    
+    % Save summaryObj
+    save([dumpDir 'temporalysis.mat'], 'summaryObj');
+    
+    
+
+%     if (CSV_DUMP)
+%         for f = 1:length(summaryObj)
+%             
+%             simData = summaryObj{f};
+%             
+%             for z = 1:nIter
+%                 stepData = simData(z);
+%                 % 1 Line
+%                 clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
+%                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
+% 
+%                 % Multiple Lines
+%                 for i=1:length(stepData.clusters_speed)
+%                     clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, i); 
+%                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
+%                 end
+%             end
+%             
+%         end
+%     end
     
     if (CSV_DUMP)
     

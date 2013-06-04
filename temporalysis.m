@@ -29,8 +29,11 @@ DUMPDIR = 'dump/';
 
 simName = 'attrExpo_nv_rndseq_tm_Rleft/'; 
 
+%profile on
+tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
-
+toc
+%profile viewer
 %%
 
 
