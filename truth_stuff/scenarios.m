@@ -17,54 +17,99 @@ colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 PRECISION = 0.01;
 x = [0:PRECISION:1;0:PRECISION:1];
 
-truth = [0.5;0.5];
-truth = [0.1;0.1];
 
 tau = 0.1;
 
+truth = [0.5;0.5];
+truth = [0.1;0.1];
+
+
 % TRUTH Constant
-ths = @(x) (repmat(truth,1,length(x))-x).*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
-const = ths(x);
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
 
 % TRUTH Linear
 ths = @(x) (repmat(truth,1,length(x))-x)./tau;
-linear = ths(x);
 
 % TRUTH Decaying exponentially (EXP)
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);
-expo = ths(x);
+SIGMA = 1;
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);
 
-% TRUTH Accelerating in the middle (NORMAL)
-POS = 6; SIGMA = 0.4;
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-normMoved = ths(x);
+% Millean Arena (NORMAL)
+POS = 3; SIGMA = 0.05;
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
 
-% Accelerating close to the TRUTH
-POS = 3; SIGMA = 2;
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-normMoved = ths(x);
+% Hard to Find (NORMAL)
+POS = 100; SIGMA = 0.02;
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
 
-% SUPER-THIN Funnel to the Truth (LOG-NORMAL)
+% Wide Funnel to Truth (LOG-NORMAL)
 POS = 1; SIGMA = 3;
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-lognorm = ths(x);
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
  
-% THIN VULCANO (does it work with truth in the corner??)
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),0.01,0.1),2,1);
-normMid = ths(x);
-
-% LOGNORMAL
-ths = @(x) (repmat(truth,1,length(x))-x).*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+% Gentle Landing to truth
+POS = 0; SIGMA = 0.2;
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),0,0.2),2,1);
         
+
+str = 'Wide Funnel to Truth';
+tp = '_tm';
+h = figure;
+[X,Y] = meshgrid(x(1,:), x(1,:));
+Z = zeros(size(X));
+for i=1:length(X)
+    agents = [X(i,:) ; Y(i,:)];
+    forces = ths(agents);
+    Z(i,:) = colnorm(forces,2);
+end
+subplot(2,2,1:2);
+mesh(X,Y,Z);
+%colorbar;
+title('3D');
+subplot(2,2,3);
+contour(X,Y,Z);
+hold on
+plot(truth(1), truth(2),'rx');
+hold off
+title('2D');
+subplot(2,2,4);
+hold on
+line = ths(x);
+plot(x, line(1,:), 'b');
+hold on
+plot(truth(1), 0,'ro');
+hold off
+title('1D');
+%Adding suptitle
+suptitle(str);
+str = strrep(str, ' ', '_');
+saveas(h,[ 'scenarios/' str tp '.fig']);
+saveas(h,[ 'scenarios/' str tp '.png']);
+
+
+hold on
+cdfplot(abs(line(1,:)));
+hold off
+
+title(['pos: ' num2str(POS) ', sigma: ' num2str(SIGMA)]);
+
+
+prompt = 'Give a file name to save the image.';
+str = input(prompt,'s');
+if ~isempty(str)
+    saveas(h,[ 'scenarios/' str ]);
+end
+
+return;
+
+
+%%% To find parameters;
 
 for SIGMA=0.1:0.1:20
 
-    for POS=6:20
+    for POS=0.1:0.1:8
        
-        %POS = 6; SIGMA = 0.3;
-        ths = @(x) (repmat(truth,1,length(x))-x).*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-
-         
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+        
         [X,Y] = meshgrid(x(1,:), x(1,:));
         Z = zeros(size(X));
         for i=1:length(X)
@@ -72,8 +117,8 @@ for SIGMA=0.1:0.1:20
             forces = ths(agents);
             Z(i,:) = colnorm(forces,2);
         end
-        
         h = mesh(X,Y,Z);
+        
         hold on
         plot(truth(1), truth(2),'rx');
         hold off
