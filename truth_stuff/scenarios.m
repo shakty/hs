@@ -23,6 +23,8 @@ tau = 0.1;
 truth = [0.5;0.5];
 truth = [0.1;0.1];
 
+% Social Constructionism
+ths = @(x) (zeros(2, length(x)));
 
 % TRUTH Constant
 ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
@@ -51,8 +53,8 @@ POS = 0; SIGMA = 0.2;
 ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),0,0.2),2,1);
         
 
-str = 'Wide Funnel to Truth';
-tp = '_tm';
+str = 'Social Constructionism';
+tp = '';
 h = figure;
 [X,Y] = meshgrid(x(1,:), x(1,:));
 Z = zeros(size(X));

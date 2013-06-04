@@ -40,6 +40,7 @@ plottype = 3;
 vScalings = 10;
 n_agents = 10;
 sigmas = 0.2;
+
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir);
 

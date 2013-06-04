@@ -75,41 +75,50 @@ plot_arrow = 3;
 attr_zero = 0;
 attr_const = 1;
 attr_linear = 2;
-attr_normal_middle = 3;
-attr_normal_closer_t = 4;
-attr_lognormal = 5;
+attr_expo = 3;
+attr_millean_arena = 4;
+attr_hard_to_find = 5;
+attr_wide_funnel = 6;
+attr_gentle_landing = 7;
 
 switch (attrtype)
+    
     case attr_zero
     % NO TRUTH
     ths = @(x) (zeros(2, n_agents));
     
     case attr_const
     % TRUTH Constant
-    ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1));
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
 
     case attr_linear
     % TRUTH Linear
     ths = @(x) (repmat(truth,1,length(x))-x)./tau;
     
-    case attr_normal_middle
-    % TRUTH Accelerating in the middle (NORMAL)
-    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./2,0.1);
-    ths = @(x) (repmat(truth,1,length(x))-x) .* repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2), DIAG/8,0.1),2,1);
-    
-    case attr_normal_closer_t
-    % TRUTH Accelerating in the middle (NORMAL) mean closer to TRUTH
-    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*normpdf(abs(repmat(truth,1,n_agents)-x),norm(truth)./3,0.1);
-    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),log(norm(truth)),1),2,1);
-
-    
-    case attr_lognormal
-    % TRUTH Accelerating closer to Truth (LOG-NORMAL)
-    %ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1)).*lognpdf(abs(repmat(truth,1,n_agents)-x),log(norm(truth)),1);
-    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),log(norm(truth)),1),2,1);
-
+    case attr_expo
     % TRUTH Decaying exponentially (EXP)
-    ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(exppdf(colnorm(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)),2)),2,1);
+    SIGMA = 1;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);   
+    
+    case attr_millean_arena
+    % Millean Arena (NORMAL)
+    POS = 3; SIGMA = 0.05;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+    
+    case attr_hard_to_find
+    % Hard to Find (NORMAL)
+    POS = 100; SIGMA = 0.02;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+    
+    case attr_wide_funnel
+    % Wide Funnel to Truth (LOG-NORMAL)
+    POS = 1; SIGMA = 3;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+    
+    case attr_gentle_landing
+    % Gentle Landing to truth
+    POS = 0; SIGMA = 0.2;
+    ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),POS,SIGMA),2,1);   
 
 end
 
