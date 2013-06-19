@@ -2,8 +2,7 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 
-DIR = "test_t-2013-6-4-12-14/";
-
+DIR = "attrExpo_nv_rndseq_tm_Rleft"
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
