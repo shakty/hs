@@ -449,21 +449,28 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
                     ncol = cols, nrow = ceiling(numPlots/cols))
   }
 
+ 
+
  if (numPlots==1) {
     print(plots[[1]])
 
   } else {
     # Set up the page
     grid.newpage()
-    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+                
+    pushViewport(viewport(layout = grid.layout(nrow(layout)+1, ncol(layout))))
 
+    grid.text("title of this panel", vp = viewport(layout.pos.row = 1, ))
+ 
+    
     # Make each plot, in the correct location
     for (i in 1:numPlots) {
       # Get the i,j matrix positions of the regions that contain this subplot
       matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
 
-      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row + 1,
                                       layout.pos.col = matchidx$col))
     }
   }
+
 }

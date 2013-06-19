@@ -1,12 +1,13 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
+DIR = "test_t-2013-6-4-12-14"
 
-DIR = "test_t-2013-6-4-12-14/";
+#DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
-PATH = paste0(DUMPDIR,DIR)
+PATH = paste0(DUMPDIR,"/",DIR)
 setwd(PATH)
 IMGPATH <- paste0(PATH, "img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
@@ -67,8 +68,6 @@ p <- ggplot(clusters.micro.sub, aes(size, move))
 p <- p + geom_point()
 p
 
-nrow(a)
-
 # Cluster Macro in time
 
 cl <- clusters
@@ -79,7 +78,7 @@ p.count <- p.count + geom_jitter(aes(y = size.avg), alpha=.2)
 p.count <- p.count + geom_smooth(aes(y = count, colour="count"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.avg, colour="size"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.sd, colour="std. size"), size=2)
-p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents")
+p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
 p.count
 
 title = "Average and cumulative space exploration"
@@ -106,15 +105,19 @@ p.move <- p.move + geom_smooth(aes(y = move.sd, colour="sd"), size=2)
 p.move <- p.move + ggtitle(title) + xlab("Rounds") + ylab("Displacement")
 p.move
 
-title = "Mean and std. agents distance from truth"
+title = "Mean and std. distance from truth"
 p.truth <- ggplot(cl, aes(t))
 p.truth <- p.truth + geom_jitter(aes(y = fromtruth.avg), alpha=.2)
 p.truth <- p.truth + geom_smooth(aes(y = fromtruth.avg, colour="avg"), size=2)
 p.truth <- p.truth + geom_smooth(aes(y = fromtruth.sd, colour="sd"), size=2)
 p.truth <- p.truth + ggtitle(title) + xlab("Rounds") + ylab("Distance")
-p.truth
+print(p.truth)
 
-multiplot(p.explo, p.count, p.speed, p.move, p.truth, cols=3)
+jpeg(paste0(IMGPATH, "mycoolplot.jpeg"), width=800, height=480)
+p <- grid.arrange(p.count, p.explo, p.speed, p.truth, p.move, ncol=3,
+            main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+dev.off()
+
 
 # START
 
@@ -178,156 +181,3 @@ p
 
 
 ### End
-
-
-
-clu2 <- clu
-clu2$init.vscaling <- as.numeric(clu2$init.vscaling)
-clu2$tau <- as.numeric(clu2$tau)
-clu2$t <- as.numeric(clu2$t)
-clu2$alpha <- as.numeric(clu2$alpha)
-clu2$R <- as.numeric(clu2$R)
-clu2$run <- as.numeric(clu2$run)
-clu2$simcount <- as.numeric(clu2$simcount)
-
-
-cluB <- clu2[clu2$alpha == 0.1 | clu2$alpha == 0.2 | clu2$alpha == 0.05,]
-
-plot.ts(cluB$t, cluB$fromtruth.avg)
-
-
-
-
-cluB <- clu2[clu2$t == 31 & clu2$run==1 & clu2$alpha == 0.2,]
-
-plot(cluB$R, cluB$fromtruth.avg)
-
-heatmap2by2Detail("R","alpha", data=cluB)
-
-# Spinning 3d Scatterplot
-library(rgl)
-
-plot3d(clu$init.vscaling, clu$t, clu$count, col="red", size=3) 
-plot3d(clu$init.vscaling, clu$t, clu$fromtruth.avg, col="red", size=3) 
-
-
-plot3d(clu2$R, clu2$alpha, clu2$count, col="red", size=3)
-
-plot3d(clu2$R, clu2$alpha, clu2$fromtruth.avg, col="red", size=3) 
-
-
-scatter3d(clu2$R, clu2$fromtruth.avg, clu2$alpha)
-
-scatter3d(cluB$R, cluB$fromtruth.avg, cluB$alpha) 
-
-
-scatter3d(clu2$init.vscaling, clu2$fromtruth.avg, clu2$tau) 
-
-## JUST FOR A FEW POINTS
-s3d <-scatterplot3d(clu2$init.vscaling, clu2$tau, clu2$fromtruth.avg, highlight.3d=TRUE,
-type="h", main="3D Scatterplot")
-fit <- lm(fromtruth.avg ~ tau+init.vscaling, data=clu2)
-s3d$plane3d(fit)
-##
-
-                    
-plotTS2by2("init.vscaling", "R")
-
-boxplot2by2("init.vscaling")
-
-boxplot(clu$fromtruth.avg ~ clu$init.vscaling)
-
-boxplot(clu$count ~ clu$init.vscaling)
-
-boxplot(clu$size.avg ~ clu$init.vscaling)
-
-clu0 <- clu[clu$alpha == 0,]
-
-
-
-
-# when B fucks it up
-clu <- clu[clu$B == 0,]
-
-
-
-
-
-
-
-cluB <- clu[clu$B != 0,]
-
-R <- summarySE(clu, c("fromtruth.avg"), c("R","sigma"))
-
-sort(R,partial=c(4))
-
-v1="R"
-v2="alpha"
-
-v3="R"
-v4="alpha"
-
-facetFormula <- as.formula(sprintf('%s~%s', v1, v2))
-title <- paste0("Convergence levels in time by ", v1, " and ", v2)
-  p <- ggplot(clu, aes_string(x="t", y="fromtruth.avg", group=v1, colour=v1))
-  p <- p + geom_smooth()
-  p <- p + facet_grid(facetFormula)
-  p <- p + reducedXScale + yLabDis
-  p <- p  + hs.makeggtitle(title, c(v1, v2))
-
-p
-
-  saveOrPlot(TRUE, p, "R1_alpha", IMGPATH)
-#  saveOrPlot(save, p, paste0("facets_", title), IMGPATH)
-
-
-p <- ggplot(clu, aes(x=alpha, y=count, colour=B, group=B))
-p <- p + geom_smooth()
-p
-
-
-cl <- clu[clu$B == 0 & clu$A == 0.1 & clu$tau == 9 & clu$R == 0,]
-plot.ts(cl$alpha, cl$count)
-
-
-
-
-R <- summarySE(clu, c("fromtruth.avg"), c("R","alpha", "sigma"))
-
-
-last <- clu[clu$t == 21,]
-R <- summarySE(last, c("fromtruth.avg"), c("R","alpha","sigma"))
-
-A <- R[order(R$fromtruth.avg),]
-
-A$ratio = as.numeric(A$alpha) / as.numeric(A$R)
-
-p <- ggplot(A, aes(R, sigma))
-p + geom_tile(aes(fill=fromtruth.avg)) + scale_fill_continuous(limits=c(0,max(clu$fromtruth.avg)), guide="legend", breaks= seq(0,1,0.05), low='lightblue',high='red')
-
-obs=nrow(R)
-
-
-
-plot.ts(1:nrow(R), R$truthdiff)
-
-p <- ggplot(A[A$sigma == 0,], aes(R, fromtruth.avg, group=sigma, colour=sigma))
-p + geom_line() + scale_fill_continuous(limits=c(0,max(clu$fromtruth.avg)), guide="legend", breaks= seq(0,1,0.05), low='lightblue',high='red')
-
-
-+ geom_text(data = labeled.dat, aes(R, fromtruth.avg, label = R), size=4)
-
-
-jumpR <- R[R$truthdiff > 0.02 & R$sigma == 0,]$R
-
-
-
-
-plot.ts(1:nrow(A), A$R)
-
-
-B <- A[sample(nrow(A)),]
-
-#B$ratio = as.numeric(B$alpha) / as.numeric(B$R)
-
-plot.ts(1:nrow(B), B$R)
