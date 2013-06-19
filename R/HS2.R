@@ -3,13 +3,13 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
-#DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
+DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
 
 
-DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
-PATH = paste0(DUMPDIR,"/",DIR)
+DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
+PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
-IMGPATH <- paste0(PATH, "img/");
+IMGPATH <- paste0(PATH, "/img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
 
 clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
@@ -119,6 +119,8 @@ p <- grid.arrange(p.count, p.explo, p.speed, p.truth, p.move, ncol=3,
 dev.off()
 
 
+
+
 # START
 
 
@@ -181,3 +183,27 @@ p
 
 
 ### End
+library(sqldf)
+tic()
+f1 <- file('x00')
+toc()
+
+tic()
+mmicro <- sqldf("select * from f1", dbname = tempfile(), file.format = list(header = T, row.names = F))
+toc()
+
+a <- read.csv.sql("clusters_micro.csv", sql = "select * from file")
+
+library(RSQLite)
+con <- dbConnect("SQLite", dbname = "sample_db")
+
+# read csv file into sql database
+dbWriteTable(con, name="sample_data", value="clusters_macro.csv", 
+             row.names=FALSE, header=TRUE, sep = ",")
+
+
+library(ffbase)
+
+tic()
+ffx <- read.csv.ffdf(file="clusters_micro", header=TRUE)
+toc()

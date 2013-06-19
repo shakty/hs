@@ -30,37 +30,10 @@ DUMPDIR = 'dump/';
 simName = 'test_t-2013-6-4-12-14/';
  
 dumpDir = [DUMPDIR simName '/'];
-tic  
-files = dir(dumpDir);
-fileIndex = find(~[files.isdir]);
 
-validFileIdx = 0;
-for f = 1:length(fileIndex)
-
-        append = files(fileIndex(f)).name;
-        fileName = [dumpDir, append];
-
-        % We load only .mat
-        [PATH,NAME,EXT] = fileparts(fileName);
-        if (~strcmpi(EXT,'.mat') || strcmp(NAME, 'temporalysis') == 1) 
-            continue;
-        end
-        
-        simnameidx = strfind(NAME, '-');
-        simnameidx = NAME(1:simnameidx-1);
-        
-        
-        load(fileName);
-        validFileIdx = validFileIdx + 1
-end
-toc
-return;
-%profile on
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
 toc
-%profile viewer
-%%
 
 
 
