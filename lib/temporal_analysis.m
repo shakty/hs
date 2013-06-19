@@ -111,7 +111,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         end
 
         simnameidx = strfind(NAME, '-');
-        simnameidx = NAME(1:simnameidx-1);
+        simnameidx = str2double(NAME(1:simnameidx-1));
         
         
         load(fileName);

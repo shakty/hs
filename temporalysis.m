@@ -27,45 +27,14 @@ PLOTS = 0;
 
 DUMPDIR = 'dump/';
 
-<<<<<<< HEAD
 simName = 'attrExpo_nv_rndseq_tm_Rleft/'; 
 
-=======
-simName = 'test_t-2013-6-4-12-14/';
  
 dumpDir = [DUMPDIR simName '/'];
-tic  
-files = dir(dumpDir);
-fileIndex = find(~[files.isdir]);
 
-validFileIdx = 0;
-for f = 1:length(fileIndex)
-
-        append = files(fileIndex(f)).name;
-        fileName = [dumpDir, append];
-
-        % We load only .mat
-        [PATH,NAME,EXT] = fileparts(fileName);
-        if (~strcmpi(EXT,'.mat') || strcmp(NAME, 'temporalysis') == 1) 
-            continue;
-        end
-        
-        simnameidx = strfind(NAME, '-');
-        simnameidx = NAME(1:simnameidx-1);
-        
-        
-        load(fileName);
-        validFileIdx = validFileIdx + 1
-end
-toc
-return;
->>>>>>> 77e9dabdfd177e769922723a616214ac001cb06c
-%profile on
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
 toc
-%profile viewer
-%%
 
 
 
