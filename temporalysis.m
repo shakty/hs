@@ -16,8 +16,8 @@ set(0,'DefaultAxesFontSize', 14)
 set(0,'DefaultTextFontname', 'Times New Roman')
 set(0,'DefaultTextFontSize', 14)
 
-% The minimum size of a cluster to be included in the analysis
-CLU_CUTOFF = 10;
+% Only clusters of size above the cutoff are included in the analysis
+CLU_CUTOFF = 2;
 % When computing the coverage we build a grid on top of the space of cell
 % size = PRECISION
 PRECISION = 100;

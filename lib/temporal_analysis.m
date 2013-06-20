@@ -351,12 +351,16 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
                 % 1 Line
                 clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
-
+   
+                % SAVING ONLY CLUSTERS of SIZE > CUTOFF
+                idxs = find(stepData.clusters_size > CLU_CUTOFF);
+                
                 % Multiple Lines
-                for i=1:length(stepData.clusters_speed)
-                    clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, i); 
+                for i=1:length(idxs)
+                    clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, idxs(i)); 
                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
                 end
+                
             end
             
         end

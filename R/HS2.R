@@ -12,8 +12,21 @@ setwd(PATH)
 IMGPATH <- paste0(PATH, "/img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
 
-clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
-clusters.micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
+# BIGMEMORY
+library(bigmemory)
+library(biganalytics)
+
+
+x <- read.big.matrix("clusters_micro_smaller.csv", header=TRUE,
+                     backingfile="micro_s.bin",
+                     descriptorfile="micro_s.desc")
+
+
+
+
+# NORMAL READ.TABLE
+#clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+#clusters.micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
 
 params$simname <- as.factor(params$simname)
 params$simcount <- as.factor(params$simcount)
@@ -185,12 +198,15 @@ p
 ### End
 library(sqldf)
 tic()
-f1 <- file('x00')
+f1 <- file('clusters_micro_smaller.csv')
 toc()
 
 tic()
 mmicro <- sqldf("select * from f1", dbname = tempfile(), file.format = list(header = T, row.names = F))
 toc()
+
+tic()
+fit <- lm(
 
 a <- read.csv.sql("clusters_micro.csv", sql = "select * from file")
 

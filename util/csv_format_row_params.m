@@ -1,7 +1,7 @@
 function [ row ] = csv_format_row_params( name, filename, run, simTime, params, truth )
     
 
-    row = sprintf('"%s","%s","%u","%s","%f","%u","%u","%u","%u","%f","%f","%f","%f","%f","%f","%f","%f","%f","%f","%f","%u","%f","%f","%u","%u"', ... 
+    row = sprintf('"%s",%u,%u,"%s",%f,%u,%u,%u,%u,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%u,%f,%f,%u,%u', ... 
         name, ...
         filename, ...
         run, ... 
@@ -28,21 +28,5 @@ function [ row ] = csv_format_row_params( name, filename, run, simTime, params, 
         params.noisetype, ...
         params.attrtype ...
     );
-
-%     row = [ '"' name '","' filename '","'  num2str(run) '","' simTime '"' ] ;
-%     
-%     row = [ row ',' num2str(params.dt) ',' num2str(params.t_end) ',' num2str(params.n_agents)];
-%     
-%     row = [ row ',' num2str(params.ideas_space_size) ',' num2str(params.ideas_space_dim) ',' num2str(params.alpha)];
-%     
-%     row = [ row ',' num2str(params.R) ',' num2str(params.k) ',' num2str(params.A)];
-%     
-%     row = [ row ',' num2str(params.d0) ',' num2str(params.B) ',' num2str(params.d1)];
-%     
-%     row = [ row ',' num2str(params.tau) ',' num2str(params.sigma) ',' num2str(params.v_scaling)];
-%     
-%     row = [ row ',' num2str(params.nof_cluster) ',' num2str(params.clusterTightness)];
-%     
-%     row = [ row ',' num2str(truth(1,1)) ',' num2str(truth(2,1))];
 end
 
