@@ -26,8 +26,8 @@ CLU_CUTOFF = 2;
 % size = PRECISION
 PRECISION = 100;
 
-CSV_DUMP = 0;
-PLOTS = 1;
+CSV_DUMP = 1;
+PLOTS = 0;
 
 DUMPDIR = 'dump/';
 

@@ -20,6 +20,43 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         'fromtruth.avg', ...
         'fromtruth.sd' ...
         };
+    
+    
+    headers_clusters_macro_avg = {
+        'simname', ...
+        'simcount', ...
+        'run', ...
+        't', ...
+        'count.avg', ...
+        'count.sd', ...
+        'count.se', ...
+        'count.ci', ...
+        'coverage.avg', ...
+        'coverage.sd', ...
+        'coverage.se', ...
+        'coverage.ci', ...
+        'coverage.cum.avg', ...
+        'coverage.cum.sd', ...
+        'coverage.cum.se', ...
+        'coverage.cum.ci', ...
+        'speed.avg', ...
+        'speed.sd', ...
+        'speed.se', ...
+        'speed.ci', ...
+        'move.avg', ...
+        'move.sd', ...
+        'move.se', ...
+        'move.ci', ...
+        'size.avg', ...
+        'size.sd', ...
+        'size.se', ...
+        'size.ci', ...
+        'fromtruth.avg', ...
+        'fromtruth.sd', ...
+        'fromtruth.se', ...
+        'fromtruth.ci' ...
+        };
+    
         
     headers_clusters_micro = {
         'simname', ...
@@ -30,6 +67,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         'speed', ...
         'move', ...
         'fromtruth'};
+    
 
     headers_params = {
         'simname', ...
@@ -60,6 +98,11 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         };
     
     
+    % CI
+    CI_INT = 0.95/2 + 0.5;
+
+    
+    % TOTAL CELLS
     TOTAL_CELLS = PRECISION^2;
 
     
@@ -77,6 +120,34 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     validFileIdx = 0;
     summaryObj = {};
     
+    
+    % Retrieving global values for the set of simulations from the first one
+    
+    fileName = [dumpDir '1-1.mat'];    
+    load(fileName);
+    v = dump.agentsv;
+    % the total number of time steps per run (assumed constant) and dump rate
+    nIter = size(v,3);
+    idxsIters = find(mod(1:nIter, DUMP_RATE) == 0);
+    % number of files
+    nFiles = length(fileIndex);
+    
+    % GLOBAL variables
+    global_count_sum = zeros(nIter,1);
+    global_count_sumsquared = zeros(nIter,1);
+    global_coverage_sum = zeros(nIter,1);
+    global_coverage_sumsquared = zeros(nIter,1);
+    global_coverage_cum_sum = zeros(nIter,1);
+    global_coverage_cum_sumsquared = zeros(nIter,1);
+    global_speed_sum = zeros(nIter,1);
+    global_speed_sumsquared = zeros(nIter,1);
+    global_move_sum = zeros(nIter,1);
+    global_move_sumsquared = zeros(nIter,1);
+    global_size_sum = zeros(nIter,1);
+    global_size_sumsquared = zeros(nIter,1);
+    global_fromtruth_sum = zeros(nIter,1);
+    global_fromtruth_sumsquared = zeros(nIter,1);
+    
     % Date and Time
     mytimestamp = datestr ( datevec ( now ), 0 );
     
@@ -86,8 +157,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         paramFileName = [dumpDir 'params.csv'];
         write_csv_headers(paramFileName, headers_params);
         fidParam = fopen(paramFileName,'a');
-
-        
+ 
         dataFileName = [dumpDir 'clusters_macro.csv'];
         write_csv_headers(dataFileName, headers_clusters_macro);
         fidClustersMacro = fopen(dataFileName,'a');
@@ -95,11 +165,15 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         dataFileName = [dumpDir 'clusters_micro.csv'];
         write_csv_headers(dataFileName, headers_clusters_micro);
         fidClustersMicro = fopen(dataFileName,'a');
-
+                
+        dataFileName = [dumpDir 'clusters_macro_avg.csv'];
+        write_csv_headers(dataFileName, headers_clusters_macro_avg);
+        fidClustersMacroAvg = fopen(dataFileName,'a');
+       
     end
     
     % Load all parameters matrices in one
-    for f = 1:length(fileIndex)
+    for f = 1:nFiles
 
         append = files(fileIndex(f)).name;
         fileName = [dumpDir, append];
@@ -125,12 +199,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
             fprintf(fidParam,'%s\n', param_string);
         end
     
-        
-
         v = dump.agentsv;
         pos = dump.agents;
-        
-        nIter = size(v,3);
         
         % average velocity of agents at time t
         mean_cluster_speed = zeros(1,nIter);
@@ -220,6 +290,26 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
             clusters_fromtruth{i} = AvgGDist;
             clusters_speed{i} = avgGroupSpeed;
             clusters_move{i} = avgGroupMove;
+    
+                
+            % SUMMING UP AVG statistics
+            if (i == 3)
+                test_c(validFileIdx) = C;
+            end
+            global_count_sum(i) = global_count_sum(i) + C;
+            global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
+            global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage(i);
+            global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage(i)^2;
+            global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage(i);
+            global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage(i)^2;
+            global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed(i);
+            global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed(i)^2;
+            global_move_sum(i) = global_move_sum(i) + mean_cluster_move(i);
+            global_move_sumsquared(i) =  global_move_sumsquared(i) + mean_cluster_move(i)^2;
+            global_size_sum(i) = global_size_sum(i) + mean_cluster_size(i);
+            global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size(i)^2;
+            global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth(i);
+            global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) +  mean_cluster_fromtruth(i)^2;
 
         end
         
@@ -345,10 +435,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
             
             simData = summaryObj{validFileIdx};
             
-            
-             % SAVING ONLY EVERY X ITERATIONS
-             idxsIters = find(mod(1:nIter, DUMP_RATE) == 0);
-            
+             % SAVING ONLY EVERY X ITERATIONS        
              for k = 1:size(idxsIters,2)
                 z = idxsIters(k);
                 stepData = simData(z);
@@ -364,21 +451,77 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                     clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, idxs(i)); 
                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
                 end
-                
-            end
-            
+ 
+             end
+             
         end
         
-    end
+    end % File loop
+    
+    
+    
+    % Computing global stats  
+    t_count_avg = global_count_sum / nFiles; 
+    t_count_sd = sqrt(((sum(global_count_sumsquared) - ((global_count_sum).^2 / nFiles))) / nFiles);
+    t_count_se = t_count_sd / sqrt(nFiles);  
+    t_count_ci = t_count_se * tquant(CI_INT, nFiles-1);
+    
+    t_cover_avg = global_coverage_sum / nFiles; 
+    t_cover_sd = sqrt(((sum(global_coverage_sumsquared) - ((global_coverage_sum).^2 / nFiles))) / nFiles);
+    t_cover_se = t_cover_sd / sqrt(nFiles);  
+    t_cover_ci = t_cover_se * tquant(CI_INT, nFiles-1);
+    
+    t_cover_cum_avg = global_coverage_cum_sum / nFiles; 
+    t_cover_cum_sd = sqrt(((sum(global_coverage_cum_sumsquared) - ((global_coverage_cum_sum).^2 / nFiles))) / nFiles);
+    t_cover_cum_se = t_cover_cum_sd / sqrt(nFiles);  
+    t_cover_cum_ci = t_cover_cum_se * tquant(CI_INT, nFiles-1);
+    
+    t_speed_avg = global_speed_sum / nFiles; 
+    t_speed_sd = sqrt(((sum(global_speed_sumsquared) - ((global_speed_sum).^2 / nFiles))) / nFiles);
+    t_speed_se = t_speed_sd / sqrt(nFiles);  
+    t_speed_ci = t_speed_se * tquant(CI_INT, nFiles-1);
+    
+    t_move_avg = global_move_sum / nFiles; 
+    t_move_sd = sqrt(((sum(global_move_sumsquared) - ((global_move_sum).^2 / nFiles))) / nFiles);
+    t_move_se = t_move_sd / sqrt(nFiles);  
+    t_move_ci = t_move_se * tquant(CI_INT, nFiles-1);
+    
+    t_size_avg = global_size_sum / nFiles; 
+    t_size_sd = sqrt(((sum(global_size_sumsquared) - ((global_size_sum).^2 / nFiles))) / nFiles);
+    t_size_se = t_size_sd / sqrt(nFiles);  
+    t_size_ci = t_size_se * tquant(CI_INT, nFiles-1);
+
+    t_fromtruth_avg = global_fromtruth_sum / nFiles; 
+    t_fromtruth_sd = sqrt(((sum(global_fromtruth_sumsquared) - ((global_fromtruth_sum).^2 / nFiles))) / nFiles);
+    t_fromtruth_se = t_fromtruth_sd / sqrt(nFiles);  
+    t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, nFiles-1);
+ 
     
     % Save summaryObj
     % save([dumpDir 'temporalysis.mat'], 'summaryObj');
     
     if (CSV_DUMP)
-    
+        
         fclose(fidParam);
         fclose(fidClustersMacro);
         fclose(fidClustersMicro);
+        
+        % SAVING ONLY EVERY X ITERATIONS        
+        for k = 1:size(idxsIters,2)
+            z = idxsIters(k);
+            clu_macro_avg_string = sprintf('"%s",%u,%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f%.4f%.4f%.4f%.4f%.4f%.4f\n', ...
+                simName, simnameidx, dump.run, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
+                t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
+                t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
+                t_speed_avg(z), t_speed_sd(z), t_speed_se(z), t_speed_ci(z), ...
+                t_move_avg(z), t_move_sd(z), t_move_se(z), t_move_ci(z), ...
+                t_size_avg(z),t_size_sd(z), t_size_se(z), t_size_ci(z), ...
+                t_fromtruth_avg(z), t_fromtruth_sd(z), t_fromtruth_se(z), t_fromtruth_ci(z));
+            
+            fprintf(fidClustersMacroAvg,'%s\n', clu_macro_avg_string);   
+         end
+
+        fclose(fidClustersMacroAvg);
     end
     
     

@@ -15,14 +15,12 @@ tic()
 mmicro <- sqldf("select * from f1", dbname = tempfile(), file.format = list(header = T, row.names = F))
 toc()
 
-tic()
-fit <- lm(
-
 a <- read.csv.sql("clusters_micro.csv", sql = "select * from file")
 
 library(RSQLite)
 con <- dbConnect("SQLite", dbname = "sample_db")
 
+        
 # read csv file into sql database
 dbWriteTable(con, name="sample_data", value="clusters_macro.csv", 
              row.names=FALSE, header=TRUE, sep = ",")
@@ -33,6 +31,19 @@ library(ffbase)
 tic()
 ffx <- read.csv.ffdf(file="clusters_micro", header=TRUE)
 toc()
+          
 
 
         
+a <- c(1,2,3)
+b <- c(10,2,1)
+c <- c(100,9,2)
+all <- c(a,b,c)
+mean(all)
+sd(all)
+mean(c(mean(a),mean(b),mean(c)))
+sd(c(sd(a),sd(b),sd(c)))
+          
+
+          
+          
