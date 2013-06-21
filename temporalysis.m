@@ -35,7 +35,3 @@ dumpDir = [DUMPDIR simName '/'];
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS);
 toc
-
-
-
-

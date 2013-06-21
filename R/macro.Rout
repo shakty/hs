@@ -1,0 +1,127 @@
+
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # HS analysis
+> source("init.R")
+
+Attaching package: ‘reshape’
+
+The following object is masked from ‘package:plyr’:
+
+    rename, round_any
+
+Loading required package: nnet
+Loading required package: bdsmatrix
+
+Attaching package: ‘bdsmatrix’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+Loading required package: nlme
+Loading required package: Formula
+Loading required package: sandwich
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following object is masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+> 
+> DIR = "test_t-2013-6-4-12-14"
+> 
+> DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
+> 
+> DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
+> DUMPDIR = "/cluster/home/gess/balistef/matlab/hsnew/dump/"
+> 
+> PATH = paste0(DUMPDIR,DIR)
+> setwd(PATH)
+> IMGPATH <- paste0(PATH, "/img/");
+> params <- read.table('params.csv', head=TRUE, sep=",")
+> 
+> # NORMAL READ.TABLE
+> #clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+> 
+> library(sqldf)
+Loading required package: DBI
+Loading required package: gsubfn
+Loading required package: proto
+Loading required namespace: tcltk
+Loading required package: chron
+Loading required package: RSQLite
+Loading required package: RSQLite.extfuns
+Warning message:
+In fun(libname, pkgname) : no DISPLAY variable so Tk is not available
+> tic()
+> f1 <- file('clusters_macro_smaller.csv')
+> toc()
+elapsed 
+  0.001 
+> 
+> tic()
+> clusters <- sqldf("select * from f1", dbname = tempfile(), file.format = list(header = T, row.names = F))
+Loading required package: tcltk
+> toc()
+elapsed 
+163.717 
+> 
+> # Micro commented for the moment
+> #clusters.micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
+> 
+> 
+> 
+> 
+> params$simname <- as.factor(params$simname)
+> params$simcount <- as.factor(params$simcount)
+> params$run <- as.factor(params$run)
+> clusters$simname <- as.factor(clusters$simname)
+> clusters$simcount <- as.factor(clusters$simcount)
+> clusters$run <- as.factor(clusters$run)
+> # Transforms params in factors
+> clu <- merge(params, clusters, by=c("simname","simcount","run"))
+> for (n in names(clu[1:23])) {
++   clu[, n] <- as.factor(clu[, n])      
++ }
+> 
+> # Cluster Macro in time
+> 
+> cl <- clusters
+> tic()
+> title = "Evolution of cluster count and size"
+> p.count <- ggplot(cl, aes(t))
+> p.count <- p.count + geom_jitter(aes(y = size.avg), alpha=.2)
+> p.count <- p.count + geom_smooth(aes(y = count, colour="count"), size=2)
+> p.count <- p.count + geom_smooth(aes(y = size.avg, colour="size"), size=2)
+> p.count <- p.count + geom_smooth(aes(y = size.sd, colour="std. size"), size=2)
+> p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
+> toc()
+elapsed 
+ 97.167 
+> 
+> tic()
+> #p.count
+> ggsave("count_size.jpg", plot=p.count)
+Saving 7 x 7 in image
+Error in eval(expr, envir, enclos) : object 'size.avg' not found
+Calls: ggsave ... unlist -> lapply -> eval.quoted -> lapply -> FUN -> eval
+JPEG parameter struct mismatch: library thinks size is 512, caller expects 520

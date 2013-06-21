@@ -1,12 +1,13 @@
 # HS analysis
-source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
+source("init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
 DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
 
-
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
+DUMPDIR = "/cluster/home/gess/balistef/matlab/hsnew/dump/"
+
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
 IMGPATH <- paste0(PATH, "/img/");
@@ -45,7 +46,7 @@ for (n in names(clu[1:23])) {
 # Cluster Macro in time
 
 cl <- clusters
-
+tic()
 title = "Evolution of cluster count and size"
 p.count <- ggplot(cl, aes(t))
 p.count <- p.count + geom_jitter(aes(y = size.avg), alpha=.2)
@@ -53,8 +54,12 @@ p.count <- p.count + geom_smooth(aes(y = count, colour="count"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.avg, colour="size"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.sd, colour="std. size"), size=2)
 p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
+toc()
+
+tic()
 #p.count
 ggsave("count_size.jpg", plot=p.count)
+toc()
 
 #title = "Average and cumulative space exploration"
 #p.explo <- ggplot(cl, aes(t))
