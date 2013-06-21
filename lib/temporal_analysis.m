@@ -1,4 +1,4 @@
-function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, PLOTS)
+function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, DUMP_RATE, PLOTS)
 
     
     %% Param
@@ -287,11 +287,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
             title('Mean and Std cluster from truth');
             hold off
 
+            
             % Creating a string with the description of the parameters
 
             paramString = format_sim_params_for_plot_display(simName, NAME, dump.parameters);
-
-
 
             annotation('textbox', [0.7, 0.45, 0, 0], 'string', paramString, ...
                 'BackgroundColor', 'white', ...
@@ -346,7 +345,12 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
             
             simData = summaryObj{validFileIdx};
             
-            for z = 1:nIter
+            
+             % SAVING ONLY EVERY X ITERATIONS
+             idxsIters = find(mod(1:nIter, DUMP_RATE) == 0);
+            
+             for k = 1:size(idxsIters,2)
+                z = idxsIters(k);
                 stepData = simData(z);
                 % 1 Line
                 clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
@@ -368,30 +372,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
     end
     
     % Save summaryObj
-    save([dumpDir 'temporalysis.mat'], 'summaryObj');
-    
-    
-
-%     if (CSV_DUMP)
-%         for f = 1:length(summaryObj)
-%             
-%             simData = summaryObj{f};
-%             
-%             for z = 1:nIter
-%                 stepData = simData(z);
-%                 % 1 Line
-%                 clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
-%                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
-% 
-%                 % Multiple Lines
-%                 for i=1:length(stepData.clusters_speed)
-%                     clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, i); 
-%                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
-%                 end
-%             end
-%             
-%         end
-%     end
+    % save([dumpDir 'temporalysis.mat'], 'summaryObj');
     
     if (CSV_DUMP)
     
