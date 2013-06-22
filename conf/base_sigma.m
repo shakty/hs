@@ -10,7 +10,7 @@ clc;
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrExpo_nv_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
-dumpDir = 'dump/'; % dump
+%dumpDir = 'dump/'; % dump
 
 VIDEO = 0;
 DEBUG = 0;
@@ -158,7 +158,11 @@ for i=1:size(sigmas,2)
     confFile = sprintf('%s_s%u', simName, sigmas*10);
     fullName = sprintf('%s/%s',DIR, confFile);
     save(fullName);
-    cmdStr = sprintf('sub -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+    if (i == 1)
+        cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+    else
+        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+    end
     fprintf(fid, '%s\n', cmdStr);
 end
 fclose(fid);
