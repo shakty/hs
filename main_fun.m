@@ -1,4 +1,4 @@
-function [] = main_fun(confFile)
+function [] = main_fun(confDir, subDir, confFile)
 
     %% Stefano Balietti
 
@@ -21,22 +21,19 @@ function [] = main_fun(confFile)
 
     simName = 'Sim';
     dumpDir = 'dump/';
-    confDir = 'conf/';
 
     compLOCAL = 0;
     compPARALLEL = 1;
     compLSF = 2;
     
-    confFile;
-    
     %% Loading Conf
-    load([confDir confFile]);
+    load([confDir subDir '/' confFile]);
 
     %% Modifying params locally
     % VIDEO = 0;
     % DUMP = 1;
     % % alphas = [0.1 0.5 0.9];
-    % COMPUTATION = 0;
+    COMPUTATION = 0;
     % attrtype = 7;
     % alphas = 0.1;
     % Rs = 0.07;
@@ -48,7 +45,8 @@ function [] = main_fun(confFile)
     % dumpDir = 'dump/';
 
     %% Creating simName and Struct
-    simName = createSimName(simName,DUMP,dumpDir);
+    myDumpDir = [dumpDir subDir '/'];
+    simName = createSimName(confFile, DUMP, myDumpDir);
 
     simParamsStruct = struct( ...
                     'dumpDir', dumpDir, ...
@@ -85,7 +83,7 @@ function [] = main_fun(confFile)
 
     %% Store a copy of input params in DIR if DUMP is required
     if (DUMP)
-        struct2File( simParamsStruct, dumpDir, simName);
+        struct2File( simParamsStruct, myDumpDir, simName);
     end
 
     %% Start Vectorization of Parameters Sets

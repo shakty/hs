@@ -10,7 +10,7 @@ clc;
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrExpo_nv_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
-
+dumpDir = 'dump/'; % dump
 
 VIDEO = 0;
 DEBUG = 0;
@@ -147,7 +147,6 @@ DIR = [CONF_SUBDIR simName];
 if (exist(DIR, 'dir')~=0 )
     error('Dir already exists');
 end
-
 mkdir(DIR);
 
 launcher = '../GO_FUN';
@@ -156,9 +155,10 @@ old_sigmas = sigmas;
 for i=1:size(sigmas,2)
     % Saving all params
     sigmas = old_sigmas(i);
-    fullName = sprintf('%s/%s_s%u',DIR, simName, sigmas*10);
+    confFile = sprintf('%s_s%u', simName, sigmas*10);
+    fullName = sprintf('%s/%s',DIR, confFile);
     save(fullName);
-    cmdStr = sprintf('sub -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/%s'')"', fullName);
+    cmdStr = sprintf('sub -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
     fprintf(fid, '%s\n', cmdStr);
 end
 fclose(fid);
