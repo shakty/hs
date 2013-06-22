@@ -40,10 +40,23 @@ b <- c(10,2,1)
 c <- c(100,9,2)
 all <- c(a,b,c)
 mean(all)
+
+all <- c(1,1,5,9,9)
+
+all <- c(rep(29,20),c(32,27))
+
+
+
+all2 <- all^2
+
+sqrt((sum(all2) - ((sum(all))^2/length(all)))/(length(all)-1))
+
 sd(all)
+
 mean(c(mean(a),mean(b),mean(c)))
 sd(c(sd(a),sd(b),sd(c)))
           
 
           
           
+sqrt(sqrt((18573 - (639/22))/21))

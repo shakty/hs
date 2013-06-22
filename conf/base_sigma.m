@@ -1,14 +1,16 @@
 %% Conf parameters
 
+clc;
+
 %%%%%%%%%%%%%
 
 % GLOBAL Conf
 
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
-simName = 'attrExpo_nv_rndseq_tm_Rleft_r_sigma05';
+simName = 'attrExpo_nv_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
-
+%dumpDir = 'dump/'; % dump
 
 VIDEO = 0;
 DEBUG = 0;
@@ -59,7 +61,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [0.1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0.5];   % Std. deviation of white noise term
+sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities
@@ -123,18 +125,44 @@ noise_adaptive_on_v = 2;
 
 noisetype = 1;
 
-% Saving all params
-save(simName);
+% Split by Sigma
 
 
 
 nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(ideas_space_dims,2)*size(As,2)*size(Bs,2)*size(ks,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
-                size(sigmas,2)*size(vScalings,2)*size(nClusters,2)*...
+                size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
                 size(noisetype,2);
             
                 
-            
+fprintf('%u levels of Sigma\n',  size(sigmas,2));           
 fprintf('Total number of simulations = %u x %u: = %u\n', nRuns, nCombinations, nRuns*nCombinations);
+
+
+% CREATING FOLDERS
+CONF_SUBDIR = 'NEW/';
+DIR = [CONF_SUBDIR simName];
+if (exist(DIR, 'dir')~=0 )
+    error('Dir already exists');
+end
+mkdir(DIR);
+
+launcher = '../GO_FUN';
+fid = fopen(launcher,'w');
+old_sigmas = sigmas;
+for i=1:size(sigmas,2)
+    % Saving all params
+    sigmas = old_sigmas(i);
+    confFile = sprintf('%s_s%u', simName, sigmas*10);
+    fullName = sprintf('%s/%s',DIR, confFile);
+    save(fullName);
+    if (i == 1)
+        cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+    else
+        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+    end
+    fprintf(fid, '%s\n', cmdStr);
+end
+fclose(fid);

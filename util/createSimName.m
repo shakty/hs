@@ -22,8 +22,8 @@ function newSimName = createUniqueDumpDir(dumpDir,simName)
 variants = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n', ...
             'o','p','q','r','s','t','u','v','w','x','y','z'];
 
-newSimName = simName;
-folderName = [ dumpDir simName ];
+newSimName = simName
+folderName = [ dumpDir simName ]
 
 i=1;
 while (exist(folderName,'dir')~=0 )
