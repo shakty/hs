@@ -248,7 +248,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
         
         if (PLOTS)
             
-            %figure;
+            close all;
+            figure;
     
             subplot(2,3,1);
             hold on
@@ -300,15 +301,14 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
 
             waitforbuttonpress;
             
-            
-            %figure;
+            figure;
             
             % Eliminating groups with only 1 agent
             % The first iteration (t0) is removed, there is no influence among
             % clusters 
             valid_clusters_idx = cell(nIter-1);
             
-            subplot(2,3,1);
+            subplot(1,3,1);
             hold on
             for z=2:nIter
                 csizes = clusters_size{z};
@@ -319,7 +319,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
             hold off
             title('Cluster size vs speed');
             
-            subplot(2,3,2);
+            subplot(1,3,2);
             hold on
             for z=2:nIter
                 idxs = valid_clusters_idx{z};
@@ -328,7 +328,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, P
             hold off
             title('Cluster size vs fromtruth');
 
-            subplot(2,3,3);
+            subplot(1,3,3);
             hold on
             for z=2:nIter
                 idxs = valid_clusters_idx{z};

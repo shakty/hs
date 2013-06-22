@@ -26,7 +26,7 @@ compPARALLEL = 1;
 compLSF = 2;
 
 %% Loading Conf
-load([confDir 'attrExpo_nv_rndseq_tm_Rleft']);
+load([confDir 'attrExpo_nv_rndseq_tm_Rleft_reduced']);
 
 %% Modifying params locally
 % VIDEO = 0;
