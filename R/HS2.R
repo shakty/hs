@@ -90,7 +90,7 @@ toc()
 xcut <- cut(x[, "size"], c(3,5,10,20,50,75,100))
 x <- cbind(x, xcut)
 
-xsplit <- split(1:nrow(x), x[, "size"])
+xsplit <- split(1:nrow(x), x[, "size"]);
 
 
 plot(x[,"size"],x[,"speed"])

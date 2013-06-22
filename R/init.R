@@ -382,9 +382,12 @@ heatmapFacets<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMG
 
 }
 
-heatmapFacets_fromtruth<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+heatmapFacets_fromtruth<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
 
   title <- paste0("Convergence levels by combinations of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=fromtruth.avg), colour = "white")
