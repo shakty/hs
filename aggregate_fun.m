@@ -1,4 +1,4 @@
-function [] = temporalysis_fun(dumpDir, subDir, nIter)
+function [] = temporalysis_fun(dumpDir, subDir)
 
     %% Saves simulations into properly formatted CSV files
 
@@ -60,20 +60,7 @@ function [] = temporalysis_fun(dumpDir, subDir, nIter)
         error('Invalid Directory Selected');
     end
     
-    g_global_count_sum = zeros(nIter,1);
-    g_global_count_sumsquared = zeros(nIter,1);
-    g_global_coverage_sum = zeros(nIter,1);
-    g_global_coverage_sumsquared = zeros(nIter,1);
-    g_global_coverage_cum_sum = zeros(nIter,1);
-    g_global_coverage_cum_sumsquared = zeros(nIter,1);
-    g_global_speed_sum = zeros(nIter,1);
-    g_global_speed_sumsquared = zeros(nIter,1);
-    g_global_move_sum = zeros(nIter,1);
-    g_global_move_sumsquared = zeros(nIter,1);
-    g_global_size_sum = zeros(nIter,1);
-    g_global_size_sumsquared = zeros(nIter,1);
-    g_global_fromtruth_sum = zeros(nIter,1);
-    g_global_fromtruth_sumsquared = zeros(nIter,1);
+   
     
     validFiles = 0;
      % Load all parameters matrices in one
@@ -87,9 +74,32 @@ function [] = temporalysis_fun(dumpDir, subDir, nIter)
         
         validFiles = validFiles + 1;
         
+        
+        
+        
         dirPath = [DUMPDIR myDir];
 
         load([ dirPath '/' 'sums' ]);
+        
+        % If it is the first open file, initialize the arrays
+        if (validFiles == 1)
+            nIter = length(g_global_count_sum);
+            g_global_count_sum = zeros(nIter,1);
+            g_global_count_sumsquared = zeros(nIter,1);
+            g_global_coverage_sum = zeros(nIter,1);
+            g_global_coverage_sumsquared = zeros(nIter,1);
+            g_global_coverage_cum_sum = zeros(nIter,1);
+            g_global_coverage_cum_sumsquared = zeros(nIter,1);
+            g_global_speed_sum = zeros(nIter,1);
+            g_global_speed_sumsquared = zeros(nIter,1);
+            g_global_move_sum = zeros(nIter,1);
+            g_global_move_sumsquared = zeros(nIter,1);
+            g_global_size_sum = zeros(nIter,1);
+            g_global_size_sumsquared = zeros(nIter,1);
+            g_global_fromtruth_sum = zeros(nIter,1);
+            g_global_fromtruth_sumsquared = zeros(nIter,1);
+        end
+        
         
         g_global_count_sum = g_global_count_sum + global_count_sum;
         g_global_count_sumsquared = g_global_count_sumsquared + global_count_sumsquared;
