@@ -155,6 +155,9 @@ fidMain = fopen(launcherMain, 'w');
 launcherCl = '../GOCL_FUN';
 fidCl = fopen(launcherCl, 'w');
 
+launcherAggr = '../GOAGGR_FUN';
+fidAggr = fopen(launcherCl, 'w');
+
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
 
@@ -180,8 +183,12 @@ for i=1:size(sigmas,2)
     cmdStr = sprintf('bsub -J hs_cl_%u -W 8:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
     
+    % Creating the GOAGGR_FUN
+    cmdStr = sprintf('bsub -J hs_cl_aggr -W 8:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
+    fprintf(fidCl, '%s\n', cmdStr);
+    
 end
 fclose(fidMain);
 fclose(fidCl);
-
+fclose(fidAggr);
 
