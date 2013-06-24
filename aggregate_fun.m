@@ -60,21 +60,22 @@ function [] = temporalysis_fun(dumpDir, subDir, nIter)
         error('Invalid Directory Selected');
     end
     
-    global_count_sum = zeros(nIter,1);
-    global_count_sumsquared = zeros(nIter,1);
-    global_coverage_sum = zeros(nIter,1);
-    global_coverage_sumsquared = zeros(nIter,1);
-    global_coverage_cum_sum = zeros(nIter,1);
-    global_coverage_cum_sumsquared = zeros(nIter,1);
-    global_speed_sum = zeros(nIter,1);
-    global_speed_sumsquared = zeros(nIter,1);
-    global_move_sum = zeros(nIter,1);
-    global_move_sumsquared = zeros(nIter,1);
-    global_size_sum = zeros(nIter,1);
-    global_size_sumsquared = zeros(nIter,1);
-    global_fromtruth_sum = zeros(nIter,1);
-    global_fromtruth_sumsquared = zeros(nIter,1);
+    g_global_count_sum = zeros(nIter,1);
+    g_global_count_sumsquared = zeros(nIter,1);
+    g_global_coverage_sum = zeros(nIter,1);
+    g_global_coverage_sumsquared = zeros(nIter,1);
+    g_global_coverage_cum_sum = zeros(nIter,1);
+    g_global_coverage_cum_sumsquared = zeros(nIter,1);
+    g_global_speed_sum = zeros(nIter,1);
+    g_global_speed_sumsquared = zeros(nIter,1);
+    g_global_move_sum = zeros(nIter,1);
+    g_global_move_sumsquared = zeros(nIter,1);
+    g_global_size_sum = zeros(nIter,1);
+    g_global_size_sumsquared = zeros(nIter,1);
+    g_global_fromtruth_sum = zeros(nIter,1);
+    g_global_fromtruth_sumsquared = zeros(nIter,1);
     
+    validFiles = 0;
      % Load all parameters matrices in one
     for d = 1:length(dirIndex)
         
@@ -84,11 +85,91 @@ function [] = temporalysis_fun(dumpDir, subDir, nIter)
             continue;
         end
         
+        validFiles = validFiles + 1;
+        
         dirPath = [DUMPDIR myDir];
 
         load([ dirPath '/' 'sums' ]);
+        
+        g_global_count_sum = g_global_count_sum + global_count_sum;
+        g_global_count_sumsquared = g_global_count_sumsquared + global_count_sumsquared;
+        g_global_coverage_sum = g_global_coverage_sum + global_coverage_sum;
+        g_global_coverage_sumsquared = g_global_coverage_sumsquared + global_coverage_sumsquared;
+        g_global_coverage_cum_sum = g_global_coverage_cum_sum + global_coverage_cum_sum;
+        g_global_coverage_cum_sumsquared = g_global_coverage_cum_sumsquared + global_coverage_cum_sumsquared;
+        g_global_speed_sum = g_global_speed_sum + global_speed_sum;
+        g_global_speed_sumsquared = g_global_speed_sumsquared + global_speed_sumsquared;
+        g_global_move_sum = g_global_move_sum + global_move_sum;
+        g_global_move_sumsquared = g_global_move_sumsquared + global_move_sumsquared;
+        g_global_size_sum = g_global_size_sum + global_size_sum;
+        g_global_size_sumsquared = g_global_size_sumsquared + global_size_sumsquared;
+        g_global_fromtruth_sum = g_global_fromtruth_sum + global_fromtruth_sum;
+        g_global_fromtruth_sumsquared = g_global_fromtruth_sumsquared + global_fromtruth_sumsquared;     
 
     end
+    
+    
+    nFiles = validFiles;  
+    df = nFiles - 1;
+
+    % Computing g_global stats  
+    t_count_avg = g_global_count_sum / nFiles; 
+    t_count_sd = sqrt(((g_global_count_sumsquared - ((g_global_count_sum).^2 / N))) / df);
+    t_count_se = t_count_sd / sqrt(nFiles);  
+    t_count_ci = t_count_se * tquant(CI_INT, nFiles-1);
+    
+    t_cover_avg = g_global_coverage_sum / nFiles; 
+    t_cover_sd = sqrt(((g_global_coverage_sumsquared - ((g_global_coverage_sum).^2 / N))) / df);
+    t_cover_se = t_cover_sd / sqrt(nFiles);  
+    t_cover_ci = t_cover_se * tquant(CI_INT, nFiles-1);
+    
+    t_cover_cum_avg = g_global_coverage_cum_sum / nFiles; 
+    t_cover_cum_sd = sqrt(((g_global_coverage_cum_sumsquared - ((g_global_coverage_cum_sum).^2 / N))) / df);
+    t_cover_cum_se = t_cover_cum_sd / sqrt(nFiles);  
+    t_cover_cum_ci = t_cover_cum_se * tquant(CI_INT, nFiles-1);
+    
+    t_speed_avg = g_global_speed_sum / nFiles; 
+    t_speed_sd = sqrt(((g_global_speed_sumsquared - ((g_global_speed_sum).^2 / N))) / df);
+    t_speed_se = t_speed_sd / sqrt(nFiles);  
+    t_speed_ci = t_speed_se * tquant(CI_INT, nFiles-1);
+    
+    t_move_avg = g_global_move_sum / nFiles; 
+    t_move_sd = sqrt(((g_global_move_sumsquared - ((g_global_move_sum).^2 / N))) / df);
+    t_move_se = t_move_sd / sqrt(nFiles);  
+    t_move_ci = t_move_se * tquant(CI_INT, nFiles-1);
+    
+    t_size_avg = g_global_size_sum / nFiles; 
+    t_size_sd = sqrt(((g_global_size_sumsquared - ((g_global_size_sum).^2 / N))) / df);
+    t_size_se = t_size_sd / sqrt(nFiles);  
+    t_size_ci = t_size_se * tquant(CI_INT, nFiles-1);
+
+    t_fromtruth_avg = g_global_fromtruth_sum / nFiles; 
+    t_fromtruth_sd = sqrt(((g_global_fromtruth_sumsquared - ((g_global_fromtruth_sum).^2 / N))) / df);
+    t_fromtruth_se = t_fromtruth_sd / sqrt(nFiles);  
+    t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, nFiles-1);
+    
+    
+    dataFileName = [dumpDir 'clusters_macro_avg.csv'];
+    write_csv_headers(dataFileName, headers_clusters_macro_avg);
+    fidClustersMacroAvg = fopen(dataFileName,'a');
+    
+     % SAVING ONLY EVERY X ITERATIONS        
+    for k = 1:size(idxsIters,2)
+        z = idxsIters(k);
+        clu_macro_avg_string = sprintf('"%s",%.4,f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+            simName, simnameidx, dump.run, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
+            t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
+            t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
+            t_speed_avg(z), t_speed_sd(z), t_speed_se(z), t_speed_ci(z), ...
+            t_move_avg(z), t_move_sd(z), t_move_se(z), t_move_ci(z), ...
+            t_size_avg(z),t_size_sd(z), t_size_se(z), t_size_ci(z), ...
+            t_fromtruth_avg(z), t_fromtruth_sd(z), t_fromtruth_se(z), t_fromtruth_ci(z));
+
+        fprintf(fidClustersMacroAvg,'%s\n', clu_macro_avg_string);   
+     end
+
+    fclose(fidClustersMacroAvg);
+    
 end
 
 
