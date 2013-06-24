@@ -15,7 +15,7 @@ dumpDir = '/cluster/work/scr4/balistef/'; % dump
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 100; % Dump every x steps
+DUMP_RATE = 2; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 %%%%%%%%%%%%%

@@ -16,7 +16,7 @@ function [] = temporalysis_fun(dumpDir, subDir, simName)
 
 
     % Dump only every X steps
-    DUMP_RATE = 10;
+    DUMP_RATE = 1;
 
     % Only clusters of size above the cutoff are included in the analysis
     CLU_CUTOFF = 2;
