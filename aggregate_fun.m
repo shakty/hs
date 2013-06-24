@@ -120,7 +120,7 @@ function [] = temporalysis_fun(dumpDir, subDir)
     
     CI_INT = 0.95/2 + 0.5;
     N = validFiles;
-    df = nFiles - 1;
+    df = N - 1;
 
     % Computing g_global stats
         % Computing global stats  
