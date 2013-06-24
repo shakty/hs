@@ -1,7 +1,8 @@
 function [] = temporalysis_fun(dumpDir, subDir)
 
+    
     %% Saves simulations into properly formatted CSV files
-
+    tic
     %% Add other directories to path
     path(path,'util/'); % Help functions
     path(path,'lib/'); % Help functions
@@ -176,7 +177,7 @@ function [] = temporalysis_fun(dumpDir, subDir)
      end
 
     fclose(fidClustersMacroAvg);
-    
+    toc
 end
 
 
