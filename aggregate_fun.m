@@ -60,10 +60,10 @@ function [] = temporalysis_fun(dumpDir, subDir)
         error('Invalid Directory Selected');
     end
     
-   
+    totalFiles = 0;
     
     validFiles = 0;
-     % Load all parameters matrices in one
+    % Load all parameters matrices in one
     for d = 1:length(dirIndex)
         
         myDir = dirs(dirIndex(d)).name;
@@ -74,12 +74,11 @@ function [] = temporalysis_fun(dumpDir, subDir)
         
         validFiles = validFiles + 1;
         
-        
-        
-        
         dirPath = [DUMPDIR myDir];
 
         load([ dirPath '/' 'sums' ]);
+        
+        totalFiles = totalFiles + N; % is found in sums
         
         % If it is the first open file, initialize the arrays
         if (validFiles == 1)
@@ -164,8 +163,8 @@ function [] = temporalysis_fun(dumpDir, subDir)
     
     % Saving all iterations
     for z = 1:nIter
-        clu_macro_avg_string = sprintf('"%s",%.4,f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
-            simName, simnameidx, dump.run, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
+        clu_macro_avg_string = sprintf('"%s",%u,%.4,f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+            simName, totalFiles, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
             t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
             t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
             t_speed_avg(z), t_speed_sd(z), t_speed_se(z), t_speed_ci(z), ...
