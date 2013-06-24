@@ -83,7 +83,7 @@ function [] = temporalysis_fun(dumpDir, subDir)
         
         % If it is the first open file, initialize the arrays
         if (validFiles == 1)
-            nIter = length(g_global_count_sum);
+            nIter = length(global_count_sum);
             g_global_count_sum = zeros(nIter,1);
             g_global_count_sumsquared = zeros(nIter,1);
             g_global_coverage_sum = zeros(nIter,1);
