@@ -123,7 +123,6 @@ function [] = temporalysis_fun(dumpDir, subDir)
     df = N - 1;
 
     % Computing g_global stats
-        % Computing global stats  
     t_count_avg = global_count_sum / N; 
     t_count_sd = sqrt(((global_count_sumsquared - ((global_count_sum).^2 / N))) / df);
     t_count_se = t_count_sd / sqrt(N);  
@@ -163,9 +162,8 @@ function [] = temporalysis_fun(dumpDir, subDir)
     write_csv_headers(dataFileName, headers_clusters_macro_avg);
     fidClustersMacroAvg = fopen(dataFileName,'a');
     
-     % SAVING ONLY EVERY X ITERATIONS        
-    for k = 1:size(idxsIters,2)
-        z = idxsIters(k);
+    % Saving all iterations
+    for k = z:nIter
         clu_macro_avg_string = sprintf('"%s",%.4,f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
             simName, simnameidx, dump.run, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
             t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
