@@ -187,7 +187,7 @@ fclose(fidCl);
 % Creating the GOAGGR_FUN
 launcherAggr = '../GOAGGR_FUN';
 fidAggr = fopen(launcherAggr, 'w');
-cmdStr = sprintf('bsub -J hs_cl_aggr -W 36:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
+cmdStr = sprintf('bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
 fprintf(fidAggr, '%s\n', cmdStr);
 fclose(fidAggr);
 
