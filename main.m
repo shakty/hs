@@ -44,7 +44,7 @@ load([confDir 'attrExpo_nv_rndseq_tm_Rleft_reduced']);
 % dumpDir = 'dump/';
 
 %% Creating simName and Struct
-simName = createSimName(simName,DUMP,dumpDir);
+simName = createSimName(simName,DUMP,dumpDir, 1);
 
 simParamsStruct = struct( ...
                 'dumpDir', dumpDir, ...

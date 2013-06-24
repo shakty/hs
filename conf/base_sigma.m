@@ -143,26 +143,45 @@ fprintf('Total number of simulations = %u x %u: = %u\n', nRuns, nCombinations, n
 
 % CREATING FOLDERS
 CONF_SUBDIR = 'NEW/';
-DIR = [CONF_SUBDIR simName];
+DIR = [CONF_SUBDIR simName '/'];
 if (exist(DIR, 'dir')~=0 )
     error('Dir already exists');
 end
 mkdir(DIR);
 
-launcher = '../GO_FUN';
-fid = fopen(launcher,'w');
+launcherMain = '../GO_FUN';
+fidMain = fopen(launcherMain, 'w');
+
+launcherCl = '../GOCL_FUN';
+fidCl = fopen(launcherCl, 'w');
+
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
-    % Saving all params
+
     sigmas = old_sigmas(i);
-    confFile = sprintf('%s_s%u', simName, sigmas*10);
-    fullName = sprintf('%s/%s',DIR, confFile);
+    % Sigma string
+    S = sigmas*10;
+    confFile = sprintf('%s_s%u', simName, S);
+    fullName = sprintf('%s/%s', DIR, confFile);
+    
+    % Saving the configuration to .mat
     save(fullName);
+    
+    % Creating the GO_FUN file
     if (i == 1)
         cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
     else
         cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
     end
-    fprintf(fid, '%s\n', cmdStr);
+    fprintf(fidMain, '%s\n', cmdStr);
+    
+    
+    % Creating the GOCL_FUN
+    cmdStr = sprintf('bsub -J hs_cl_%u -W 8:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
+    fprintf(fidCl, '%s\n', cmdStr);
+    
 end
-fclose(fid);
+fclose(fidMain);
+fclose(fidCl);
+
+

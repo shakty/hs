@@ -3,7 +3,7 @@ source("./init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
-DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
+DIR = "attrExpo_nv_rndseq_tm_Rleft_reduced/" # ADD NEW
 
 DUMPDIR = "/cluster/home/gess/balistef/matlab/hsnew/dump/"
 

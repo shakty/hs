@@ -180,7 +180,10 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
 
         % We load only .mat
         [PATH,NAME,EXT] = fileparts(fileName);
-        if (~strcmpi(EXT,'.mat') || strcmp(NAME, 'temporalysis') == 1) 
+        if (~strcmpi(EXT,'.mat') ...
+            || strcmp(NAME, 'temporalysis') == 1 ...
+            || strcmp(NAME, 'global_count_sum') == 1 ...
+            || strcmp(NAME, 'global_count_sumsquared') == 1 )
             continue;
         end
 
@@ -457,6 +460,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         end
         
     end % File loop
+    
+    save([ dumpDir 'sums' ], 'global_count_sum', 'global_count_sumsquared');
+    
     
     N = validFileIdx; % last value
     df = N - 1;

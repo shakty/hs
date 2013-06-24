@@ -1,10 +1,15 @@
-function simName = createSimName (simName,DUMP,dumpDir) 
+function simName = createSimName (simName, DUMP, dumpDir, time) 
 %  CREATESIMNAME Adds identifiers to the name of the simulation
 
+
 if (~isempty(simName))
-    simName = [simName '-' time2name()];
+    simName = simName;
 else
-    simName = ['noname' '-' time2name()];
+    simName = 'noname';
+end
+
+if (time ~= 0)
+ simName = [simName '-' time2name()];
 end
 
 if (DUMP) 
