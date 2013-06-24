@@ -46,7 +46,7 @@ function [] = main_fun(confDir, subDir, confFile)
 
     %% Creating simName and Struct
     myDumpDir = [dumpDir subDir '/'];
-    simName = createSimName(confFile, DUMP, myDumpDir);
+    simName = createSimName(confFile, DUMP, myDumpDir, 0);
 
     simParamsStruct = struct( ...
                     'dumpDir', dumpDir, ...
