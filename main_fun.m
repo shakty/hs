@@ -33,7 +33,7 @@ function [] = main_fun(confDir, subDir, confFile)
     % VIDEO = 0;
     % DUMP = 1;
     % % alphas = [0.1 0.5 0.9];
-    COMPUTATION = 0;
+    % COMPUTATION = 0;
     % attrtype = 7;
     % alphas = 0.1;
     % Rs = 0.07;
@@ -42,7 +42,7 @@ function [] = main_fun(confDir, subDir, confFile)
     % %n_agents = 10;
     % sigmas = [0, 0.1, 0.2];
     % simName = 'test_t';
-    dumpDir = 'dump/';
+    % dumpDir = 'dump/';
 
     %% Creating simName and Struct
     myDumpDir = [ dumpDir subDir ];
