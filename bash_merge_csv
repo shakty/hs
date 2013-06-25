@@ -1,0 +1,4 @@
+## TODO...
+# http://www.unix.com/shell-programming-scripting/134268-removing-header-files-before-concatenation.html
+cat file1 > out-file
+sed -e '1d' file2 >> out-file
