@@ -398,9 +398,12 @@ heatmapFacets_fromtruth<- function(v1,v2,v3,data = clu, paramsData = params, img
   return(list(p=p,t=title))
 }
 
-heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
-
+heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
+  
   title <- paste0("Cluster counts by combinations of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=count), colour = "white")
@@ -411,9 +414,12 @@ heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath
   return(list(p=p,t=title))
 }
 
-heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE) {
+heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
 
   title <- paste0("Cluster sizes  by combinations of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
@@ -423,6 +429,71 @@ heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath 
 
   return(list(p=p,t=title))
 }
+
+heatmapFacets_move<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
+
+  title <- paste0("Cluster movements by combinations of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=move.avg), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$move.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
+heatmapFacets_speed<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
+
+  title <- paste0("Cluster movements by combinations of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=move.avg), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$move.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
+heatmapFacets_cumcoverage<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
+
+  title <- paste0("Cumulative space exploration by combination of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=coverage.cum), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$coverage.cum)), breaks= seq(0,1,0.05), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
+heatmapFacets_coverage<- function(v1,v2,v3,data = clu, paramsData = params, imgpath = IMGPATH, save = TRUE, t = 0) {
+
+  title <- paste0("Current share of space occupied by combination of ", v1, ", ", v2, ", and ", v3)
+  if (t != 0) {
+    title <- paste0(t, " - ", title)
+  }
+  facetFormula <- as.formula(sprintf('%s~.', v3))
+  p <- ggplot(data, aes_string(x=v1, y=v2))
+  p <- p + geom_tile(aes(fill=coverage), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$coverage)), breaks= seq(0,1,0.05), low='lightblue',high='red')
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + facet_grid(facetFormula)
+
+  return(list(p=p,t=title))
+}
+
 
 
 # Multiple plot function

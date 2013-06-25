@@ -6,14 +6,14 @@ DIR = "test_t-2013-6-4-12-14"
 DIR = "attrExpo_nv_rndseq_tm_Rleft_reduced/"
 DIR = "attrExpo_nv_rndseq_tm_Rleft/"
 
-DIR = "attrExpo_nv_rndseq_tm_Rleft/attrExpo_nv_rndseq_tm_Rleft_s0/" 
+DIR = "attrExpo_nv_rndseq_tm_Rleft/attrExpo_nv_rndseq_tm_Rleft_s5/" 
 
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
-IMGPATH <- paste0(PATH, "/img/");
+IMGPATH <- paste0(PATH, "img/");
 
 # Create IMG dir if not existing
 if (!file.exists(IMGPATH)) {
@@ -26,41 +26,87 @@ params <- read.table('params.csv', head=TRUE, sep=",")
 params$simname <- as.factor(params$simname)
 params$simcount <- as.factor(params$simcount)
 params$run <- as.factor(params$run)
-clusters$simname <- as.factor(clusters$simname)
-clusters$simcount <- as.factor(clusters$simcount)
-clusters$run <- as.factor(clusters$run)
-# Transforms params in factors
-clu <- merge(params, clusters, by=c("simname","simcount","run"))
+
+
+
+## MACRO: Loading
+
+macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+macro$simname <- as.factor(macro$simname)
+macro$simcount <- as.factor(macro$simcount)
+macro$run <- as.factor(macro$run)
+# Merging macro and params: clu
+clu <- merge(params, macro, by=c("simname","simcount","run"))
+# Factorising
 for (n in names(clu[1:23])) {
   clu[, n] <- as.factor(clu[, n])      
 }
 
+## MACRO: Heatmap
 
-## MACRO HEATMAP
+v1 <- "R"
+v2 <- "alpha"
+v3 <- "sigma"
+paramsData <- params
 
-
-if (!file.exists(paste0(IMGPATH, "ft/")) {
-  
+if (!file.exists(paste0(IMGPATH, "ft/"))) {
+  dir.create(paste0(IMGPATH, "ft/"))
 }
+if (!file.exists(paste0(IMGPATH, "count/"))) {
+  dir.create(paste0(IMGPATH, "count/"))
+}   
+if (!file.exists(paste0(IMGPATH, "size/"))) {
+  dir.create(file.path(IMGPATH, "size/"))
+}   
+if (!file.exists(paste0(IMGPATH, "speed/"))) {
+  dir.create(file.path(IMGPATH, "speed/"))
+}
+if (!file.exists(paste0(IMGPATH, "move/"))) {
+  dir.create(file.path(IMGPATH, "move/"))
+}    
+if (!file.exists(paste0(IMGPATH, "cumcov/"))) {
+  dir.create(file.path(IMGPATH, "cumcov/"))
+}
+if (!file.exists(paste0(IMGPATH, "cov/"))) {
+  dir.create(file.path(IMGPATH, "cov/"))
+} 
 
-    
-    
-
-    
+        
 data <- clu
 for (t in unique(clu$t)) {
   data <- clu[clu$t == t,]
-
+  # From truth
   pt <- heatmapFacets_fromtruth(v1,v2,v3, data, t=t)
   ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
-
+  # Count
   pt <- heatmapFacets_count(v1,v2,v3, data, t=t)
-  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
-
+  ggsave(filename=paste0(IMGPATH,"count/count_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  # Size
   pt <- heatmapFacets_size(v1,v2,v3, data, t=t)
-  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  ggsave(filename=paste0(IMGPATH,"size/size_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  # Move
+  pt <- heatmapFacets_move(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"move/move_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  # Speed
+  pt <- heatmapFacets_speed(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"speed/speed_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  # Cum Cov
+  pt <- heatmapFacets_cumcoverage(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"cumcov/cumcov_",sprintf("%04d",t),".jpg"),plot=pt$p)
+   # Cov Instantaneous
+  pt <- heatmapFacets_coverage(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"cov/cov_",sprintf("%04d",t),".jpg"),plot=pt$p)
 }
 
+
+# Making a video out of the images
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/ft/ft_%04d.jpg img/ft/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/speed/speed_%04d.jpg img/speed/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/move/move_%04d.jpg img/move/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/size/size_%04d.jpg img/size/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/cumcov/cumcov_%04d.jpg img/cumcov/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/cov/cov_%04d.jpg img/cov/movie.avi')
+system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/count/count_%04d.jpg img/count/movie.avi')
 
 ## MICRO
 
