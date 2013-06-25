@@ -155,6 +155,15 @@ fidMain = fopen(launcherMain, 'w');
 launcherCl = '../GOCL_FUN';
 fidCl = fopen(launcherCl, 'w');
 
+
+file_merge = '../bash_merge_csv';
+fidFileMerge = fopen(file_merge, 'w');
+cmdStr = sprintf('#!/bin/sh');
+fprintf(fidFileMerge, '%s\n', cmdStr);
+cmdStr = sprintf('OUTFILE="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
+
+
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
 
@@ -173,16 +182,33 @@ for i=1:size(sigmas,2)
     else
         cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
     end
-    fprintf(fidMain, '%s\n', cmdStr);
-    
+    fprintf(fidMain, '%s\n', cmdStr);   
     
     % Creating the GOCL_FUN
     cmdStr = sprintf('bsub -J hs_cl_%u -W 1:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
+    
+    % Creating bash_merge_csv
+    if (i == 1)
+        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE', dumpDir, DIR, confFile, 'clusters_macro.csv');
+    else
+        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE', dumpDir, DIR, confFile, 'clusters_macro.csv');
+    end
+    fprintf(fidFileMerge, '%s\n', cmdStr);
+    
         
 end
 fclose(fidMain);
 fclose(fidCl);
+fclose(fidFileMerge);
+
+% Creating the GOMERGECSV_FUN
+launcherMerge = '../GOMERGECSV_FUN';
+fidMerge = fopen(launcherMerge, 'w');
+cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N bash_merge_csv');
+fprintf(fidMerge, '%s\n', cmdStr);
+fclose(fidMerge);
+
 
 % Creating the GOAGGR_FUN
 launcherAggr = '../GOAGGR_FUN';
@@ -190,4 +216,3 @@ fidAggr = fopen(launcherAggr, 'w');
 cmdStr = sprintf('bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
 fprintf(fidAggr, '%s\n', cmdStr);
 fclose(fidAggr);
-

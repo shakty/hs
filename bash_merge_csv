@@ -1,4 +1,8 @@
-## TODO...
-# http://www.unix.com/shell-programming-scripting/134268-removing-header-files-before-concatenation.html
-cat file1 > out-file
-sed -e '1d' file2 >> out-file
+#!/bin/sh
+OUTFILE="/cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/clusters_macro_all.csv"
+cat /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s0/clusters_macro.csv > $OUTFILE
+sed -e '1d' /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s1/clusters_macro.csv >> $OUTFILE
+sed -e '1d' /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s2/clusters_macro.csv >> $OUTFILE
+sed -e '1d' /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s3/clusters_macro.csv >> $OUTFILE
+sed -e '1d' /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s4/clusters_macro.csv >> $OUTFILE
+sed -e '1d' /cluster/work/scr4/balistef/NEW/attrExpo_nv_rndseq_tm_Rleft_all_iter/attrExpo_nv_rndseq_tm_Rleft_all_iter_s5/clusters_macro.csv >> $OUTFILE
