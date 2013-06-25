@@ -15,7 +15,55 @@ PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
 IMGPATH <- paste0(PATH, "/img/");
 
+# Create IMG dir if not existing
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(PATH, "/img/"))
+}
+
+# Reading the params file
+
+params <- read.table('params.csv', head=TRUE, sep=",")
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+clusters$simname <- as.factor(clusters$simname)
+clusters$simcount <- as.factor(clusters$simcount)
+clusters$run <- as.factor(clusters$run)
+# Transforms params in factors
+clu <- merge(params, clusters, by=c("simname","simcount","run"))
+for (n in names(clu[1:23])) {
+  clu[, n] <- as.factor(clu[, n])      
+}
+
+
+## MACRO HEATMAP
+
+
+if (!file.exists(paste0(IMGPATH, "ft/")) {
+  
+}
+
+    
+    
+
+    
+data <- clu
+for (t in unique(clu$t)) {
+  data <- clu[clu$t == t,]
+
+  pt <- heatmapFacets_fromtruth(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
+
+  pt <- heatmapFacets_count(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
+
+  pt <- heatmapFacets_size(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
+}
+
+
 ## MICRO
+
 micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
 
 CUTOFF <- 1
@@ -43,6 +91,9 @@ p
 p <- ggplot(micro.sub, aes(speed, fromtruth))
 p <- p + geom_point()
 p
+
+
+
 
 ## MACRO AVG ALL
 
