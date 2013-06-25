@@ -122,9 +122,11 @@ function [] = temporalysis_fun(dumpDir, subDir)
     end
     
     CI_INT = 0.95/2 + 0.5;
-    N = validFiles;
+    N = totalFiles;
     df = N - 1;
 
+    
+    
     % Computing g_global stats
     t_count_avg = g_global_count_sum / N; 
     t_count_sd = sqrt(((g_global_count_sumsquared - ((g_global_count_sum).^2 / N))) / df);
