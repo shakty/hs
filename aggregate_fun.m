@@ -163,7 +163,7 @@ function [] = temporalysis_fun(dumpDir, subDir)
     t_fromtruth_se = t_fromtruth_sd / sqrt(N);  
     t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, df);
     
-    dataFileName = [DUMPDIR 'clusters_macro_avg.csv'];
+    dataFileName = [DUMPDIR 'clusters_macro_avg_all.csv'];
     write_csv_headers(dataFileName, headers_clusters_macro_avg);
     fidClustersMacroAvg = fopen(dataFileName,'a');
     
