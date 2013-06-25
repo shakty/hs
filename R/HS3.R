@@ -98,6 +98,7 @@ for (t in unique(clu$t)) {
   ggsave(filename=paste0(IMGPATH,"cov/cov_",sprintf("%04d",t),".jpg"),plot=pt$p)
 }
 
+
 # Making a video out of the images
 system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/ft/ft_%04d.jpg img/ft/movie.avi')
 system('ffmpeg -qscale 1 -r 1 -b 9600 -y -i img/speed/speed_%04d.jpg img/speed/movie.avi')
