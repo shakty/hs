@@ -20,7 +20,7 @@ videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)
     mkdir([VIDEODIR videoSubDir]);
 end
-makevideo([dumpDir myFile], 1, videoFile, 1, 0);
+makevideo([dumpDir myFile], 1, videoFile, 0, 0);
 
 return;
 
