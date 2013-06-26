@@ -14,7 +14,7 @@ dumpDir = [DUMPDIR MYDIR];
 VIDEODIR = '/home/stefano/hs/videos/';
 
 
-myFile '1-1.mat';
+myFile = '1-1.mat';
 videoSubDir = MYDIR;
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)
