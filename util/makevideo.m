@@ -117,7 +117,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         open(vidObj);
     end
 
-    for j=1:size(allStepsAgents,3)
+    for j=1:size(agents,3)
    
         switch (plottype)
         
