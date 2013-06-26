@@ -34,7 +34,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
    
     %allStepsAgents = dump.agents;
     agents = dump.agents;
-    v = dump.v;
+    v = dump.agentsv;
     truth = dump.truth;
     
     % not used for now
