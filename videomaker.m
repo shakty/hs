@@ -14,13 +14,13 @@ dumpDir = [DUMPDIR MYDIR];
 VIDEODIR = '/home/stefano/hs/videos/';
 
 
-myFile = '1-1.mat';
+myFile = '1199-1.mat';
 videoSubDir = MYDIR;
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)
     mkdir([VIDEODIR videoSubDir]);
 end
-makevideo([dumpDir myFile], 1, videoFile, 0, 0);
+makevideo([dumpDir myFile], 0, videoFile, 0, 0);
 
 return;
 

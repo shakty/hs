@@ -37,8 +37,8 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     % not used for now
     % Creating a string with the description of the parameters
-    %paramString = ['File: ' fileIn];
-    %paramString = [paramString create_params_string(dump.parameters, dump.truth)];
+    paramString = ['File: ' fileIn];
+    paramString = [paramString create_params_string(dump.parameters, dump.truth)];
     
 
     %% Video Plotting
@@ -155,7 +155,9 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         % TODO: change here if the idea_dim_size changes
         xlim([0 1]);
         ylim([0 1]);
-        
+        % TODO move the title in the first frame
+        title(['T: ' int2str(j) ' ' paramString]);
+
         if (MPEG)
             % Get the very last frame
             currFrame = getframe();
@@ -173,7 +175,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         end
         
         % no need for pause for complicated plots
-        if (params.plottype == plot_cross)
+        if (plottype == plot_cross)
             pause(0.01);
         end
        
