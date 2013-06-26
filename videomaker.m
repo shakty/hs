@@ -6,43 +6,23 @@ clear
 
 path(path,'util/');
 
-VIDEO = 1;
-MPEG  = 0;
-DEBUG = 0;
-
-DUMPDIR = '/mnt/tmp/dump/';
-
-MYDIR = 'R-alpha-noA-noB-2013-3-6-20-8/'; 
-
-MYDIR = 'tests/the_loop-2013-3-9-22-40/';
-
-MYDIR = 'tests/motus_perpetuous-2013-3-11-12-40-a/';
-
-MYDIR = 'tests/quick_convergence-2013-3-11-12-54/';
-
-MYDIR = 'tests/average_clusters-2013-3-11-13-2/';
-
-MYDIR = 'tests/big_clusters-2013-3-11-13-8/';
-
-MYDIR = 'tests/slow_formation_of_clusters-2013-3-11-14-3/';
-
-MYDIR = 'limited_sigma_R_seq_rnd_avv1/';
-
-MYDIR = 'alpha1_tau_vinit_av0/';
-
-MYDIR = 'cluster_zone_sigma_R_alpha/';
-
-MYDIR = 'truth_corner_alpha_R_av1/';
-
-MYDIR = 'refactor/refactor-2013-5-29-10-31/';
-
 MYDIR = 'tec_np_seqrnd_av1_Rleft/';
 
 DUMPDIR = 'dump/';
-dumpDir = [DUMPDIR MYDIR]
+dumpDir = [DUMPDIR MYDIR];
 
 VIDEODIR = '/home/stefano/hs/videos/';
 
+
+myFile '1-1.mat';
+videoSubDir = MYDIR;
+videoFile = [VIDEODIR videoSubDir myFile '.avi'];
+if (exist([VIDEODIR videoSubDir],'dir') == 0)
+    mkdir([VIDEODIR videoSubDir]);
+end
+makevideo([dumpDir myFile], 1, videoFile, 1);
+
+return;
 
 % parentDir = '/home/stefano/hs/dump/tests/';
 %myFiles = {
@@ -58,13 +38,6 @@ VIDEODIR = '/home/stefano/hs/videos/';
 %    videoFile = [VIDEODIR videoSubDir myFiles{i} '.avi'];
 %    makevideo([parentDir myFiles{i} '/1-1.mat'], 1, videoFile);
 %end
-
-myFile '1-1.mat';
-videoSubDir = MYDIR;
-videoFile = [VIDEODIR videoSubDir myFile '.avi'];
-makevideo([dumpDir myFile], 1, videoFile);
-
-return;
 
 files = dir(dumpDir);
 fileIndex = find(~[files.isdir]);
