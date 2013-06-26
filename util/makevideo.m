@@ -1,18 +1,11 @@
-function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
+function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     close all;
     
-    if nargin < 4
-        SHOW_POTENTIAL = 0;
-    end
-    
-    DEBUG = 0; % not used for now
- 
-    colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
-    
-    load(fileIn);
-    
-    attrtype = dumps.parameters.attrtype;
-    
+    % PLOT TYPE
+    plot_cross = 0;
+    plot_number = 1;
+    plot_number_color = 2;
+    plot_arrow = 3;
     % Attraction to truth force type
     attr_zero = 0;
     attr_const = 1;
@@ -23,46 +16,20 @@ function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
     attr_wide_funnel = 6;
     attr_gentle_landing = 7;
 
-    switch (attrtype)
-
-        case attr_zero
-        % NO TRUTH
-        ths = @(x) (zeros(2, n_agents));
-
-        case attr_const
-        % TRUTH Constant
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
-
-        case attr_linear
-        % TRUTH Linear
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau;
-
-        case attr_expo
-        % TRUTH Decaying exponentially (EXP)
-        SIGMA = 1;
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);   
-
-        case attr_millean_arena
-        % Millean Arena (NORMAL)
-        POS = 3; SIGMA = 0.05;
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-
-        case attr_hard_to_find
-        % Hard to Find (NORMAL)
-        POS = 100; SIGMA = 0.02;
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-
-        case attr_wide_funnel
-        % Wide Funnel to Truth (LOG-NORMAL)
-        POS = 1; SIGMA = 3;
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
-
-        case attr_gentle_landing
-        % Gentle Landing to truth
-        POS = 0; SIGMA = 0.2;
-        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),POS,SIGMA),2,1);   
-
+    if nargin < 4
+        plottype = plot_cross;
+    
+    elseif nargin < 5
+        SHOW_POTENTIAL = 0;
     end
+    
+    DEBUG = 0; % not used for now
+ 
+    colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
+    
+    load(fileIn);
+    
+    
     
    
     %allStepsAgents = dump.agents;
@@ -79,17 +46,62 @@ function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
     %% Video Plotting
 
     % Showing the potential of the attraction to truth
-    if (SHOW_POTENTIAL && attrtype > 1)
-        PRECISION = 0.01;
-        a = [0:PRECISION:1;0:PRECISION:1];
-        [X,Y] = meshgrid(a(1,:), a(1,:));
-        Z = zeros(size(X));
-        for i=1:length(X)
-            potential_grid = [X(i,:) ; Y(i,:)];
-            forces = ths(potential_grid);
-            Z(i,:) = colnorm(forces,2);
+    if (SHOW_POTENTIAL)
+        attrtype = dumps.parameters.attrtype;
+    
+        switch (attrtype)
+
+            case attr_zero
+            % NO TRUTH
+            ths = @(x) (zeros(2, n_agents));
+
+            case attr_const
+            % TRUTH Constant
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
+
+            case attr_linear
+            % TRUTH Linear
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau;
+
+            case attr_expo
+            % TRUTH Decaying exponentially (EXP)
+            SIGMA = 1;
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);   
+
+            case attr_millean_arena
+            % Millean Arena (NORMAL)
+            POS = 3; SIGMA = 0.05;
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+            case attr_hard_to_find
+            % Hard to Find (NORMAL)
+            POS = 100; SIGMA = 0.02;
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+            case attr_wide_funnel
+            % Wide Funnel to Truth (LOG-NORMAL)
+            POS = 1; SIGMA = 3;
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+            case attr_gentle_landing
+            % Gentle Landing to truth
+            POS = 0; SIGMA = 0.2;
+            ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),POS,SIGMA),2,1);   
+
         end
-        contour(X,Y,Z);
+        
+        if (attrtype > 1)
+            PRECISION = 0.01;
+            a = [0:PRECISION:1;0:PRECISION:1];
+            [X,Y] = meshgrid(a(1,:), a(1,:));
+            Z = zeros(size(X));
+            for i=1:length(X)
+                potential_grid = [X(i,:) ; Y(i,:)];
+                forces = ths(potential_grid);
+                Z(i,:) = colnorm(forces,2);
+            end
+            contour(X,Y,Z);
+        end
     end
     
     
@@ -108,7 +120,7 @@ function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
 
     for j=1:size(allStepsAgents,3)
    
-        switch (params.plottype)
+        switch (plottype)
         
             case plot_cross
             % PLOT red crosses
@@ -144,7 +156,12 @@ function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
         xlim([0 ideas_space_size]);
         ylim([0 ideas_space_size]);
         
-            
+        if (MPEG)
+            % Get the very last frame
+            currFrame = getframe();
+            writeVideo(vidObj,currFrame);
+        end 
+        
         if (DEBUG)
             %Debugging: Calculate energy and control whether it is constant
             E=0;
