@@ -32,8 +32,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     
    
-    %allStepsAgents = dump.agents;
-    agents = dump.agents;
+    allStepsAgents = dump.agents;
     truth = dump.truth;
     
     % not used for now
@@ -117,8 +116,9 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         open(vidObj);
     end
 
-    for j=1:size(agents,3)
-   
+    for j=1:size(allStepsAgents,3)
+        agents = allStepsAgents(:,:,j);
+        
         switch (plottype)
         
             case plot_cross
