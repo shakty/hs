@@ -1,10 +1,15 @@
-function simName = createSimName (simName,DUMP,dumpDir) 
+function simName = createSimName (simName, DUMP, dumpDir, time) 
 %  CREATESIMNAME Adds identifiers to the name of the simulation
 
+
 if (~isempty(simName))
-    simName = [simName '-' time2name()];
+    simName = simName;
 else
-    simName = ['noname' '-' time2name()];
+    simName = 'noname';
+end
+
+if (time ~= 0)
+ simName = [simName '-' time2name()];
 end
 
 if (DUMP) 
@@ -22,8 +27,8 @@ function newSimName = createUniqueDumpDir(dumpDir,simName)
 variants = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n', ...
             'o','p','q','r','s','t','u','v','w','x','y','z'];
 
-newSimName = simName;
-folderName = [ dumpDir simName ];
+newSimName = simName
+folderName = [ dumpDir simName ]
 
 i=1;
 while (exist(folderName,'dir')~=0 )

@@ -68,13 +68,13 @@ DIR = "simul_texactcorner_noisev_av1_rleft/"
 
 DIR = "attr0_av1_nv_seqrnd_thm/"
 
-
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
 IMGPATH <- paste0(PATH, "img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
 clusters <- read.table('clusters.csv', head=TRUE, sep=",")
+
 params$simname <- as.factor(params$simname)
 params$simcount <- as.factor(params$simcount)
 params$run <- as.factor(params$run)
@@ -134,6 +134,15 @@ for (S in unique(params$sigma)) {
 }
 IMGPATH = OLDPATH
 
+
+### TEST
+data <- clu
+for (t in unique(clu$t)) {
+  data <- clu[clu$t == t,]
+  pt <- heatmapFacets_fromtruth(v1,v2,v3, data, t=t)
+  ggsave(filename=paste0(IMGPATH,"ft/ft_",sprintf("%04d",t),".jpg"),plot=pt$p)
+  #saveOrPlot(TRUE, pt$p, paste0("hf_", pt$t, "_", t), IMGPATH)
+}
 
 #image(clu$R, clu$sigma, clu$fromtruth.avg)
 

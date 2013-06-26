@@ -3,7 +3,7 @@ source("init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
-DIR = "attrExpo_nv_rndseq_tm_Rleft_reduced" # ADD NEW
+DIR = "attrExpo_nv_rndseq_tm_Rleft_reduced/" # ADD NEW
 
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
@@ -84,6 +84,33 @@ p <- p + geom_point()
 p
 
 # Cluster Macro in time
+
+library(biglm)
+library(bigmemory)
+library(biganalytics)
+
+
+x <- read.big.matrix("clusters_micro_cutoff.csv", header=TRUE,
+                     backingfile="micro_cutoff.bin",
+                     descriptorfile="micro_cutoff.desc",
+                     col.names = c("simname", "simcount", "run", "t", "size", "speed", "move", "fromtruth"))
+
+
+xdesc <- dget("micro_cutoff.desc")
+x <- attach.big.matrix(xdesc)
+
+
+tic()
+xfit <- biglm.big.matrix(speed ~ size + t + size*t, data = x)
+toc()
+
+xcut <- cut(x[, "size"], c(3,5,10,20,50,75,100))
+x <- cbind(x, xcut)
+
+xsplit <- split(1:nrow(x), x[, "size"]);
+
+
+plot(x[,"size"],x[,"speed"])
 
 cl <- clusters
 

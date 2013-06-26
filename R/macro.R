@@ -5,6 +5,12 @@ DIR = "test_t-2013-6-4-12-14"
 
 DIR = "attrExpo_nv_rndseq_tm_Rleft" # ADD NEW
 
+DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
+DIR = "noisev_truth_corner_alpha_Rleft_sigma_av1"
+PATH = paste0(DUMPDIR,DIR)
+setwd(PATH)
+paramsOLD <- read.table('params.csv', head=TRUE, sep=",")
+clustersOLD <- read.table('clusters.csv', head=TRUE, sep=",")
 
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
 PATH = paste0(DUMPDIR,DIR)

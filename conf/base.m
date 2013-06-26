@@ -6,7 +6,7 @@
 
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
-simName = 'attrExpo_nv_rndseq_tm_Rleft';
+simName = 'attrExpo_nv_rndseq_tm_Rleft_r_sigma';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 
 
@@ -59,7 +59,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [0.1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
-sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
+sigmas = [0.5];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities
