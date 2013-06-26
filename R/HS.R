@@ -68,7 +68,6 @@ DIR = "simul_texactcorner_noisev_av1_rleft/"
 
 DIR = "attr0_av1_nv_seqrnd_thm/"
 
-
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)

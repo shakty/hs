@@ -28,8 +28,12 @@ params$run <- as.factor(params$run)
 
 
 ## MACRO Aggregated: Loading
+params <- read.table('params_all.csv', head=TRUE, sep=",")
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+
 macro <- read.table('clusters_macro_all.csv', head=TRUE, sep=",")
-# renaming some of the columns so that they are compatible with clusters_macro file
 
 
 macro$simname <- as.factor(macro$simname)
@@ -38,7 +42,7 @@ macro$run <- as.factor(macro$run)
 # Merging macro and params: clu
 clu <- merge(params, macro, by=c("simname","simcount","run"))
 # Factorising
-for (n in names(clu[1:23])) {
+for (n in names(clu[1:25])) {
   clu[, n] <- as.factor(clu[, n])      
 }
 
@@ -155,6 +159,8 @@ p
 
 
 ## MACRO AVG ALL
+
+# if heatmap, needs to rename count to count.avg, maybe others too
 
 macro.avg.all <- read.table('clusters_macro_avg_all.csv', head=TRUE, sep=",")
 

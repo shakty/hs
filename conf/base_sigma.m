@@ -8,14 +8,14 @@ clc;
 
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
-simName = 'attrExpo_nv_rndseq_tm_Rleft_all_iter';
+simName = 'attrExpo_nv_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr4/balistef/'; % dump
 %dumpDir = 'dump/'; % dump
 
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 1; % Dump every x steps
+DUMP_RATE = 10; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 %%%%%%%%%%%%%
@@ -160,9 +160,11 @@ file_merge = '../bash_merge_csv';
 fidFileMerge = fopen(file_merge, 'w');
 cmdStr = sprintf('#!/bin/sh');
 fprintf(fidFileMerge, '%s\n', cmdStr);
+cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
 cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
+cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
 
 old_sigmas = sigmas;
@@ -191,13 +193,16 @@ for i=1:size(sigmas,2)
     
     % Creating bash_merge_csv
     if (i == 1)
-        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
-        cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');     
+        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');       
+        cmdStr1 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
     else
-        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
-        cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
+        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
+        cmdStr1 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
     end
     fprintf(fidFileMerge, '%s\n', cmdStr);
+    fprintf(fidFileMerge, '%s\n', cmdStr1);
     fprintf(fidFileMerge, '%s\n', cmdStr2);
         
 end
