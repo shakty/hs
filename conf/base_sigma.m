@@ -160,9 +160,10 @@ file_merge = '../bash_merge_csv';
 fidFileMerge = fopen(file_merge, 'w');
 cmdStr = sprintf('#!/bin/sh');
 fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
+cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
-
+cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
 
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
@@ -190,12 +191,14 @@ for i=1:size(sigmas,2)
     
     % Creating bash_merge_csv
     if (i == 1)
-        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');     
     else
-        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
+        cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
     end
     fprintf(fidFileMerge, '%s\n', cmdStr);
-    
+    fprintf(fidFileMerge, '%s\n', cmdStr2);
         
 end
 fclose(fidMain);
