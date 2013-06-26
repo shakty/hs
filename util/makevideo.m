@@ -1,21 +1,93 @@
-function makevideo( fileIn, MPEG, fileOut )
-
-    DEBUG = 0;
-
+function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
+    close all;
+    
+    DEBUG = 0; % not used for now
+ 
     colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
     
     load(fileIn);
+    
+    attrtype = dumps.parameters.attrtype;
+    
+    % Attraction to truth force type
+    attr_zero = 0;
+    attr_const = 1;
+    attr_linear = 2;
+    attr_expo = 3;
+    attr_millean_arena = 4;
+    attr_hard_to_find = 5;
+    attr_wide_funnel = 6;
+    attr_gentle_landing = 7;
+
+    switch (attrtype)
+
+        case attr_zero
+        % NO TRUTH
+        ths = @(x) (zeros(2, n_agents));
+
+        case attr_const
+        % TRUTH Constant
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*(repmat(tau./colnorm(repmat(truth,1,length(x))-x,2),2,1));
+
+        case attr_linear
+        % TRUTH Linear
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau;
+
+        case attr_expo
+        % TRUTH Decaying exponentially (EXP)
+        SIGMA = 1;
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(exppdf(colnorm(repmat(truth,1,length(x)) - abs((repmat(truth,1,length(x))-x)),2),SIGMA),2,1);   
+
+        case attr_millean_arena
+        % Millean Arena (NORMAL)
+        POS = 3; SIGMA = 0.05;
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+        case attr_hard_to_find
+        % Hard to Find (NORMAL)
+        POS = 100; SIGMA = 0.02;
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+        case attr_wide_funnel
+        % Wide Funnel to Truth (LOG-NORMAL)
+        POS = 1; SIGMA = 3;
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(lognpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+        case attr_gentle_landing
+        % Gentle Landing to truth
+        POS = 0; SIGMA = 0.2;
+        ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),POS,SIGMA),2,1);   
+
+    end
+    
    
-    allStepsAgents = dump.agents;
+    %allStepsAgents = dump.agents;
+    agents = dump.agents;
+    v = dump.v;
     truth = dump.truth;
     
+    % not used for now
     % Creating a string with the description of the parameters
-    paramString = ['File: ' fileIn];
-    paramString = [paramString create_params_string(dump.parameters, dump.truth)];
+    %paramString = ['File: ' fileIn];
+    %paramString = [paramString create_params_string(dump.parameters, dump.truth)];
     
 
     %% Video Plotting
 
+    % Showing the potential of the attraction to truth
+    if (SHOW_POTENTIAL && attrtype > 1)
+        PRECISION = 0.01;
+        a = [0:PRECISION:1;0:PRECISION:1];
+        [X,Y] = meshgrid(a(1,:), a(1,:));
+        Z = zeros(size(X));
+        for i=1:length(X)
+            potential_grid = [X(i,:) ; Y(i,:)];
+            forces = ths(potential_grid);
+            Z(i,:) = colnorm(forces,2);
+        end
+        contour(X,Y,Z);
+    end
+    
     
     xlim([0 1]);
     ylim([0 1]);
@@ -30,70 +102,60 @@ function makevideo( fileIn, MPEG, fileOut )
         open(vidObj);
     end
 
-    %A = allStepsAgents;  
-    %figure
-    close all
     for j=1:size(allStepsAgents,3)
+   
+        switch (params.plottype)
+        
+            case plot_cross
+            % PLOT red crosses
+            plot(agents(1,:),agents(2,:),'rx');     
+        
+            case plot_number
+            % PLOT BLACK NUMBERS
+            text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
+            plot(exp(agents(1,1)));
+        
+            case plot_number_color
+            % PLOT COLORED NUMBERS
+            points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
+            text(agents(1,:),agents(2,:), points');
+            
+            case plot_arrow
+            % PLOT VELOCITY ARROWS
+            quiver(agents(1,:),agents(2,:),v(1,:),v(2,:));
+            
 
-        %if (j > 1400)
-        %    break;
-        %    continue;
-        %end
-
-        agents = allStepsAgents(:,:,j);
-
-        % PLOT red crosses
-        plot(agents(1,:),agents(2,:),'rx');     
-
-        % PLOT COLORED NUMBERS
-        %points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
-        %text(agents(1,:),agents(2,:), points');
-
-        % PLOT BLACK NUMBERS
-        %text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
-
+        end
         hold on;
-        %plot(agents_average(1),agents_average(2),'bo');
+        
+        if (SHOW_POTENTIAL && attrtype > 1)
+            [C, h] = contour(X,Y,Z);
+            alpha(.5);
+        end
+        
         plot(truth(1),truth(2),'go');
-        title(['T: ' int2str(j) ' ' paramString]);
-
+        
         hold off;
-
-        % LIMITS for plotting red crosses
-        xlim([0 dump.parameters.iss]);
-        ylim([0 dump.parameters.iss]);
-
-        % LIMITS when plotting numbers
-        %axis([0 dump.parameters.iss 0 dump.parameters.iss])
-
-        if (MPEG)
-            % Get the very last frame
-            currFrame = getframe();
-            writeVideo(vidObj,currFrame);
-            %A(j)=getframe();
-        end 
-
+            
+        xlim([0 ideas_space_size]);
+        ylim([0 ideas_space_size]);
+        
+            
         if (DEBUG)
-            % Debugging: Calculate energy and control...
-            % whether it is constant
+            %Debugging: Calculate energy and control whether it is constant
             E=0;
-            for ii=1:n_agents
-                E=E+0.5*(v(:,ii))'*v(:,ii);
+            for i=1:n_agents
+                E=E+0.5*(v(:,i))'*v(:,i);
             end
             energy=num2str(E);
             legend(energy);
         end
-
-        %if (j<500)
+        
+        % no need for pause for complicated plots
+        if (params.plottype == plot_cross)
             pause(0.01);
-        %else
-        %    pause(0.2);
-        %end
-        % no need for pause when plotting numbers
-
-        %if (j ~= size(allStepsAgents,3)-1)
-        %    clf
-        %end
+        end
+       
     end      
  
 %%    

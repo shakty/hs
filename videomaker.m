@@ -36,6 +36,8 @@ MYDIR = 'truth_corner_alpha_R_av1/';
 
 MYDIR = 'refactor/refactor-2013-5-29-10-31/';
 
+MYDIR = 'tec_np_seqrnd_av1_Rleft/';
+
 DUMPDIR = 'dump/';
 dumpDir = [DUMPDIR MYDIR]
 
@@ -57,10 +59,10 @@ VIDEODIR = '/home/stefano/hs/videos/';
 %    makevideo([parentDir myFiles{i} '/1-1.mat'], 1, videoFile);
 %end
 
-
-videoSubDir = 'simul_tcorner_noisev_av1_rleft/';
-videoFile = [VIDEODIR videoSubDir 'few_little_cluster_R=.07_n=0_a=.4.avi'];
-makevideo([dumpDir '1-1.mat'], 0, videoFile);
+myFile '1-1.mat';
+videoSubDir = MYDIR;
+videoFile = [VIDEODIR videoSubDir myFile '.avi'];
+makevideo([dumpDir myFile], 1, videoFile);
 
 return;
 
