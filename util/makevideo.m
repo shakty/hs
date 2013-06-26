@@ -1,6 +1,10 @@
 function makevideo( fileIn, MPEG, fileOut, SHOW_POTENTIAL)
     close all;
     
+    if nargin < 4
+        SHOW_POTENTIAL = 0;
+    end
+    
     DEBUG = 0; % not used for now
  
     colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
