@@ -147,14 +147,14 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         if (SHOW_POTENTIAL && attrtype > 1)
             [C, h] = contour(X,Y,Z);
             alpha(.5);
-        end
-        
+        end        
         plot(truth(1),truth(2),'go');
         
         hold off;
-            
-        xlim([0 ideas_space_size]);
-        ylim([0 ideas_space_size]);
+        
+        % TODO: change here if the idea_dim_size changes
+        xlim([0 1]);
+        ylim([0 1]);
         
         if (MPEG)
             % Get the very last frame
