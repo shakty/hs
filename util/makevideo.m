@@ -34,7 +34,6 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
    
     %allStepsAgents = dump.agents;
     agents = dump.agents;
-    v = dump.agentsv;
     truth = dump.truth;
     
     % not used for now
@@ -138,6 +137,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             
             case plot_arrow
             % PLOT VELOCITY ARROWS
+            v = dump.agentsv;
             quiver(agents(1,:),agents(2,:),v(1,:),v(2,:));
             
 
