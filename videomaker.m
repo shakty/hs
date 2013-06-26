@@ -12,20 +12,6 @@ DEBUG = 0;
 
 DUMPDIR = '/mnt/tmp/dump/';
 
-
-%'the_loop-2013-3-8-16-13/';
-%MYDIR = 'circle_maybe-2013-3-8-13-22/';
-%MYDIR = 'many_little_clusters_do_not_find_truth_mod_a_little_bigger_clusters-2013-3-8-17-29/'
-%MYDIR = 'few_big_groups_do_not_find_truth_in_a_smaller_space_cluster_together-2013-3-8-18-28/';
-
-%MYDIR = 'few_big_groups-DIM-vs-ALPHA/';
-
-% WITH THE BUG (full) 'the_loop-2013-3-8-16-13/'
-% WITH THE BUG (withtout A and B) 'the_loop-2013-3-9-16-23/'
-% WITHOUT THE BUG (no alpha - R): 'the_loop-2013-3-9-16-29/'
-% the_loop-2013-3-9-16-42-a/
-
-
 MYDIR = 'R-alpha-noA-noB-2013-3-6-20-8/'; 
 
 MYDIR = 'tests/the_loop-2013-3-9-22-40/';
@@ -72,14 +58,11 @@ VIDEODIR = '/home/stefano/hs/videos/';
 %end
 
 
-
-
 videoSubDir = 'simul_tcorner_noisev_av1_rleft/';
 videoFile = [VIDEODIR videoSubDir 'few_little_cluster_R=.07_n=0_a=.4.avi'];
 makevideo([dumpDir '1-1.mat'], 0, videoFile);
 
-
-ded = ded
+return;
 
 files = dir(dumpDir);
 fileIndex = find(~[files.isdir]);
