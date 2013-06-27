@@ -9,8 +9,9 @@ clc;
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrMillean_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr5/balistef/'; % dump
-%dumpDir = 'dump/'; % dump
+dumpDir = '/cluster/work/scr5/balistef/'; 
+%dumpDir = 'dump/';
+bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
 VIDEO = 0;
 DEBUG = 0;
@@ -166,6 +167,9 @@ cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv
 fprintf(fidFileMerge, '%s\n', cmdStr);
 cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
+cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
+
 
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
@@ -196,15 +200,17 @@ for i=1:size(sigmas,2)
         cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');       
         cmdStr1 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     else
         cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
         cmdStr1 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     end
     fprintf(fidFileMerge, '%s\n', cmdStr);
     fprintf(fidFileMerge, '%s\n', cmdStr1);
     fprintf(fidFileMerge, '%s\n', cmdStr2);
-        
+    fprintf(fidFileMerge, '%s\n', cmdStr3);
 end
 fclose(fidMain);
 fclose(fidCl);
@@ -213,7 +219,7 @@ fclose(fidFileMerge);
 % Creating the GOMERGECSV_FUN
 launcherMerge = '../GOMERGECSV_FUN';
 fidMerge = fopen(launcherMerge, 'w');
-cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N bash_merge_csv');
+cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N %sbash_merge_csv', bsubWD);
 fprintf(fidMerge, '%s\n', cmdStr);
 fclose(fidMerge);
 
