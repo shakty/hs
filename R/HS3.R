@@ -17,7 +17,7 @@ IMGPATH <- paste0(PATH, "img/");
 # Create IMG dir if not existing
 if (!file.exists(IMGPATH)) {
   dir.create(file.path(PATH, "/img/"))
-}
+} 
 
 ## MACRO AVG_SPLIT Aggregated: Loading
 params <- read.table('params_all.csv', head=TRUE, sep=",")
@@ -40,11 +40,11 @@ limits <- aes(ymax = cl$size.avg + cl$size.sd, ymin=cl$size.avg - cl$size.sd)
 
 title = "Evolution of cluster size"
 p.count <- ggplot(cl, aes(t,group=simname))
-p.count <- p.count + geom_point(aes(y = size.avg,colour=simname), alpha=.5)
+#p.count <- p.count + geom_point(aes(y = size.avg,colour=simname), alpha=.5)
 #p.count <- p.count + geom_line(aes(y = count.avg, colour=simname, lty="count.avg"))
-#p.count <- p.count + geom_line(aes(y = size.avg, colour=simname, group=simname))
+p.count <- p.count + geom_line(aes(y = size.avg, colour=simname, group=simname))
 p.count <- p.count + geom_errorbar(limits, width=0.2)
-#p.count <- p.count + geom_line(aes(y = size.sd, colour=simname, lty="std. size"))
+p.count <- p.count + geom_line(aes(y = size.sd, colour=simname, lty="std. size"))
 p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
 p.count
 
