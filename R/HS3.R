@@ -19,7 +19,76 @@ if (!file.exists(IMGPATH)) {
   dir.create(file.path(PATH, "/img/"))
 }
 
-## MACRO Aggregated: Loading
+## MACRO AVG_SPLIT Aggregated: Loading
+params <- read.table('params_all.csv', head=TRUE, sep=",")
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+
+macro <- read.table('clusters_macro_avg_split.csv', head=TRUE, sep=",")
+macro$simname <- as.factor(macro$simname)
+macro$simcount <- as.factor(macro$simcount)
+macro$t <- as.factor(macro$t)
+
+cl <- macro[macro$simname=="attrExpo_nv_rndseq_tm_Rleft_s0",]
+cl <- macro
+
+# COUNT AND SIZE
+# TODO FIND A NICE VIZ FOR THE DIFFERENT BARS
+# Define the top and bottom of the errorbars
+limits <- aes(ymax = cl$size.avg + cl$size.sd, ymin=cl$size.avg - cl$size.sd)
+
+title = "Evolution of cluster size"
+p.count <- ggplot(cl, aes(t,group=simname))
+p.count <- p.count + geom_point(aes(y = size.avg,colour=simname), alpha=.5)
+#p.count <- p.count + geom_line(aes(y = count.avg, colour=simname, lty="count.avg"))
+#p.count <- p.count + geom_line(aes(y = size.avg, colour=simname, group=simname))
+p.count <- p.count + geom_errorbar(limits, width=0.2)
+#p.count <- p.count + geom_line(aes(y = size.sd, colour=simname, lty="std. size"))
+p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
+p.count
+
+                                        #COVERAGE
+title = "Average and cumulative space exploration"
+p.explo <- ggplot(cl, aes(t))
+p.explo <- p.explo + geom_jitter(aes(y = coverage.avg), alpha=.2)
+p.explo <- p.explo + geom_smooth(aes(y = coverage.avg, colour="avg"), size=2)
+p.explo <- p.explo + geom_smooth(aes(y = coverage.cum.avg, colour="cum"), size=2)
+p.explo <- p.explo + ggtitle(title) + xlab("Rounds") + ylab("Percentage")
+#p.explo
+# SPEED
+title = "Mean and std. agents speed"
+p.speed <- ggplot(cl, aes(t))
+p.speed <- p.speed + geom_jitter(aes(y = speed.avg), alpha=.2)
+p.speed <- p.speed + geom_smooth(aes(y = speed.avg, colour="avg"), size=2)
+p.speed <- p.speed + geom_smooth(aes(y = speed.sd, colour="sd"), size=2)
+p.speed <- p.speed + ggtitle(title) + xlab("Rounds") + ylab("Speed")
+#p.speed
+#MOVEMENTS
+title = "Mean and std. agents movements"
+p.move <- ggplot(cl, aes(t))
+p.move <- p.move + geom_jitter(aes(y = move.avg), alpha=.2)
+p.move <- p.move + geom_smooth(aes(y = move.avg, colour="avg"), size=2)
+p.move <- p.move + geom_smooth(aes(y = move.sd, colour="sd"), size=2)
+p.move <- p.move + ggtitle(title) + xlab("Rounds") + ylab("Displacement")
+#p.move
+# FROM TRUTH
+title = "Mean and std. distance from truth"
+p.truth <- ggplot(cl, aes(t))
+p.truth <- p.truth + geom_jitter(aes(y = fromtruth.avg), alpha=.2)
+p.truth <- p.truth + geom_smooth(aes(y = fromtruth.avg, colour="avg"), size=2)
+p.truth <- p.truth + geom_smooth(aes(y = fromtruth.sd, colour="sd"), size=2)
+p.truth <- p.truth + ggtitle(title) + xlab("Rounds") + ylab("Distance")
+#print(p.truth)
+# grid.Arrange
+jpeg(paste0(IMGPATH, "t_avg_overview.jpeg"), width=2048, height=1024)
+p <- grid.arrange(p.count, p.explo, p.speed, p.truth, p.move, ncol=3,
+            main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+dev.off()
+
+
+
+## MACRO AVG Aggregated: Loading
 params <- read.table('params_all.csv', head=TRUE, sep=",")
 params$simname <- as.factor(params$simname)
 params$simcount <- as.factor(params$simcount)
@@ -169,6 +238,7 @@ macro.avg.all <- read.table('clusters_macro_avg_all.csv', head=TRUE, sep=",")
 attach(macro.avg.all)
 
 cl <- macro.avg.all
+
 # COUNT AND SIZE
 title = "Evolution of cluster count and size"
 p.count <- ggplot(cl, aes(t))
