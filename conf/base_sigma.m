@@ -224,3 +224,12 @@ fidAggr = fopen(launcherAggr, 'w');
 cmdStr = sprintf('bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
 fprintf(fidAggr, '%s\n', cmdStr);
 fclose(fidAggr);
+
+% Saving a copy of all files in the conf dir
+COPYDIR = [DIR 'launchers/']; 
+mkdir(COPYDIR);
+copyfile(launcherMerge, COPYDIR);
+copyfile(launcherAggr, COPYDIR);
+copyfile(file_merge, COPYDIR);
+copyfile(launcherMain, COPYDIR);
+copyfile(launcherCl, COPYDIR);
