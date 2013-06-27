@@ -9,8 +9,9 @@ clc;
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrMillean_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr5/balistef/'; % dump
-%dumpDir = 'dump/'; % dump
+dumpDir = '/cluster/work/scr5/balistef/'; 
+%dumpDir = 'dump/';
+bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
 VIDEO = 0;
 DEBUG = 0;
@@ -213,7 +214,7 @@ fclose(fidFileMerge);
 % Creating the GOMERGECSV_FUN
 launcherMerge = '../GOMERGECSV_FUN';
 fidMerge = fopen(launcherMerge, 'w');
-cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N bash_merge_csv');
+cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N %sbash_merge_csv', bsubWD);
 fprintf(fidMerge, '%s\n', cmdStr);
 fclose(fidMerge);
 

@@ -15,7 +15,9 @@ function [] = temporalysis_fun(dumpDir, subDir, simName)
     set(0,'DefaultTextFontSize', 14)
 
 
-    % Dump only every X steps
+    % Dump to CSV (micro and macro) only every X steps
+    % the sums.mat is not affected by this value and always contains
+    % all iterations
     DUMP_RATE = 1;
 
     % Only clusters of size above the cutoff are included in the analysis

@@ -301,9 +301,6 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     
                 
             % SUMMING UP AVG statistics
-            if (i == 3)
-                test_c(validFileIdx) = C;
-            end
             global_count_sum(i) = global_count_sum(i) + C;
             global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
             global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage(i);
