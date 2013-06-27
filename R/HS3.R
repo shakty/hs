@@ -9,7 +9,6 @@ DIR = "attrExpo_nv_rndseq_tm_Rleft/"
 DIR = "attrExpo_nv_rndseq_tm_Rleft/attrExpo_nv_rndseq_tm_Rleft_s5/" 
 
 
-
 DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -28,6 +27,22 @@ params$simcount <- as.factor(params$simcount)
 params$run <- as.factor(params$run)
 
 
+## MACRO Aggregated: Loading
+params <- read.table('params_all.csv', head=TRUE, sep=",")
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+
+macro <- read.table('clusters_macro_all.csv', head=TRUE, sep=",")
+macro$simname <- as.factor(macro$simname)
+macro$simcount <- as.factor(macro$simcount)
+macro$run <- as.factor(macro$run)
+# Merging macro and params: clu
+clu <- merge(params, macro, by=c("simname","simcount","run"))
+# Factorising
+for (n in names(clu[1:25])) {
+  clu[, n] <- as.factor(clu[, n])      
+}
 
 ## MACRO: Loading
 
@@ -142,6 +157,8 @@ p
 
 
 ## MACRO AVG ALL
+
+# if heatmap, needs to rename count to count.avg, maybe others too
 
 macro.avg.all <- read.table('clusters_macro_avg_all.csv', head=TRUE, sep=",")
 
