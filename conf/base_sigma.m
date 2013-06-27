@@ -167,6 +167,9 @@ cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv
 fprintf(fidFileMerge, '%s\n', cmdStr);
 cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
+cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
+
 
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
@@ -197,15 +200,17 @@ for i=1:size(sigmas,2)
         cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');       
         cmdStr1 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     else
         cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
         cmdStr1 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     end
     fprintf(fidFileMerge, '%s\n', cmdStr);
     fprintf(fidFileMerge, '%s\n', cmdStr1);
     fprintf(fidFileMerge, '%s\n', cmdStr2);
-        
+    fprintf(fidFileMerge, '%s\n', cmdStr3);
 end
 fclose(fidMain);
 fclose(fidCl);

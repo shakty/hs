@@ -531,7 +531,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         fclose(fidClustersMicro);
         
         % SAVING ONLY EVERY X ITERATIONS        
-        for k = 1:size(idxsIters,2)
+        for k = 1:size(idxsIters,2) % TODO should it save all iters?
             z = idxsIters(k);
             clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
                 simName, N, dump.run, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...

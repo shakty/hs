@@ -2,21 +2,28 @@
 OUTFILE_PARAMS="/cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/params_all.csv"
 OUTFILE_MACRO="/cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/clusters_macro_all.csv"
 OUTFILE_MICRO="/cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/clusters_micro_all.csv"
+OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/clusters_macro_avg_split.csv"
 cat /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s0/params.csv > $OUTFILE_PARAMS
 cat /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s0/clusters_macro.csv > $OUTFILE_MACRO
 cat /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s0/clusters_micro.csv > $OUTFILE_MICRO
+cat /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s0/clusters_macro_avg.csv > $OUTFILE_MACRO_AVG_SPLIT
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s1/params.csv >> $OUTFILE_PARAMS
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s1/clusters_macro.csv >> $OUTFILE_MACRO
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s1/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s1/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s2/params.csv >> $OUTFILE_PARAMS
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s2/clusters_macro.csv >> $OUTFILE_MACRO
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s2/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s2/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s3/params.csv >> $OUTFILE_PARAMS
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s3/clusters_macro.csv >> $OUTFILE_MACRO
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s3/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s3/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s4/params.csv >> $OUTFILE_PARAMS
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s4/clusters_macro.csv >> $OUTFILE_MACRO
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s4/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s4/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s5/params.csv >> $OUTFILE_PARAMS
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s5/clusters_macro.csv >> $OUTFILE_MACRO
 sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s5/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr5/balistef/NEW/attrMillean_nv_rndseq_tm_Rleft/attrMillean_nv_rndseq_tm_Rleft_s5/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
