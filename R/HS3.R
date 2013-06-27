@@ -34,8 +34,6 @@ params$simcount <- as.factor(params$simcount)
 params$run <- as.factor(params$run)
 
 macro <- read.table('clusters_macro_all.csv', head=TRUE, sep=",")
-
-
 macro$simname <- as.factor(macro$simname)
 macro$simcount <- as.factor(macro$simcount)
 macro$run <- as.factor(macro$run)
