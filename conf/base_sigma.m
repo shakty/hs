@@ -188,7 +188,7 @@ for i=1:size(sigmas,2)
     fprintf(fidMain, '%s\n', cmdStr);   
     
     % Creating the GOCL_FUN
-    cmdStr = sprintf('bsub -J hs_cl_%u -W 1:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
+    cmdStr = sprintf('bsub -J hs_cl_%u -W 36:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
     
     % Creating bash_merge_csv
