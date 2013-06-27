@@ -9,7 +9,7 @@ clc;
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrMillean_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr4/balistef/'; % dump
+dumpDir = '/cluster/work/scr5/balistef/'; % dump
 %dumpDir = 'dump/'; % dump
 
 VIDEO = 0;
