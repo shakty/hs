@@ -26,36 +26,49 @@ params$simcount <- as.factor(params$simcount)
 params$run <- as.factor(params$run)
 
 macro <- read.table('clusters_macro_avg_split.csv', head=TRUE, sep=",")
+macro$simname <- as.character(macro$simname)
+macro$simname <- substr(macro$simname, nchar(macro$simname)-1, nchar(macro$simname))
 macro$simname <- as.factor(macro$simname)
 macro$simcount <- as.factor(macro$simcount)
 macro$t <- as.factor(macro$t)
 
+
 cl <- macro[macro$simname=="attrExpo_nv_rndseq_tm_Rleft_s0",]
 cl <- macro
 
-# COUNT AND SIZE
-# TODO FIND A NICE VIZ FOR THE DIFFERENT BARS
-# Define the top and bottom of the errorbars
-limits <- aes(ymax = cl$size.avg + cl$size.sd, ymin=cl$size.avg - cl$size.sd)
+# SIZE
+title = "Evolution of cluster size by sigma and Std"
+p.count <- ggplot(cl, aes(t,group=simname))
+p.count <- p.count + geom_area(aes(y = size.avg, colour=simname, group=simname))
+p.count <- p.count + geom_area(aes(y = size.sd, colour=simname, group=simname, fill=simname))
+p.count <- p.count + facet_grid(simname~.,margins=F)
+p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
+p.count
 
+limits <- aes(ymax = cl$size.avg + cl$size.se, ymin=cl$size.avg - cl$size.se)
 title = "Evolution of cluster size"
 p.count <- ggplot(cl, aes(t,group=simname))
 #p.count <- p.count + geom_point(aes(y = size.avg,colour=simname), alpha=.5)
 #p.count <- p.count + geom_line(aes(y = count.avg, colour=simname, lty="count.avg"))
 p.count <- p.count + geom_line(aes(y = size.avg, colour=simname, group=simname))
 p.count <- p.count + geom_errorbar(limits, width=0.2)
-p.count <- p.count + geom_line(aes(y = size.sd, colour=simname, lty="std. size"))
+#p.count <- p.count + geom_line(aes(y = size.sd, colour=simname, lty="std. size"))
 p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
 p.count
 
-                                        #COVERAGE
+
+
+#COVERAGE
 title = "Average and cumulative space exploration"
 p.explo <- ggplot(cl, aes(t))
-p.explo <- p.explo + geom_jitter(aes(y = coverage.avg), alpha=.2)
-p.explo <- p.explo + geom_smooth(aes(y = coverage.avg, colour="avg"), size=2)
-p.explo <- p.explo + geom_smooth(aes(y = coverage.cum.avg, colour="cum"), size=2)
+#p.explo <- p.explo + geom_jitter(aes(y = coverage.avg, colour=simname, group=simname))
+p.explo <- p.explo + geom_area(aes(y = coverage.cum.avg, colour=simname, group=simname))
+p.explo <- p.explo + geom_area(aes(y = coverage.avg, colour=simname, group=simname, fill=simname))
+p.explo <- p.explo + geom_area(aes(y = coverage.cum.sd, colour=simname, group=simname, fill=simname))
+p.explo <- p.explo + facet_grid(simname~.,margins=F)
 p.explo <- p.explo + ggtitle(title) + xlab("Rounds") + ylab("Percentage")
-#p.explo
+p.explo
+
 # SPEED
 title = "Mean and std. agents speed"
 p.speed <- ggplot(cl, aes(t))
