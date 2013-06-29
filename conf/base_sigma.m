@@ -9,7 +9,7 @@ clc;
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
 simName = 'attrLinear_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr5/balistef/'; 
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
