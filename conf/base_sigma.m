@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr _ noise _ update _  truth _ parameter sweep
-simName = 'attrLinear_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr6/balistef/'; 
+simName = 'attrLinear_nv_rndseed_rndseq_tm_Rleft';
+dumpDir = '/cluster/work/scr3/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -117,7 +117,7 @@ plottype = plot_cross;
 seed_fixed = 0;
 seed_random = 1;
 
-seedtype = seed_fixed;
+seedtype = 1;
 
 % NOISE TYPES
 noise_on_p = 0;
