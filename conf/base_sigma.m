@@ -7,8 +7,8 @@ clc;
 % GLOBAL Conf
 
 % always av1
-% attr _ seedType _ noise _ update _  truth _ parameter sweep
-simName = 'attrK_nv_Kseed_rndseq_tm_Rleft';
+% attr  _ noise _ seedType _ update _  truth _ parameter sweep
+simName = 'attrHard_nv_rndseed_rndseq_tm_Rleft';
 dumpDir = '/cluster/work/scr2/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 1;
+attrtype = 5;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -117,7 +117,7 @@ plottype = plot_cross;
 seed_fixed = 0;
 seed_random = 1;
 
-seedtype = 1;
+seedtype = 0;
 
 % NOISE TYPES
 noise_on_p = 0;
