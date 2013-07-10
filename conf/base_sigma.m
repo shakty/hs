@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrFunnel_nv_rndseed_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr4/balistef/'; 
+simName = 'attrGentle_nv_rndseed_rndseq_tm_Rleft';
+dumpDir = '/cluster/work/scr3/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 6;
+attrtype = 7;
 
 % PLOT TYPE
 plot_cross = 0;
