@@ -318,6 +318,9 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                 global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) + mean_cluster_fromtruth(i)^2;
                 
             else
+                
+                sprintf('Error at iter: %i, fileIdx: %i, fileName: %s', i, validFileIdx, fileName)
+                
                 mean_cluster_size(i) = 0;
                 sd_cluster_size(i) = 0;
 
