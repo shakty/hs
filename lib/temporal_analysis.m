@@ -279,41 +279,60 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
             % Z the results of HCLUST 
             % T the cluster of each agent
             % C the number of clusters
-            [Z, T, C] = clusterize(pos(:,:,i));
-            cluster_count(i) = C;
-
-            [d, Gc, AvgGDist, avgGroupSpeed, avgGroupMove] = cluster_stats(T, dump.truth, pos(:,:,i), v(:,:,i), movs);
-
-            mean_cluster_size(i) = mean(Gc);
-            sd_cluster_size(i) = std(Gc);
+            [Z, T, C, err] = clusterize(pos(:,:,i));
             
-            mean_cluster_fromtruth(i) = mean(AvgGDist);
-            sd_cluster_fromtruth(i) = std(AvgGDist);
+            if (err == 0)
             
-            sd_cluster_speed(i) = std(avgGroupSpeed);
-            sd_cluster_move(i) = std(avgGroupMove);
+                cluster_count(i) = C;
 
-            clusters_size{i} = Gc;
-            clusters_fromtruth{i} = AvgGDist;
-            clusters_speed{i} = avgGroupSpeed;
-            clusters_move{i} = avgGroupMove;
-    
+                [d, Gc, AvgGDist, avgGroupSpeed, avgGroupMove] = cluster_stats(T, dump.truth, pos(:,:,i), v(:,:,i), movs);
+
+                mean_cluster_size(i) = mean(Gc);
+                sd_cluster_size(i) = std(Gc);
+
+                mean_cluster_fromtruth(i) = mean(AvgGDist);
+                sd_cluster_fromtruth(i) = std(AvgGDist);
+
+                sd_cluster_speed(i) = std(avgGroupSpeed);
+                sd_cluster_move(i) = std(avgGroupMove);
+
+                clusters_size{i} = Gc;
+                clusters_fromtruth{i} = AvgGDist;
+                clusters_speed{i} = avgGroupSpeed;
+                clusters_move{i} = avgGroupMove;
+
+                % SUMMING UP AVG statistics
+                global_count_sum(i) = global_count_sum(i) + C;
+                global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
+                global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage(i);
+                global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage(i)^2;
+                global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage(i);
+                global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage(i)^2;
+                global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed(i);
+                global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed(i)^2;
+                global_move_sum(i) = global_move_sum(i) + mean_cluster_move(i);
+                global_move_sumsquared(i) =  global_move_sumsquared(i) + mean_cluster_move(i)^2;
+                global_size_sum(i) = global_size_sum(i) + mean_cluster_size(i);
+                global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size(i)^2;
+                global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth(i);
+                global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) + mean_cluster_fromtruth(i)^2;
                 
-            % SUMMING UP AVG statistics
-            global_count_sum(i) = global_count_sum(i) + C;
-            global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
-            global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage(i);
-            global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage(i)^2;
-            global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage(i);
-            global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage(i)^2;
-            global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed(i);
-            global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed(i)^2;
-            global_move_sum(i) = global_move_sum(i) + mean_cluster_move(i);
-            global_move_sumsquared(i) =  global_move_sumsquared(i) + mean_cluster_move(i)^2;
-            global_size_sum(i) = global_size_sum(i) + mean_cluster_size(i);
-            global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size(i)^2;
-            global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth(i);
-            global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) +  mean_cluster_fromtruth(i)^2;
+            else
+                mean_cluster_size(i) = 0;
+                sd_cluster_size(i) = 0;
+
+                mean_cluster_fromtruth(i) = 0;
+                sd_cluster_fromtruth(i) = 0;
+
+                sd_cluster_speed(i) = 0;
+                sd_cluster_move(i) = 0;
+
+                clusters_size{i} = 0;
+                clusters_fromtruth{i} = 0;
+                clusters_speed{i} = 0;
+                clusters_move{i} = 0;
+            
+            end
 
         end
         
