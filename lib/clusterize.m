@@ -16,8 +16,6 @@ function [Z, T, maxC, err] = clusterize(agentpos)
         err = 1;
         sprintf('Error happened!')
         e
-        T = zeros(max(size(X)));
-        maxC = 0;
     end
    
 end
