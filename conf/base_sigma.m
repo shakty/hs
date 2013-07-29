@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrGentle_nv_rndseed_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr3/balistef/'; 
+simName = 'attrHard_nv_rndseed_rndseq_tc_Rleft';
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -83,7 +83,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.5; 0.5];
+truths = [0.1; 0.1];
 
 
 % BOUNDARY CONDITIONS (not used yet)
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 7;
+attrtype = 5;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -192,7 +192,7 @@ for i=1:size(sigmas,2)
     fprintf(fidMain, '%s\n', cmdStr);   
     
     % Creating the GOCL_FUN
-    cmdStr = sprintf('bsub -J hs_cl_%u -W 36:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
+    cmdStr = sprintf('bsub -J hs_cl_%u -W 36:00 -N matlab -R "rusage[mem=20000]" -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
     
     % Creating bash_merge_csv
