@@ -276,13 +276,11 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
             end
             cumcoverage(i) = nnz(cum_coverage_matrix(:,:,i)) / TOTAL_CELLS;
 
-            % Z the results of HCLUST 
-            % T the cluster of each agent
-            % C the number of clusters
-            [Z, T, C, err] = clusterize(pos(:,:,i));
-            
-            if (err == 0)
-            
+            try
+                % Z the results of HCLUST 
+                % T the cluster of each agent
+                % C the number of clusters            
+                [Z, T, C] = clusterize(pos(:,:,i));
                 cluster_count(i) = C;
 
                 [d, Gc, AvgGDist, avgGroupSpeed, avgGroupMove] = cluster_stats(T, dump.truth, pos(:,:,i), v(:,:,i), movs);
@@ -311,14 +309,15 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                 global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed(i);
                 global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed(i)^2;
                 global_move_sum(i) = global_move_sum(i) + mean_cluster_move(i);
-                global_move_sumsquared(i) =  global_move_sumsquared(i) + mean_cluster_move(i)^2;
+                global_move_sumsquared(i) = global_move_sumsquared(i) + mean_cluster_move(i)^2;
                 global_size_sum(i) = global_size_sum(i) + mean_cluster_size(i);
                 global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size(i)^2;
                 global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth(i);
                 global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) + mean_cluster_fromtruth(i)^2;
                 
-            else
+            catch err
                 
+                err
                 sprintf('Error at iter: %i, fileIdx: %i, fileName: %s', i, validFileIdx, fileName)
                 
                 mean_cluster_size(i) = 0;
