@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrHard_nv_rndseed_rndseq_tc_Rleft';
+simName = 'attrMillean_nv_rndFixed_rndseq_tc_Rleft';
 dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 5;
+attrtype = 4;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -126,9 +126,8 @@ noise_adaptive_on_v = 2;
 
 noisetype = 1;
 
+
 % Split by Sigma
-
-
 
 nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(ideas_space_dims,2)*size(As,2)*size(Bs,2)*size(ks,2)*...
