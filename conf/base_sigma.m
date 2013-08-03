@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrExpo_nv_rndFixed_rndseq_tc_Rleft';
-dumpDir = '/cluster/work/scr5/balistef/'; 
+simName = 'attrExpo_nv_seedFixed_rndseq_tc_Rleft';
+dumpDir = '/cluster/work/scr3/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
