@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrZero_nv_Kseed_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr1/balistef/'; 
+simName = 'attrLinear_nv_Kseed_rndseq_tc_Rleft';
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -83,7 +83,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.5; 0.5];
+truths = [0.1; 0.1];
 
 
 % BOUNDARY CONDITIONS (not used yet)
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 0;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
