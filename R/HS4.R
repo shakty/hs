@@ -2,23 +2,25 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # TM
-DIR = "attrExpo_nv_rndseq_tm_Rleft/" # needs to be re-run (missing aggregation of results)
 DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
 DIR = "attrHard_nv_rndseed_rndseq_tm_Rleft/"
 DIR = "attrMillean_nv_rndseq_tm_Rleft/"
 DIR = "attrFunnel_nv_Kseed_rndseq_tm_Rleft/"
 DIR = "attrGentle_nv_Kseed_rndseq_tm_Rleft/" # some simulations are not saved in the results
+DIR = "attrExpo_nv_Kseed_rndseq_tm_Rleft/"
 
 # TC
-DIR = "attrExpo_nv_seedFixed_rndseq_tc_Rleft/"
-DIR = "attrHard_nv_Kseed_rndseq_tc_Rleft/"
-DIR = "attrK_nv_Kseed_rndseq_tc_Rleft/"
-DIR = "attrMillean_nv_Kseed_rndseq_tc_Rleft/"
-#DIR = "attrLinear_nv_rndseq_tm_Rleft/"
+#DIR = "attrExpo_nv_seedFixed_rndseq_tc_Rleft/"
+#DIR = "attrHard_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrK_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrMillean_nv_Kseed_rndseq_tc_Rleft/"
 #DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
 #DIR = "attrFunnel_nv_Kseed_rndseq_tm_Rleft/"
 #DIR = "attrGentle_nv_Kseed_rndseq_tm_Rleft/" 
+
+# next
+# DIR = "attrLinear_nv_rndseq_tc_Rleft/"
 
 INTERACTIVE = FALSE
 # DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
