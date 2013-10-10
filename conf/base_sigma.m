@@ -7,9 +7,9 @@ clc;
 % GLOBAL Conf
 
 % always av1
-% attr  _ noise _ seedType _ update _  truth _ parameter sweep
-simName = 'attrFunnel_nv_Kseed_rndseq_tc_Rleft';
-dumpDir = '/cluster/work/scr5/balistef/'; 
+% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents
+simName = 'attrLinear_nv_Kseed_rndseq_tm_Rleft_n10';
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -28,7 +28,7 @@ nRuns = 1;             % Number of simulation runs with same param set
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
 
-n_agents = [100];       % number of agents
+n_agents = [10];       % number of agents
 
 ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
@@ -83,7 +83,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.1; 0.1];
+truths = [0.5; 0.5];
 
 
 % BOUNDARY CONDITIONS (not used yet)
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 6;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
