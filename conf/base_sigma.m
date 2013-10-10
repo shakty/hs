@@ -9,7 +9,7 @@ clc;
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents
 simName = 'attrLinear_nv_Kseed_rndseq_tm_Rleft_n50';
-dumpDir = '/cluster/work/scr5/balistef/'; 
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -26,9 +26,9 @@ COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 nRuns = 1;             % Number of simulation runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [50];          % running time
+t_ends = [20];          % running time
 
-n_agents = [10];       % number of agents
+n_agents = [50];       % number of agents
 
 ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
