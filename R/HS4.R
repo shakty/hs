@@ -1,6 +1,9 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
+# NO TRUTH
+DIR = "attrZero_nv_Kseed_rndseq_tm_Rleft/"
+
 # TM
 DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
@@ -15,12 +18,13 @@ DIR = "attrExpo_nv_Kseed_rndseq_tm_Rleft/"
 #DIR = "attrHard_nv_Kseed_rndseq_tc_Rleft/"
 #DIR = "attrK_nv_Kseed_rndseq_tc_Rleft/"
 #DIR = "attrMillean_nv_Kseed_rndseq_tc_Rleft/"
-#DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
-#DIR = "attrFunnel_nv_Kseed_rndseq_tm_Rleft/"
-#DIR = "attrGentle_nv_Kseed_rndseq_tm_Rleft/" 
+#DIR = "attrFunnel_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrGentle_nv_Kseed_rndseq_tc_Rleft/" 
+#DIR = "attrLinear_nv_Kseed_rndseq_tc_Rleft/"
 
 # next
-# DIR = "attrLinear_nv_rndseq_tc_Rleft/"
+DIR = "attrLinear_nv_Kseed_rndseq_tc_Rleft/"
+
 
 INTERACTIVE = FALSE
 # DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
@@ -282,7 +286,7 @@ for (t in unique(clu$t)) {
   ggsave(filename=paste0(IMGPATH,"cov/cov_",sprintf("%04d",idx),".jpg"),plot=pt.cov$p)
   # Creating an overview of the last frame of all indexes
   if (t == maxT) {
-    jpeg(paste0(IMGPATH, "ht_overview.jpg"), width=2048, height=768)
+    jpeg(paste0(IMGPATH, "ht_overview.jpeg"), width=2048, height=768)
     p <- grid.arrange(pt.s$p, pt.c$p, pt.ft$p, pt.m$p, pt.sp$p, pt.ccov$p, pt.cov$p, ncol=4,
             main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
     dev.off()
