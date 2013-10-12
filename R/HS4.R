@@ -23,8 +23,7 @@ DIR = "attrExpo_nv_Kseed_rndseq_tm_Rleft/"
 #DIR = "attrLinear_nv_Kseed_rndseq_tc_Rleft/"
 
 # next
-DIR = "attrLinear_nv_Kseed_rndseq_tc_Rleft/"
-
+DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 
 INTERACTIVE = FALSE
 # DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
@@ -281,7 +280,7 @@ for (t in unique(clu$t)) {
   # Cum Cov
   pt.ccov <- heatmapFacets_cumcoverage(v1,v2,v3, data, t=t)
   ggsave(filename=paste0(IMGPATH,"cumcov/cumcov_",sprintf("%04d",idx),".jpg"),plot=pt.ccov$p)
-   # Cov Instantaneous
+  # Cov Instantaneous
   pt.cov <- heatmapFacets_coverage(v1,v2,v3, data, t=t)
   ggsave(filename=paste0(IMGPATH,"cov/cov_",sprintf("%04d",idx),".jpg"),plot=pt.cov$p)
   # Creating an overview of the last frame of all indexes

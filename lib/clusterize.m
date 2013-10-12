@@ -10,7 +10,7 @@ function [Z, T, maxC, err] = clusterize(agentpos)
     %[H,T] = dendrogram(Z,'colorthreshold',0.1);
     %set(H,'LineWidth',2)
     %T = cluster(Z,'cutoff',1.2)
-    T = cluster(Z,'cutoff',0.1, 'criterion', 'distance');
+    T = cluster(Z,'cutoff', 0.1, 'criterion', 'distance');
     maxC = max(T);
     
    

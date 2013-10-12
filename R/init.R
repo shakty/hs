@@ -456,8 +456,8 @@ heatmapFacets_speed<- function(v1,v2,v3,data = clu, paramsData = params, imgpath
   }
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
-  p <- p + geom_tile(aes(fill=move.avg), colour = "white")
-  p <- p + scale_fill_continuous(limits=c(0,max(data$move.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
+  p <- p + geom_tile(aes(fill=speed.avg), colour = "white")
+  p <- p + scale_fill_continuous(limits=c(0,max(data$speed.avg)), breaks= seq(0,1,0.1), low='lightblue',high='red')
   p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
   p <- p + facet_grid(facetFormula)
 
