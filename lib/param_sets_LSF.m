@@ -126,7 +126,7 @@ for i1=1:size(params.dts)
             elseif (params.seedtype == seed_random)
                 % Random seed
                 seed = randi(1000000);
-            elseif (paramas.seedtype == seed_fixed)
+            elseif (params.seedtype == seed_fixed)
                 seed = params.seed;
             end
         
