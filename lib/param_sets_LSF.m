@@ -4,9 +4,8 @@ function param_sets_LSF (params)
 seed_fixed = 0;
 seed_random = 1;
 seed_machinetime = 2;
-seed_uninit = 3;
 
-if (params.seedtype == seed_random)
+if (params.seedtype ~= seed_fixed)
     s = RandStream('mcg16807','Seed', params.seed);
     RandStream.setGlobalStream(s);
 end 

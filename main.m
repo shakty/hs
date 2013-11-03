@@ -6,11 +6,6 @@ close all
 clear
 clc
 
-%% Set Random Seed
-
-%s = RandStream('mcg16807','Seed',0);
-%RandStream.setGlobalStream(s)
-
 %% Add other directories to path
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
@@ -38,7 +33,7 @@ COMPUTATION = 0;
 % alphas = 0.1;
 % Rs = 0.07;
 plottype = 2;
-vScalings = 0;
+vScalings = 1;
 n_agents = 10;
 % sigmas = [0, 0.1, 0.2];
 % simName = 'test_t';
@@ -46,6 +41,7 @@ n_agents = 10;
 seedtype = 1;
 truths = [0.5;0.5];
 forces_on_v = 1;
+seed = 0;
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
 

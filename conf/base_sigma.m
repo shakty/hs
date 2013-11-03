@@ -7,9 +7,9 @@ clc;
 % GLOBAL Conf
 
 % always av1
-% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents
-simName = 'attrLinear_nv_Kseed_rndseq_tm_Rleft_n200';
-dumpDir = '/cluster/work/scr2/balistef/'; 
+% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
+simName = 'attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0';
+dumpDir = '/cluster/work/scr1/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -28,7 +28,7 @@ nRuns = 1;             % Number of simulation runs with same param set
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
 
-n_agents = [200];       % number of agents
+n_agents = [100];       % number of agents
 
 ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
@@ -116,8 +116,9 @@ plottype = plot_cross;
 % SEED TYPE
 seed_fixed = 0;
 seed_random = 1;
-seed_machine
-seedtype = 0;
+seed_seed_machinetime = 2;
+
+seedtype = seed_random;
 
 % NOISE TYPES
 noise_on_p = 0;
@@ -127,7 +128,7 @@ noise_adaptive_on_v = 2;
 noisetype = 1;
 
 % FORCES INTEGRATION on V
-forces_on_v = 1;
+forces_on_v = 0;
 
 % Seed
 
