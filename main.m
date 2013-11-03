@@ -6,11 +6,6 @@ close all
 clear
 clc
 
-%% Set Random Seed
-
-%s = RandStream('mcg16807','Seed',0);
-%RandStream.setGlobalStream(s)
-
 %% Add other directories to path
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
@@ -26,23 +21,27 @@ compPARALLEL = 1;
 compLSF = 2;
 
 %% Loading Conf
-load([confDir 'attrExpo_nv_rndseq_tm_Rleft_reduced']);
+% load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0']);
+load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tc_Rleft/attrLinear_nv_Kseed_rndseq_tc_Rleft_s0']);
 
 %% Modifying params locally
-% VIDEO = 0;
-% DUMP = 1;
+VIDEO = 1;
+DUMP = 0;
 % % alphas = [0.1 0.5 0.9];
-% COMPUTATION = 0;
+COMPUTATION = 0;
 % attrtype = 7;
 % alphas = 0.1;
 % Rs = 0.07;
-% plottype = 3;
-% vScalings = 2;
-% %n_agents = 10;
+plottype = 2;
+vScalings = 1;
+n_agents = 10;
 % sigmas = [0, 0.1, 0.2];
 % simName = 'test_t';
 % dumpDir = 'dump/';
-
+seedtype = 1;
+truths = [0.5;0.5];
+forces_on_v = 1;
+seed = 0;
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
 
@@ -75,7 +74,9 @@ simParamsStruct = struct( ...
                 'attrtype', attrtype, ...
                 'noisetype', noisetype, ...
                 'plottype', plottype, ...
-                'seedtype', seed_fixed ...
+                'seedtype', seedtype, ...
+                'seed', seed, ...
+                'forces_on_v', forces_on_v ...
             );
 
 

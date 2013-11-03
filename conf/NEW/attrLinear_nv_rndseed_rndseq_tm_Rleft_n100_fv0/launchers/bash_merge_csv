@@ -1,4 +1,5 @@
 #!/bin/sh
+OUTFILE_PARAMS="/cluster/work/scr1/balistef/NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/params_all.csv"
 OUTFILE_MACRO="/cluster/work/scr1/balistef/NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/clusters_macro_all.csv"
 OUTFILE_MICRO="/cluster/work/scr1/balistef/NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/clusters_micro_all.csv"
 OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr1/balistef/NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/clusters_macro_avg_split.csv"

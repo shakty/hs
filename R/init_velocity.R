@@ -1,6 +1,6 @@
 library(plyr)
 library(ggplot2)
-#library(gridExtra)
+library(gridExtra)
 library(reshape)
 library(MASS)
 library(car)
@@ -403,13 +403,13 @@ heatmapFacets_count<- function(v1,v2,v3,data = clu, paramsData = params, imgpath
   if (t != 0) {
     title <- paste0(t, " - ", title)
   }
-  N <- 60 # TODO: change if nagents change
+  N <- 50 # TODO: change if nagents change
   BR <- N / 4
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=count), colour = "white")
   p <- p + scale_fill_continuous(limits=c(1,N), breaks= seq(0,N,BR), high='red',low='lightblue')
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,N,0.1)) 
   p <- p + facet_grid(facetFormula)
   return(list(p=p,t=title))
 }
@@ -420,13 +420,13 @@ heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath 
   if (t != 0) {
     title <- paste0(t, " - ", title)
   }
-  N <- 100 # TODO: change if nagents change
+  N <- 50 # TODO: change if nagents change
   BR <- N / 4
   facetFormula <- as.formula(sprintf('%s~.', v3))
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
   p <- p + scale_fill_continuous(limits=c(1,N), breaks= seq(0,N,BR), low='lightblue',high='red') 
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,N,0.1)) 
   p <- p + facet_grid(facetFormula)
 
   return(list(p=p,t=title))

@@ -127,11 +127,13 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
             case plot_number
             % PLOT BLACK NUMBERS
+            clf
             text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
-            plot(exp(agents(1,1)));
+           
         
             case plot_number_color
             % PLOT COLORED NUMBERS
+            clf
             points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
             text(agents(1,:),agents(2,:), points');
             

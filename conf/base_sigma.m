@@ -7,9 +7,9 @@ clc;
 % GLOBAL Conf
 
 % always av1
-% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents
-simName = 'attrLinear_nv_Kseed_rndseq_tm_Rleft_n200';
-dumpDir = '/cluster/work/scr2/balistef/'; 
+% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
+simName = 'attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0';
+dumpDir = '/cluster/work/scr1/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -28,7 +28,7 @@ nRuns = 1;             % Number of simulation runs with same param set
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
 
-n_agents = [200];       % number of agents
+n_agents = [100];       % number of agents
 
 ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
@@ -116,8 +116,9 @@ plottype = plot_cross;
 % SEED TYPE
 seed_fixed = 0;
 seed_random = 1;
+seed_seed_machinetime = 2;
 
-seedtype = 0;
+seedtype = seed_random;
 
 % NOISE TYPES
 noise_on_p = 0;
@@ -126,6 +127,14 @@ noise_adaptive_on_v = 2;
 
 noisetype = 1;
 
+% FORCES INTEGRATION on V
+forces_on_v = 0;
+
+% Seed
+
+% This is either the fixed seed, or the seed used to init the random
+% generator of random seeds before the loop of param vectorization
+seed = randi(1000000);
 
 % Split by Sigma
 
@@ -134,7 +143,7 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2);
+                size(noisetype,2)*size(forces_on_v,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
@@ -191,7 +200,7 @@ for i=1:size(sigmas,2)
     fprintf(fidMain, '%s\n', cmdStr);   
     
     % Creating the GOCL_FUN
-    cmdStr = sprintf('bsub -J hs_cl_%u -W 36:00 -N matlab -R "rusage[mem=20000]" -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
+    cmdStr = sprintf('bsub  -R "rusage[mem=20000]" -J hs_cl_%u -W 36:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
     
     % Creating bash_merge_csv
