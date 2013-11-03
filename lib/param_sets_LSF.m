@@ -1,5 +1,16 @@
 function param_sets_LSF (params)
 
+% SEED TYPE
+seed_fixed = 0;
+seed_random = 1;
+seed_machinetime = 2;
+seed_uninit = 3;
+
+if (params.seedtype == seed_random)
+    s = RandStream('mcg16807','Seed', params.seed);
+    RandStream.setGlobalStream(s);
+end 
+
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
@@ -94,9 +105,31 @@ for i1=1:size(params.dts)
         attrtype = params.attrtype(:,i17);
         
     for i18=1:size(params.noisetype,2)
-        noisetype = params.noisetype(:,i18);    
+        noisetype = params.noisetype(:,i18);
+        
+    for i19=1:size(params.forces_on_v,2)
+        forces_on_v = params.forces_on_v(:,i19);
         
         for rCount=1:params.nRuns
+            
+            % Defining seed
+            if (params.seedtype == seed_machinetime)
+                % Set seed with milliseconds
+                seed1 = sscanf(datestr(now, 'FFF'),'%d') * 1000;
+                s = RandStream('mcg16807','Seed', seed1);
+                RandStream.setGlobalStream(s);
+                rng shuffle
+                seed2 = randi(1000);
+                seed = seed1 + seed2;
+                % Random pause to break correlation in itialization of
+                % simulations
+                pause(randi(1));
+            elseif (params.seedtype == seed_random)
+                % Random seed
+                seed = randi(1000000);
+            elseif (paramas.seedtype == seed_fixed)
+                seed = params.seed;
+            end
         
             fprintf('\n%s\n',params.simName);
             fprintf('Starting Run: %d/%d of Simulation n. %d/%d:\n', ...
@@ -123,6 +156,8 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
             fprintf('%+15s = %d\n', 'Noise type', noisetype);
             fprintf('%+15s = %d\n', 'Plot type', params.plottype);
+            fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
+            fprintf('%+15s = %d\n','Seed', seed);
             fprintf('------------------------------------\n');
 
             paramsObj = struct( ...
@@ -154,7 +189,9 @@ for i1=1:size(params.dts)
                 'clusterTightness', clusterTightness, ...
                 'truth', truth, ...
                 'noisetype', noisetype, ...
-                'attrtype', attrtype ...
+                'attrtype', attrtype, ...
+                'forces_on_v', forces_on_v, ...
+                'seed', seed ...
             );
             
             %createTask(eval(jobName), @simulation, 0, {paramsObj});
@@ -179,6 +216,7 @@ for i1=1:size(params.dts)
             fprintf('\n\n');
         end
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end

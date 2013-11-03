@@ -116,7 +116,7 @@ plottype = plot_cross;
 % SEED TYPE
 seed_fixed = 0;
 seed_random = 1;
-
+seed_machine
 seedtype = 0;
 
 % NOISE TYPES
@@ -126,6 +126,14 @@ noise_adaptive_on_v = 2;
 
 noisetype = 1;
 
+% FORCES INTEGRATION on V
+forces_on_v = 1;
+
+% Seed
+
+% This is either the fixed seed, or the seed used to init the random
+% generator of random seeds before the loop of param vectorization
+seed = randi(1000000);
 
 % Split by Sigma
 
@@ -134,7 +142,7 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2);
+                size(noisetype,2)*size(forces_on_v,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
