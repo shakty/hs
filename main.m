@@ -22,13 +22,14 @@ compLSF = 2;
 
 %% Loading Conf
 % load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0']);
-load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tc_Rleft/attrLinear_nv_Kseed_rndseq_tc_Rleft_s0']);
+%load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tc_Rleft/attrLinear_nv_Kseed_rndseq_tc_Rleft_s0']);
+load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
 VIDEO = 1;
 DUMP = 0;
 % % alphas = [0.1 0.5 0.9];
-COMPUTATION = 0;
+%COMPUTATION = 0;
 % attrtype = 7;
 % alphas = 0.1;
 % Rs = 0.07;
@@ -38,10 +39,10 @@ n_agents = 10;
 % sigmas = [0, 0.1, 0.2];
 % simName = 'test_t';
 % dumpDir = 'dump/';
-seedtype = 1;
+%seedtype = 1;
 truths = [0.5;0.5];
 forces_on_v = 1;
-seed = 0;
+%seed = 0;
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
 
