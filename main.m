@@ -37,17 +37,17 @@ vScalings = 1;
 n_agents = 100;
 
 % Influence
-alphas = 0.99;
-Rs = 0.1;
+alphas = 1;
+Rs = 0;
 
 % Noise
-sigmas = 0.4;
+sigmas = 0.5;
 noisetype = 1;
 
 % Truth
 taus = 0.1;
 truths = [0.5;0.5];
-attrtype = 2;
+attrtype = 0;
 forces_on_v = 0;
 
 % Seed
