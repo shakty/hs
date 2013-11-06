@@ -1,5 +1,14 @@
 function param_sets_local(params)
 
+% SEED TYPE
+seed_fixed = 0;
+seed_random = 1;
+seed_machinetime = 2;
+
+if (params.seedtype ~= seed_fixed)
+    s = RandStream('mcg16807','Seed', params.seed);
+    RandStream.setGlobalStream(s);
+end 
 
 dumpFolder = [params.dumpDir params.simName];
 
@@ -9,7 +18,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.ideas_space_dims,2)*size(params.As,2)*size(params.Bs,2)*size(params.ks,2)*...
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
-                size(params.clusterTightness,2)*size(params.truths,2);
+                size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2);
       
             
             
@@ -74,8 +83,27 @@ for i1=1:size(params.dts)
         
     for i18=1:size(params.noisetype,2)
         noisetype = params.noisetype(:,i18);        
+ 
+    for i19=1:size(params.forces_on_v,2)
+        forces_on_v = params.forces_on_v(:,i19);
         
         for rCount=1:params.nRuns
+          
+            % Defining seed
+            if (params.seedtype == seed_machinetime)
+                % Set seed with milliseconds
+                seed1 = sscanf(datestr(now, 'FFF'),'%d') * 1000;
+                s = RandStream('mcg16807','Seed', seed1);
+                RandStream.setGlobalStream(s);
+                rng shuffle
+                seed2 = randi(1000);
+                seed = seed1 + seed2;
+            elseif (params.seedtype == seed_random)
+                % Random seed
+                seed = randi(1000000);
+            elseif (params.seedtype == seed_fixed)
+                seed = params.seed;
+            end
         
             fprintf('\n%s\n',params.simName);
             fprintf('Starting Run: %d/%d of Simulation n. %d/%d:\n', ...
@@ -102,6 +130,8 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
             fprintf('%+15s = %d\n', 'Noise type', noisetype);
             fprintf('%+15s = %d\n', 'Plot type', params.plottype);
+            fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
+            fprintf('%+15s = %d\n','Seed', seed);            
             fprintf('------------------------------------\n');
 
             paramsObj = struct( ...
@@ -133,7 +163,9 @@ for i1=1:size(params.dts)
                 'clusterTightness', clusterTightness, ...
                 'truth', truth, ...
                 'noisetype', noisetype, ...
-                'attrtype', attrtype ...
+                'attrtype', attrtype, ...
+                'forces_on_v', forces_on_v, ...
+                'seed', seed ...
             );
             
             simulation(paramsObj);
@@ -143,6 +175,7 @@ for i1=1:size(params.dts)
         end % End n runs with identical param set
              
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end

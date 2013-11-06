@@ -1,0 +1,29 @@
+#!/bin/sh
+OUTFILE_PARAMS="/cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/params_all.csv"
+OUTFILE_MACRO="/cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/clusters_macro_all.csv"
+OUTFILE_MICRO="/cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/clusters_micro_all.csv"
+OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/clusters_macro_avg_split.csv"
+cat /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0/params.csv > $OUTFILE_PARAMS
+cat /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0/clusters_macro.csv > $OUTFILE_MACRO
+cat /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0/clusters_micro.csv > $OUTFILE_MICRO
+cat /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0/clusters_macro_avg.csv > $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s1/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s1/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s1/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s1/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s2/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s2/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s2/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s2/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s3/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s3/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s3/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s3/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s4/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s4/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s4/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s4/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s5/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s5/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s5/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr2/balistef/NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s5/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT

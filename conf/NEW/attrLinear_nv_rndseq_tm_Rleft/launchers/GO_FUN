@@ -1,0 +1,6 @@
+bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s0')"
+bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s1')"
+bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s2')"
+bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s3')"
+bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s4')"
+bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW/attrLinear_nv_rndseq_tm_Rleft/','attrLinear_nv_rndseq_tm_Rleft_s5')"

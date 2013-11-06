@@ -6,21 +6,35 @@ clear
 
 path(path,'util/');
 
-MYDIR = 'tec_np_seqrnd_av1_Rleft/';
 
-DUMPDIR = 'dump/';
-dumpDir = [DUMPDIR MYDIR];
+DUMPDIR = '/mnt/tmp/dump/NEW/';
+MYDIR = 'attrZero_nv_Kseed_rndseq_tm_Rleft';
+MYDIR = 'attrLinear_nv_rndseq_tm_Rleft';
 
-VIDEODIR = '/home/stefano/hs/videos/';
+SIGMA = '_s1'
+
+dumpDir = [DUMPDIR MYDIR '/' MYDIR SIGMA '/'];
+
+VIDEODIR = '/home/stefano/hs/videos/NEW/';
 
 
-myFile = '1-1.mat';
-videoSubDir = MYDIR;
+SAVE_VIDEO = 0;
+SHOW_POTENTIAL = 0;
+plottype = 0;
+
+% PLOT TYPE
+% plot_cross = 0;
+% plot_number = 1;
+% plot_number_color = 2;
+% plot_arrow = 3;
+    
+myFile = '33-1.mat';
+videoSubDir = [ MYDIR '/' ];
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)
     mkdir([VIDEODIR videoSubDir]);
 end
-makevideo([dumpDir myFile], 1, videoFile, 0, 0);
+makevideo([dumpDir myFile], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
 
 return;
 

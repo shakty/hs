@@ -1,0 +1,1 @@
+bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun('/cluster/work/scr3/balistef/','NEW/attrExpo_nv_seedFixed_rndseq_tc_Rleft/')"

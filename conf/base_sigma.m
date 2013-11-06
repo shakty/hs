@@ -7,15 +7,16 @@ clc;
 % GLOBAL Conf
 
 % always av1
-% attr _ noise _ update _  truth _ parameter sweep
-simName = 'attrExpo_nv_rndseq_tm_Rleft';
-dumpDir = '/cluster/work/scr4/balistef/'; % dump
-%dumpDir = 'dump/'; % dump
+% attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
+simName = 'attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv1';
+dumpDir = '/cluster/work/scr3/balistef/'; 
+%dumpDir = 'dump/';
+bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 10; % Dump every x steps
+DUMP_RATE = 1; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 
 %%%%%%%%%%%%%
@@ -102,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 3;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -115,8 +116,9 @@ plottype = plot_cross;
 % SEED TYPE
 seed_fixed = 0;
 seed_random = 1;
+seed_seed_machinetime = 2;
 
-seedtype = seed_fixed;
+seedtype = seed_random;
 
 % NOISE TYPES
 noise_on_p = 0;
@@ -125,16 +127,23 @@ noise_adaptive_on_v = 2;
 
 noisetype = 1;
 
+% FORCES INTEGRATION on V
+forces_on_v = 1;
+
+% Seed
+
+% This is either the fixed seed, or the seed used to init the random
+% generator of random seeds before the loop of param vectorization
+seed = randi(1000000);
+
 % Split by Sigma
-
-
 
 nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(ideas_space_dims,2)*size(As,2)*size(Bs,2)*size(ks,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2);
+                size(noisetype,2)*size(forces_on_v,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
@@ -166,6 +175,9 @@ cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv
 fprintf(fidFileMerge, '%s\n', cmdStr);
 cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
+cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
+fprintf(fidFileMerge, '%s\n', cmdStr);
+
 
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
@@ -188,7 +200,7 @@ for i=1:size(sigmas,2)
     fprintf(fidMain, '%s\n', cmdStr);   
     
     % Creating the GOCL_FUN
-    cmdStr = sprintf('bsub -J hs_cl_%u -W 1:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
+    cmdStr = sprintf('bsub  -R "rusage[mem=20000]" -J hs_cl_%u -W 36:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
     fprintf(fidCl, '%s\n', cmdStr);
     
     % Creating bash_merge_csv
@@ -196,15 +208,17 @@ for i=1:size(sigmas,2)
         cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');       
         cmdStr1 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     else
         cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
         cmdStr1 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
         cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
+        cmdStr3 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
     end
     fprintf(fidFileMerge, '%s\n', cmdStr);
     fprintf(fidFileMerge, '%s\n', cmdStr1);
     fprintf(fidFileMerge, '%s\n', cmdStr2);
-        
+    fprintf(fidFileMerge, '%s\n', cmdStr3);
 end
 fclose(fidMain);
 fclose(fidCl);
@@ -213,7 +227,7 @@ fclose(fidFileMerge);
 % Creating the GOMERGECSV_FUN
 launcherMerge = '../GOMERGECSV_FUN';
 fidMerge = fopen(launcherMerge, 'w');
-cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N bash_merge_csv');
+cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N %sbash_merge_csv', bsubWD);
 fprintf(fidMerge, '%s\n', cmdStr);
 fclose(fidMerge);
 
@@ -224,3 +238,12 @@ fidAggr = fopen(launcherAggr, 'w');
 cmdStr = sprintf('bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
 fprintf(fidAggr, '%s\n', cmdStr);
 fclose(fidAggr);
+
+% Saving a copy of all files in the conf dir
+COPYDIR = [DIR 'launchers/']; 
+mkdir(COPYDIR);
+copyfile(launcherMerge, COPYDIR);
+copyfile(launcherAggr, COPYDIR);
+copyfile(file_merge, COPYDIR);
+copyfile(launcherMain, COPYDIR);
+copyfile(launcherCl, COPYDIR);
