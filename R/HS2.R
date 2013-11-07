@@ -1,5 +1,5 @@
 # HS analysis
-source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
+source("init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
@@ -13,7 +13,7 @@ IMGPATH <- paste0(PATH, "/img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
 
 # NORMAL READ.TABLE
-#clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+clusters <- read.table('clusters_macro.csv', head=TRUE, sep=",")
 
 library(sqldf)
 tic()

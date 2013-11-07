@@ -31,9 +31,8 @@ PLOTS = 1;
 
 DUMPDIR = 'dump/';
 
-simName = 'test_t-2013-6-4-12-14/';
- 
-dumpDir = [DUMPDIR simName '/'];
+simName = 'test_t-2013-6-4-12-14';
+simName = 'attrExpo_nv_rndseq_tm_Rleft'
 
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, DUMP_RATE, PLOTS);
