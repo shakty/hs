@@ -40,12 +40,14 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     paramString = ['File: ' fileIn];
     paramString = [paramString create_params_string(dump.parameters, dump.truth)];
     
-
+    
     %% Video Plotting
 
     % Showing the potential of the attraction to truth
     if (SHOW_POTENTIAL)
-        attrtype = dumps.parameters.attrtype;
+        attrtype = dump.parameters.attrtype;
+        tau = dump.parameters.tau;
+        colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
     
         switch (attrtype)
 
@@ -118,7 +120,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
 
     for j=1:size(allStepsAgents,3)
         agents = allStepsAgents(:,:,j);
-        
+        %v = dump.agentsv(:,:,j);
         switch (plottype)
         
             case plot_cross
@@ -127,13 +129,13 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
             case plot_number
             % PLOT BLACK NUMBERS
-            clf
+            cla
             text(agents(1,:),agents(2,:), num2str([1:length(agents)]'));
            
         
             case plot_number_color
             % PLOT COLORED NUMBERS
-            clf
+            cla
             points = arrayfun(@(x) {[ '\color{' colors{mod(x,length(colors))+1} '}' int2str(x)]}, 1:length(agents));
             text(agents(1,:),agents(2,:), points');
             

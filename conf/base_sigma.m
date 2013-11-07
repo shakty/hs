@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
-simName = 'attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv1';
-dumpDir = '/cluster/work/scr3/balistef/'; 
+simName = 'attrLinear_nav_rndseed_rndseq_tm_Rleft_n100_fv0';
+dumpDir = '/cluster/work/scr6/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -128,7 +128,7 @@ noise_adaptive_on_v = 2;
 noisetype = 1;
 
 % FORCES INTEGRATION on V
-forces_on_v = 1;
+forces_on_v = 0;
 
 % Seed
 
