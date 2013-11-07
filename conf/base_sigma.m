@@ -18,7 +18,7 @@ DEBUG = 0;
 DUMP = 1;
 DUMP_RATE = 1; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
-
+SHOW_POTENTIAL = 0;
 %%%%%%%%%%%%%
 
 % MODEL Conf
