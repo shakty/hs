@@ -18,7 +18,7 @@ set(0,'DefaultTextFontSize', 14)
 
 
 % Dump only every X steps
-DUMP_RATE = 1;
+DUMP_RATE = 100;
 
 % Only clusters of size above the cutoff are included in the analysis
 CLU_CUTOFF = 2;
@@ -31,13 +31,11 @@ PLOTS = 1;
 
 DUMPDIR = 'dump/';
 
-simName = 'test_t-2013-6-4-12-14';
-simName = 'attrExpo_nv_rndseq_tm_Rleft'
+simName = 'attrExpo_nv_rndseq_tm_Rleft_reduced/'; 
+
+ 
+dumpDir = [DUMPDIR simName '/'];
 
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, DUMP_RATE, PLOTS);
 toc
-
-
-
-

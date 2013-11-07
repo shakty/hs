@@ -5,7 +5,6 @@ diary
 stefan
 
 simulation.m
-simulation*
 lib/simulation*
 conf/TESTS
 
@@ -21,5 +20,3 @@ lsf.*
 .Rout
 .RHistory
 .Rhistory
-
-*.Rout

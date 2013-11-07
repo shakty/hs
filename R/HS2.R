@@ -1,13 +1,13 @@
 # HS analysis
-source("init.R")
+source("./init.R")
 
 DIR = "test_t-2013-6-4-12-14"
 
 DIR = "attrExpo_nv_rndseq_tm_Rleft_reduced/" # ADD NEW
 
+DUMPDIR = "/cluster/home/gess/balistef/matlab/hsnew/dump/"
 
-DUMPDIR = "/opt/MATLAB_WORKSPACE/hs/dump/NEW/"
-PATH = paste0(DUMPDIR,DIR)
+PATH = paste0(DUMPDIR,"/",DIR)
 setwd(PATH)
 IMGPATH <- paste0(PATH, "/img/");
 params <- read.table('params.csv', head=TRUE, sep=",")
@@ -41,47 +41,30 @@ clu <- merge(params, clusters, by=c("simname","simcount","run"))
 for (n in names(clu[1:23])) {
   clu[, n] <- as.factor(clu[, n])      
 }
+
 # clu$t <- as.factor(clu$t)
-clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
-clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
-clu$count.cut <- cut(clu$count, seq(0,100,5))
+#clu$fromtruth.avg.cut <- cut(clu$fromtruth.avg, seq(0,1,0.1))
+#clu$size.avg.cut <- cut(clu$size.avg, seq(0,100,5))
+#clu$count.cut <- cut(clu$count, seq(0,100,5))
 
 # lagging
 
-clu$fromtruth.lag <- lagg(clu$fromtruth.avg)
-clu$truthdiff <- (clu$fromtruth.avg - clu$fromtruth.lag)
-clu$ratediff <- clu$truthdiff / clu$fromtruth.avg
-clu$Rjump <- clu$truthdiff > 0.02
+#clu$fromtruth.lag <- lagg(clu$fromtruth.avg)
+#clu$truthdiff <- (clu$fromtruth.avg - clu$fromtruth.lag)
+#clu$ratediff <- clu$truthdiff / clu$fromtruth.avg
+#clu$Rjump <- clu$truthdiff > 0.02
 
 # SimCount
 
-a <- params[params$alpha == 0.4 & params$sigma == 0 & params$R == 0.07,]
-as.numeric(a$simcount)       
+#a <- params[params$alpha == 0.4 & params$sigma == 0 & params$R == 0.07,]
+#as.numeric(a$simcount)       
 
-a <- clu[clu$fromtruth.avg > 0.6,]
+#a <- clu[clu$fromtruth.avg > 0.6,]
 
-max.dist.from.truth <- which(clu$fromtruth.avg == max(clu$fromtruth.avg))
+#max.dist.from.truth <- which(clu$fromtruth.avg == max(clu$fromtruth.avg))
 
-clu[max.dist.from.truth,]
+#clu[max.dist.from.truth,]
 
-
-# Cluster Micro
-
-CUTOFF <- 1
-START.AFTER.ROUND <- 50
-clusters.micro.sub <- clusters.micro[clusters.micro$size > CUTOFF & clusters$t > START.AFTER.ROUND, ]
-
-p <- ggplot(clusters.micro.sub, aes(size, speed))
-p <- p + geom_point(aes(colour = as.factor(simcount)))
-p
-
-p <- ggplot(clusters.micro.sub, aes(size, fromtruth))
-p <- p + geom_point()
-p
-
-p <- ggplot(clusters.micro.sub, aes(size, move))
-p <- p + geom_point()
-p
 
 # Cluster Macro in time
 
@@ -121,7 +104,7 @@ p.count <- p.count + geom_smooth(aes(y = count, colour="count"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.avg, colour="size"), size=2)
 p.count <- p.count + geom_smooth(aes(y = size.sd, colour="std. size"), size=2)
 p.count <- p.count + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
-p.count
+#p.count
 
 title = "Average and cumulative space exploration"
 p.explo <- ggplot(cl, aes(t))
@@ -129,7 +112,7 @@ p.explo <- p.explo + geom_jitter(aes(y = coverage), alpha=.2)
 p.explo <- p.explo + geom_smooth(aes(y = coverage, colour="avg"), size=2)
 p.explo <- p.explo + geom_smooth(aes(y = coverage.cum, colour="cum"), size=2)
 p.explo <- p.explo + ggtitle(title) + xlab("Rounds") + ylab("Percentage")
-p.explo
+#p.explo
 
 title = "Mean and std. agents speed"
 p.speed <- ggplot(cl, aes(t))
@@ -137,7 +120,7 @@ p.speed <- p.speed + geom_jitter(aes(y = speed.avg), alpha=.2)
 p.speed <- p.speed + geom_smooth(aes(y = speed.avg, colour="avg"), size=2)
 p.speed <- p.speed + geom_smooth(aes(y = speed.sd, colour="sd"), size=2)
 p.speed <- p.speed + ggtitle(title) + xlab("Rounds") + ylab("Speed")
-p.speed
+#p.speed
 
 title = "Mean and std. agents movements"
 p.move <- ggplot(cl, aes(t))
@@ -145,7 +128,7 @@ p.move <- p.move + geom_jitter(aes(y = move.avg), alpha=.2)
 p.move <- p.move + geom_smooth(aes(y = move.avg, colour="avg"), size=2)
 p.move <- p.move + geom_smooth(aes(y = move.sd, colour="sd"), size=2)
 p.move <- p.move + ggtitle(title) + xlab("Rounds") + ylab("Displacement")
-p.move
+#p.move
 
 title = "Mean and std. distance from truth"
 p.truth <- ggplot(cl, aes(t))
@@ -153,12 +136,36 @@ p.truth <- p.truth + geom_jitter(aes(y = fromtruth.avg), alpha=.2)
 p.truth <- p.truth + geom_smooth(aes(y = fromtruth.avg, colour="avg"), size=2)
 p.truth <- p.truth + geom_smooth(aes(y = fromtruth.sd, colour="sd"), size=2)
 p.truth <- p.truth + ggtitle(title) + xlab("Rounds") + ylab("Distance")
-print(p.truth)
+#print(p.truth)
 
 jpeg(paste0(IMGPATH, "mycoolplot.jpeg"), width=800, height=480)
 p <- grid.arrange(p.count, p.explo, p.speed, p.truth, p.move, ncol=3,
             main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
+
+stop("Message")
+warning("Message")
+
+
+# Cluster Micro
+
+clusters.micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
+
+CUTOFF <- 1
+START.AFTER.ROUND <- 50
+clusters.micro.sub <- clusters.micro[clusters.micro$size > CUTOFF & clusters$t > START.AFTER.ROUND, ]
+
+p <- ggplot(clusters.micro.sub, aes(size, speed))
+p <- p + geom_point(aes(colour = as.factor(simcount)))
+p
+
+p <- ggplot(clusters.micro.sub, aes(size, fromtruth))
+p <- p + geom_point()
+p
+
+p <- ggplot(clusters.micro.sub, aes(size, move))
+p <- p + geom_point()
+p
 
 
 
