@@ -28,21 +28,32 @@ load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_
 %% Modifying params locally
 VIDEO = 1;
 DUMP = 0;
-% % alphas = [0.1 0.5 0.9];
-%COMPUTATION = 0;
-% attrtype = 7;
-% alphas = 0.1;
-% Rs = 0.07;
-plottype = 2;
+COMPUTATION = 0;
+plottype = 0;
+SHOW_POTENTIAL = 0;
+
+% Scaling and nAgents
 vScalings = 1;
-n_agents = 10;
-% sigmas = [0, 0.1, 0.2];
-% simName = 'test_t';
-% dumpDir = 'dump/';
-%seedtype = 1;
+n_agents = 100;
+
+% Influence
+alphas = 1;
+Rs = 0;
+
+% Noise
+sigmas = 0.5;
+noisetype = 1;
+
+% Truth
+taus = 0.1;
 truths = [0.5;0.5];
-forces_on_v = 1;
+attrtype = 0;
+forces_on_v = 0;
+
+% Seed
+seedtype = 1;
 %seed = 0;
+
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
 
@@ -75,6 +86,7 @@ simParamsStruct = struct( ...
                 'attrtype', attrtype, ...
                 'noisetype', noisetype, ...
                 'plottype', plottype, ...
+                'SHOW_POTENTIAL', SHOW_POTENTIAL, ...
                 'seedtype', seedtype, ...
                 'seed', seed, ...
                 'forces_on_v', forces_on_v ...

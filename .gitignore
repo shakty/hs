@@ -21,3 +21,5 @@ lsf.*
 .Rout
 .RHistory
 .Rhistory
+
+*.Rout

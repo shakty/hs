@@ -59,4 +59,13 @@ clu <- merge(params, macro, by=c("simname","simcount","run"))
 #}
 
 
-AA <- clu[clu$sigma == 0.1 & clu$R == 0.01 & clu$t == 100 & clu$alpha == 0.01,]$simcount ; AA
+AA <- clu[clu$sigma == 0.1 & clu$R == 0.01 & clu$t == 100 & clu$alpha == 0.02,]$simcount ; AA
+
+AA <- clu[clu$sigma == 0.1 & clu$R == 0 & clu$alpha == 1,]
+
+AA <- clu[clu$move.avg == max(clu$move.avg),]$simcount ; AA
+
+AA <- clu[clu$simcount == 1,]
+
+
+A

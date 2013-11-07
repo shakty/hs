@@ -11,7 +11,7 @@ DUMPDIR = '/mnt/tmp/dump/NEW/';
 MYDIR = 'attrZero_nv_Kseed_rndseq_tm_Rleft';
 MYDIR = 'attrLinear_nv_rndseq_tm_Rleft';
 
-SIGMA = '_s1'
+SIGMA = '_s0';
 
 dumpDir = [DUMPDIR MYDIR '/' MYDIR SIGMA '/'];
 
@@ -19,7 +19,7 @@ VIDEODIR = '/home/stefano/hs/videos/NEW/';
 
 
 SAVE_VIDEO = 0;
-SHOW_POTENTIAL = 0;
+SHOW_POTENTIAL = 1;
 plottype = 0;
 
 % PLOT TYPE
@@ -28,7 +28,7 @@ plottype = 0;
 % plot_number_color = 2;
 % plot_arrow = 3;
     
-myFile = '33-1.mat';
+myFile = '64-1.mat';
 videoSubDir = [ MYDIR '/' ];
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)
