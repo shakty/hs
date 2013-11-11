@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
-simName = 'attrZero_nav_rndseed_rndseq_tm_Rleft_n100_fv0';
-dumpDir = '/cluster/work/scr5/balistef/'; 
+simName = 'attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0';
+dumpDir = '/cluster/work/scr2/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -44,8 +44,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0:0.01:1];       	% weighting of velocity terms
-Rs     = [0:0.01:0.3];       	% cut-off radius
+alphas = [0:0.01:0.99];       	% weighting of velocity terms
+Rs     = [0.01:0.01:0.3];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -178,10 +178,22 @@ fprintf(fidFileMerge, '%s\n', cmdStr);
 cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
 fprintf(fidFileMerge, '%s\n', cmdStr);
 
+% Random seed must be initialized for each batch (level of sigma)
+if (seedtype ~= seed_fixed)
+    s = RandStream('mcg16807','Seed', seed);
+    RandStream.setGlobalStream(s);
+else
+    batchSeed = seed;
+end
 
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
-
+    
+    % Random seed must be initialized for each batch (level of sigma)
+    if (seedtype ~= seed_fixed)
+        batchSeed = randi(1000000);
+    end 
+    
     sigmas = old_sigmas(i);
     % Sigma string
     S = sigmas*10;
@@ -193,9 +205,9 @@ for i=1:size(sigmas,2)
     
     % Creating the GO_FUN file
     if (i == 1)
-        cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+        cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'',''%d'')"', DIR, confFile, batchSeed);
     else
-        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'')"', DIR, confFile);
+        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'', ''%d'')"', DIR, confFile, batchSeed);
     end
     fprintf(fidMain, '%s\n', cmdStr);   
     

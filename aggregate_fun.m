@@ -1,4 +1,4 @@
-function [] = temporalysis_fun(dumpDir, subDir)
+function [] = aggregate_fun(dumpDir, subDir)
 
     
     %% Saves simulations into properly formatted CSV files

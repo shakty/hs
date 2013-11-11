@@ -2,13 +2,13 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR NEW
-# DUMPDIR = "/mnt/tmp/dump/NEW/"
+DUMPDIR = "/mnt/tmp/dump/NEW/"
 
 # NO TRUTH
 #DIR = "attrZero_nv_Kseed_rndseq_tm_Rleft/"
 
 # TM
-#DIR = "attrLinear_nv_rndseq_tm_Rleft/"
+DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 #DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
 #DIR = "attrHard_nv_rndseed_rndseq_tm_Rleft/"
 #DIR = "attrMillean_nv_rndseq_tm_Rleft/"
@@ -29,12 +29,12 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 #DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 
 # DUMPDIR VELOCITY
-DUMPDIR = "/mnt/tmp/dump/VELOCITY/"
+#DUMPDIR = "/mnt/tmp/dump/VELOCITY/"
 
-DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n10/"
-DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n50/"
-DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n150/"
-DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n10/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n50/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n150/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)
@@ -171,8 +171,8 @@ if (INTERACTIVE) {
 }
 
 # MOVEMENTS + SE
-limits <- aes(ymax = cl$move.avg + cl$move.se, ymin=cl$move.avg - cl$move.se)
-title = "Evolution of movements (+Std.Err.) by sigma"
+#limits <- aes(ymax = cl$move.avg + cl$move.se, ymin=cl$move.avg - cl$move.se)
+title = "Evolution of movements by sigma"
 p.move.se <- ggplot(cl, aes(t,group=simname))
 p.move.se <- p.move.se + geom_point(aes(y = move.avg, colour=simname, group=simname))
 #p.move.se <- p.move.se + geom_line(aes(y = move.avg, colour=simname, group=simname))

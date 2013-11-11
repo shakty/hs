@@ -552,10 +552,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
         fclose(fidClustersMacro);
         fclose(fidClustersMicro);
         
-        % SAVING ALL ITERATIONS for the AVG        
-        %for k = 1:size(idxsIters,2) 
-        %    z = idxsIters(k);
-        for z = 1:nIter     
+        % SAVING ALL ITERATIONS for the AVG
+        for z = 1:nIter
             clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
                 simName, N, z, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
                 t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...

@@ -36,6 +36,10 @@ DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 #DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n150/"
 #DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/"
 
+# DUMPDIR = "/mnt/tmp/dump/RND_SEED/"
+# DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
+# DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -66,6 +70,3 @@ AA <- clu[clu$sigma == 0.1 & clu$R == 0 & clu$alpha == 1,]
 AA <- clu[clu$move.avg == max(clu$move.avg),]$simcount ; AA
 
 AA <- clu[clu$simcount == 1,]
-
-
-A

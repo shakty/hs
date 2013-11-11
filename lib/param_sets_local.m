@@ -6,7 +6,7 @@ seed_random = 1;
 seed_machinetime = 2;
 
 if (params.seedtype ~= seed_fixed)
-    s = RandStream('mcg16807','Seed', params.seed);
+    s = RandStream('mcg16807','Seed', params.batchSeed);
     RandStream.setGlobalStream(s);
 end 
 

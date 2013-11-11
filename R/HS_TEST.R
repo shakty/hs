@@ -1,11 +1,42 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
-# DUMPDIR VELOCITY
-DUMPDIR = "/mnt/tmp/dump/RND_SEED/"
+# DUMPDIR NEW
+DUMPDIR = "/mnt/tmp/dump/NEW/"
 
-DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
-DIR = "attrZero_nav_rndseed_rndseq_tm_Rleft_n100_fv0/"
+# NO TRUTH
+#DIR = "attrZero_nv_Kseed_rndseq_tm_Rleft/"
+
+# TM
+DIR = "attrLinear_nv_rndseq_tm_Rleft/"
+#DIR = "attrK_nv_Kseed_rndseq_tm_Rleft/"
+#DIR = "attrHard_nv_rndseed_rndseq_tm_Rleft/"
+#DIR = "attrMillean_nv_rndseq_tm_Rleft/"
+#DIR = "attrFunnel_nv_Kseed_rndseq_tm_Rleft/"
+#DIR = "attrGentle_nv_Kseed_rndseq_tm_Rleft/" # some simulations are not saved in the results
+#DIR = "attrExpo_nv_Kseed_rndseq_tm_Rleft/"
+
+# TC
+#DIR = "attrExpo_nv_seedFixed_rndseq_tc_Rleft/"
+#DIR = "attrHard_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrK_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrMillean_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrFunnel_nv_Kseed_rndseq_tc_Rleft/"
+#DIR = "attrGentle_nv_Kseed_rndseq_tc_Rleft/" 
+#DIR = "attrLinear_nv_Kseed_rndseq_tc_Rleft/"
+
+# next
+#DIR = "attrLinear_nv_rndseq_tm_Rleft/"
+
+# DUMPDIR VELOCITY
+#DUMPDIR = "/mnt/tmp/dump/VELOCITY/"
+
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n10/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n50/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n150/"
+#DIR = "attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/"
+
+DIR = "attrLinear_nv_rndseq_tm_Rleft/attrLinear_nv_rndseq_tm_Rleft_s5/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)
@@ -22,20 +53,33 @@ if (!file.exists(IMGPATH)) {
 ######################################
 
 params <- read.table('params_all.csv', head=TRUE, sep=",")
-params$simname <- as.factor(params$simname)
-params$simcount <- as.factor(params$simcount)
-params$run <- as.factor(params$run)
+#params$simname <- as.factor(params$simname)
+#params$simcount <- as.factor(params$simcount)
+#params$run <- as.factor(params$run)
 
-macro <- read.table('clusters_macro_avg_split.csv', head=TRUE, sep=",")
+macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
 macro$simname <- as.character(macro$simname)
-macro$simname <- substr(macro$simname, nchar(macro$simname)-1, nchar(macro$simname))
-macro$simname <- as.factor(macro$simname)
-macro$simcount <- as.factor(macro$simcount)
-macro$t <- as.factor(macro$t)
+#macro$simname <- substr(macro$simname, nchar(macro$simname)-1, nchar(macro$simname))
+#macro$simname <- as.factor(macro$simname)
+#macro$simcount <- as.factor(macro$simcount)
+#macro$t <- as.factor(macro$t)
 
 cl <- macro
 #cl <- subset(macro, t %% 100 == 0)
 #cl$t <- as.factor(cl$t)
+
+clOrig <- cl
+cl$SIM <- as.numeric(cl$simcount)
+
+A <- clOrig[cl$simcount == 3131 & clOrig$simname == "s0" & clOrig$T < 200,]
+
+A <- cl[cl$simname == "attrLinear_nv_rndseq_tm_Rleft_s5",]
+
+clOrig$SIM <- as.numeric(clOrig$simcount)
+
+
+cl <- clOrig[cl$simcount == 3131 & cl$simname == "s5" & cl$T > 700 & cl$T < 800,]
+INTERACTIVE = FALSE
 
 # SIZE with SD
 title = "Evolution of cluster size (+Std.Dev) by sigma"
@@ -47,13 +91,14 @@ p.size <- p.size + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
 if (INTERACTIVE) {
   p.size
 }
+
 # SIZE with SE
 limits <- aes(ymax = cl$size.avg + cl$size.se, ymin=cl$size.avg - cl$size.se)
 title = "Evolution of cluster size (+Std.Err.) by sigma"
 p.size.se <- ggplot(cl, aes(t,group=simname))
 #p.size.se <- p.size.se + geom_line(aes(y = size.avg, colour=simname, group=simname))
 #p.size.se <- p.size.se + geom_errorbar(limits, width=0.0002)
-p.size.se <- p.size.se + geom_smooth(aes(y = size.avg, colour=simname, group=simname))
+p.size.se <- p.size.se + geom_line(aes(y = size.avg, colour=simname, group=simname))
 p.size.se <- p.size.se + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
 #p.size.se <- p.size.se + scale_x_log10()
 if (INTERACTIVE) {
@@ -101,7 +146,7 @@ p.explo.se <- ggplot(cl, aes(t,group=simname))
 #p.explo.se <- p.explo.se + geom_line(aes(y = coverage.avg, colour=simname, group=simname))
 #p.explo.se <- p.explo.se + geom_errorbar(limits, width=0.2)
 #p.explo.se <- p.explo.se + geom_point(aes(y = coverage.avg, colour=simname, group=simname), alpha=0.2)
-p.explo.se <- p.explo.se + geom_smooth(aes(y = coverage.avg, colour=simname, group=simname))
+p.explo.se <- p.explo.se + geom_line(aes(y = coverage.avg, colour=simname, group=simname))
 p.explo.se <- p.explo.se + ggtitle(title) + xlab("Rounds") + ylab("% of space")
 if (INTERACTIVE) {
   p.explo.se
@@ -122,7 +167,7 @@ if (INTERACTIVE) {
 limits <- aes(ymax = cl$speed.avg + cl$speed.se, ymin=cl$speed.avg - cl$speed.se)
 title = "Evolution of speed (+Std.Err.) by sigma"
 p.speed.se <- ggplot(cl, aes(t,group=simname))
-p.speed.se <- p.speed.se + geom_smooth(aes(y = speed.avg, colour=simname, group=simname))
+p.speed.se <- p.speed.se + geom_line(aes(y = speed.avg, colour=simname, group=simname))
 #p.speed.se <- p.speed.se + geom_line(aes(y = speed.avg, colour=simname, group=simname))
 #p.speed.se <- p.speed.se + geom_errorbar(limits, width=0.2)
 p.speed.se <- p.speed.se + ggtitle(title) + xlab("Rounds") + ylab("Speed")
@@ -141,17 +186,19 @@ if (INTERACTIVE) {
   p.move
 }
 
+
 # MOVEMENTS + SE
-limits <- aes(ymax = cl$move.avg + cl$move.se, ymin=cl$move.avg - cl$move.se)
-title = "Evolution of movements (+Std.Err.) by sigma"
-p.move.se <- ggplot(cl, aes(t,group=simname))
-p.move.se <- p.move.se + geom_point(aes(y = move.avg, colour=simname, group=simname))
+title = "Evolution of movements by sigma"
+p.move.se <- ggplot(A, aes(t,group=simname))
+p.move.se <- p.move.se + geom_line(aes(y = move.avg))
 #p.move.se <- p.move.se + geom_line(aes(y = move.avg, colour=simname, group=simname))
 #p.move.se <- p.move.se + geom_errorbar(limits, width=0.2)
 p.move.se <- p.move.se + ggtitle(title) + xlab("Rounds") + ylab("Move")
 if (INTERACTIVE) {
   p.move.se
 }
+
+
 
 # FROM TRUTH + SD
 title = "Evolution of distance from truth (+Std.Dev.) by sigma"
@@ -178,6 +225,9 @@ if (INTERACTIVE) {
 
 ### PLOTTING ALL OF THEM TOGETHER!!
 jpeg(paste0(IMGPATH, "t_avg_overview_split.jpeg"), width=2048, height=1024)
+
+
+
 p <- grid.arrange(p.size, p.size.se,
                   p.explo.cum, p.explo.cum.se,
                   p.explo, p.explo.se,
@@ -186,6 +236,9 @@ p <- grid.arrange(p.size, p.size.se,
                   p.ft, p.ft.se,
                   ncol=4,
                   main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+
+
+
 dev.off()
 
 ################################
@@ -371,4 +424,44 @@ jpeg(paste0(IMGPATH, "t_avg_overview.jpeg"), width=2048, height=1024)
 p <- grid.arrange(p.count, p.explo, p.speed, p.truth, p.move, ncol=3,
             main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
+
+
+
+## Testing weirdness in movements
+A <- macro.later[macro.later$move.avg ==  max(macro.later$move.avg),]
+simcountsHIGH <- A$simcount
+
+A <- macro.later[macro.later$move.avg > 0.2,]
+simcountsHIGH <- A$simcount
+
+
+
+macro$HIGHMOVE <- macro$simcount %in% simcountsHIGH
+
+title = "Mean and std. agents movements"
+p.move <- ggplot(macro, aes(t, y = move.avg, colour=HIGHMOVE))
+p.move <- p.move + geom_jitter()
+p.move
+
+
+title = "Mean and std. agents movements"
+p.move <- ggplot(macro, aes(t, y = move.avg, colour=HIGHMOVE))
+p.move <- p.move + geom_smooth(size=2)
+p.move
+
+
+clu <- merge(params, A, by=c("simname","simcount","run"))
+
+plot(1:nrow(clu), clu$R)
+
+# it seems that most of the weird run have R = 0
+# but some has not. let's check those
+
+clu.Rnot0 <- clu[clu$R != 0,]
+
+plot(1:nrow(clu.Rnot0), clu.Rnot0$alpha)
+
+# those are the runs for alpha = 1
+
+# so all the cases in which agents are not influenced by other agents
 
