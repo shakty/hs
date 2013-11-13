@@ -52,7 +52,7 @@ if (!file.exists(IMGPATH)) {
 ## MACRO AVG_SPLIT Aggregated: Loading
 ######################################
 
-params <- read.table('params_all.csv', head=TRUE, sep=",")
+params <- read.table('params.csv', head=TRUE, sep=",")
 #params$simname <- as.factor(params$simname)
 #params$simcount <- as.factor(params$simcount)
 #params$run <- as.factor(params$run)
@@ -428,10 +428,10 @@ dev.off()
 
 
 ## Testing weirdness in movements
-A <- macro.later[macro.later$move.avg ==  max(macro.later$move.avg),]
+A <- macro[macro$move.avg ==  max(macro$move.avg),]
 simcountsHIGH <- A$simcount
 
-A <- macro.later[macro.later$move.avg > 0.2,]
+A <- macro[macro$move.avg > 0.2,]
 simcountsHIGH <- A$simcount
 
 
