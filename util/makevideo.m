@@ -183,6 +183,9 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             pause(0.01);
         end
        
+        if (j > 1490)
+            waitforbuttonpress
+        end
     end      
  
 %%    

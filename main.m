@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-VIDEO = 1;
+VIDEO = 0;
 DUMP = 0;
 COMPUTATION = 0;
 plottype = 0;
@@ -38,7 +38,7 @@ n_agents = 100;
 
 % Influence
 alphas = 1;
-Rs = 0;
+Rs = 0.14;
 
 % Noise
 sigmas = 0.5;
@@ -51,9 +51,9 @@ attrtype = 0;
 forces_on_v = 0;
 
 % Seed
-seedtype = 1;
-%seed = 0;
-batchSeed = randi(1000000);
+seedtype = 0; % 0 = fixed
+seed = 819325;
+batchSeed = 819325; %randi(1000000);
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
