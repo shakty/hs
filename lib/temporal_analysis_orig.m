@@ -129,7 +129,7 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     v = dump.agentsv;
     % the total number of time steps per run (assumed constant) and dump rate
     nIter = size(v,3);
-    % idxsIters = find(mod(1:nIter, DUMP_RATE) == 0);
+    idxsIters = find(mod(1:nIter, DUMP_RATE) == 0);
     % number of files
     nFiles = length(fileIndex);
     
@@ -210,155 +210,158 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     
         v = dump.agentsv;
         pos = dump.agents;
+        
+        % average velocity of agents at time t
+        mean_cluster_speed = zeros(1,nIter);
+        % Std velocity of clusters at time t
+        sd_cluster_speed = zeros(1,nIter);
+
+        % vector of movements of agents at time t
+        movs = zeros(size(pos,2),1);
+        % average movement from position at time t-1
+        mean_cluster_move = zeros(1,nIter);
+        % Std movement of clusters at time t-1
+        sd_cluster_move = zeros(1,nIter);
+
+        
+        % average share of space occupied by agents at time t
+        avgcoverage = zeros(1,nIter);
+        % cumulative share of space explored by agents at time t
+        cumcoverage = zeros(1,nIter);
+        % cumulative occupation of each cell of the grid at time t
+        cum_coverage_matrix = zeros(PRECISION, PRECISION, 3);
+        % cumulative occupation of each cell of the grid at time t
+        coverage_matrix = zeros(PRECISION, PRECISION, 3);
+
+        % Counts the number of clusters
+        cluster_count = zeros(1,nIter);              
+        % Average cluster size
+        mean_cluster_size = zeros(1,nIter);          
+        % Standard deviations of the size of clusters
+        sd_cluster_size = zeros(1,nIter);          	
+        % Average distance from truth
+        mean_cluster_fromtruth = zeros(1, nIter);    
+        % Standard deviation of distance from truth
+        sd_cluster_fromtruth = zeros(1, nIter);    
+
+
+        % Following cell arrays containing vector of variable length at each iteration
+
+        % Size of the clusters at time t
+        clusters_size = cell(nIter,1);
+        % Speed of clusters at time t
+        clusters_speed = cell(nIter,1);
+        % Spatial displacement of the cluster compared with time t-1
+        % It is the average displacement of the agents within in
+        clusters_move = cell(nIter,1);
+        % Distance from truth at time t
+        clusters_fromtruth = cell(nIter,1);
 
         for i = 1:nIter
             %avg speed
-            mean_cluster_speed = mean(colnorm(v(:,:,i),2));
+            mean_cluster_speed(i) = mean(colnorm(v(:,:,i),2));
             % avg movement
             if (i>1)
                 movs = abs(pos(:,:,i)-pos(:,:,i-1));
-                mean_cluster_move = mean(mean(movs));
+                mean_cluster_move(i) = mean(mean(movs));
             end
 
             %avg share of space
-            coverage_matrix = countAgents(pos(:,:,i), PRECISION);
-            avgcoverage = nnz(coverage_matrix) / TOTAL_CELLS;
+            coverage_matrix(:,:,i) = countAgents(pos(:,:,i), PRECISION);
+            avgcoverage(i) = nnz(coverage_matrix(:,:,i)) / TOTAL_CELLS;
 
             %cum share of space
             if (i==1)
-                cum_coverage_matrix = coverage_matrix;
+                cum_coverage_matrix(:,:,i) = coverage_matrix(:,:,i);
             else
-                cum_coverage_matrix= coverage_matrix + cum_coverage_matrix;
+                cum_coverage_matrix(:,:,i) = coverage_matrix(:,:,i) + cum_coverage_matrix(:,:,i-1);
             end
-            cumcoverage = nnz(cum_coverage_matrix) / TOTAL_CELLS;
+            cumcoverage(i) = nnz(cum_coverage_matrix(:,:,i)) / TOTAL_CELLS;
 
             try
                 % Z the results of HCLUST 
                 % T the cluster of each agent
                 % C the number of clusters            
                 [Z, T, C] = clusterize(pos(:,:,i));
-                cluster_count = C;
+                cluster_count(i) = C;
 
                 [d, Gc, AvgGDist, avgGroupSpeed, avgGroupMove] = cluster_stats(T, dump.truth, pos(:,:,i), v(:,:,i), movs);
 
-                mean_cluster_size = mean(Gc);
-                sd_cluster_size = std(Gc);
+                mean_cluster_size(i) = mean(Gc);
+                sd_cluster_size(i) = std(Gc);
 
-                mean_cluster_fromtruth = mean(AvgGDist);
-                sd_cluster_fromtruth = std(AvgGDist);
+                mean_cluster_fromtruth(i) = mean(AvgGDist);
+                sd_cluster_fromtruth(i) = std(AvgGDist);
 
-                sd_cluster_speed = std(avgGroupSpeed);
-                sd_cluster_move = std(avgGroupMove);
+                sd_cluster_speed(i) = std(avgGroupSpeed);
+                sd_cluster_move(i) = std(avgGroupMove);
 
-                clusters_size = Gc;
-                clusters_fromtruth = AvgGDist;
-                clusters_speed = avgGroupSpeed;
-                clusters_move = avgGroupMove;
+                clusters_size{i} = Gc;
+                clusters_fromtruth{i} = AvgGDist;
+                clusters_speed{i} = avgGroupSpeed;
+                clusters_move{i} = avgGroupMove;
 
                 % SUMMING UP AVG statistics
                 global_count_sum(i) = global_count_sum(i) + C;
                 global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
-                global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage;
-                global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage^2;
+                global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage(i);
+                global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage(i)^2;
                 global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage(i);
                 global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage(i)^2;
-                global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed;
-                global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed^2;
-                global_move_sum(i) = global_move_sum(i) + mean_cluster_move;
-                global_move_sumsquared(i) = global_move_sumsquared(i) + mean_cluster_move^2;
-                global_size_sum(i) = global_size_sum(i) + mean_cluster_size;
-                global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size^2;
-                global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth;
-                global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) + mean_cluster_fromtruth^2;
+                global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed(i);
+                global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed(i)^2;
+                global_move_sum(i) = global_move_sum(i) + mean_cluster_move(i);
+                global_move_sumsquared(i) = global_move_sumsquared(i) + mean_cluster_move(i)^2;
+                global_size_sum(i) = global_size_sum(i) + mean_cluster_size(i);
+                global_size_sumsquared(i) = global_size_sumsquared(i) + mean_cluster_size(i)^2;
+                global_fromtruth_sum(i) = global_fromtruth_sum(i) +  mean_cluster_fromtruth(i);
+                global_fromtruth_sumsquared(i) = global_fromtruth_sumsquared(i) + mean_cluster_fromtruth(i)^2;
                 
             catch err
                 
                 err
                 sprintf('Error at iter: %i, fileIdx: %i, fileName: %s', i, validFileIdx, fileName)
                 
-                mean_cluster_size = 0;
-                sd_cluster_size = 0;
+                mean_cluster_size(i) = 0;
+                sd_cluster_size(i) = 0;
 
-                mean_cluster_fromtruth = 0;
-                sd_cluster_fromtruth = 0;
+                mean_cluster_fromtruth(i) = 0;
+                sd_cluster_fromtruth(i) = 0;
 
-                sd_cluster_speed = 0;
-                sd_cluster_move = 0;
+                sd_cluster_speed(i) = 0;
+                sd_cluster_move(i) = 0;
 
-                clusters_size = 0;
-                clusters_fromtruth = 0;
-                clusters_speed = 0;
-                clusters_move = 0;
+                clusters_size{i} = 0;
+                clusters_fromtruth{i} = 0;
+                clusters_speed{i} = 0;
+                clusters_move{i} = 0;
             
             end
-            
-         if (CSV_DUMP)
-            
-            
-             % SAVING ONLY EVERY X ITERATIONS        
-             if (mod(i, DUMP_RATE) == 0)
-                                
-                 stepData = struct(...
-                     'simnameidx', simnameidx, ...
-                     'run', dump.run, ...
-                     'mean_cluster_speed', mean_cluster_speed, ...
-                     'mean_cluster_move', mean_cluster_move, ...
-                     'sd_cluster_move', sd_cluster_move, ...
-                     'sd_cluster_speed', sd_cluster_speed, ...
-                     'cluster_count', cluster_count, ...
-                     'avgcoverage', avgcoverage, ...
-                     'cumcoverage', cumcoverage, ...
-                     'mean_cluster_size', mean_cluster_size, ... 
-                     'sd_cluster_size', sd_cluster_size, ... 
-                     'mean_from_truth', mean_cluster_fromtruth, ... 
-                     'sd_from_truth', sd_cluster_fromtruth, ...
-                     'clusters_size', clusters_size, ...
-                     'clusters_fromtruth', clusters_fromtruth, ...
-                     'clusters_speed', clusters_speed, ...
-                     'clusters_move', clusters_move ...
-                );
-                 
-                % 1 Line
-                clu_macro_string = csv_format_row_clusters_macro(stepData, simName, i);
-                fprintf(fidClustersMacro,'%s\n', clu_macro_string);
-   
-                % SAVING ONLY CLUSTERS of SIZE > CUTOFF
-                idxs = find(stepData.clusters_size > CLU_CUTOFF);
-                
-                % Multiple Lines
-                for jj=1:length(idxs)
-                    clu_micro_string = csv_format_row_clusters_micro(stepData, simName, i, idxs(jj)); 
-                    fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
-                end
- 
-             end
-             
-        end           
-            
-            
 
         end
         
-% Trying to save memory. We dump in real time.        
-%         summaryObj{validFileIdx} = struct(...
-%              'simnameidx', simnameidx, ...
-%              'run', dump.run, ...
-%              'mean_cluster_speed', mean_cluster_speed, ...
-%              'mean_cluster_move', mean_cluster_move, ...
-%              'sd_cluster_move', sd_cluster_move, ...
-%              'sd_cluster_speed', sd_cluster_speed, ...
-%              'cluster_count', cluster_count, ...
-%              'avgcoverage', avgcoverage, ...
-%              'cumcoverage', cumcoverage, ...
-%              'mean_cluster_size', mean_cluster_size, ... 
-%              'sd_cluster_size', sd_cluster_size, ... 
-%              'mean_from_truth', mean_cluster_fromtruth, ... 
-%              'sd_from_truth', sd_cluster_fromtruth, ...
-%              'clusters_size', clusters_size, ...
-%              'clusters_fromtruth', clusters_fromtruth, ...
-%              'clusters_speed', clusters_speed, ...
-%              'clusters_move', clusters_move ...
-%         );   
+        
+        summaryObj{validFileIdx} = struct(...
+             'simnameidx', simnameidx, ...
+             'run', dump.run, ...
+             'mean_cluster_speed', mean_cluster_speed, ...
+             'mean_cluster_move', mean_cluster_move, ...
+             'sd_cluster_move', sd_cluster_move, ...
+             'sd_cluster_speed', sd_cluster_speed, ...
+             'cluster_count', cluster_count, ...
+             'avgcoverage', avgcoverage, ...
+             'cumcoverage', cumcoverage, ...
+             'mean_cluster_size', mean_cluster_size, ... 
+             'sd_cluster_size', sd_cluster_size, ... 
+             'mean_from_truth', mean_cluster_fromtruth, ... 
+             'sd_from_truth', sd_cluster_fromtruth, ...
+             'clusters_size', clusters_size, ...
+             'clusters_fromtruth', clusters_fromtruth, ...
+             'clusters_speed', clusters_speed, ...
+             'clusters_move', clusters_move ...
+        );
+        
+        
         
         if (PLOTS)
             
@@ -454,31 +457,31 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
 
         end
         
-% Trying to use less memory. We dump in real time, and not at the end       
-%         if (CSV_DUMP)
-%             
-%             simData = summaryObj{validFileIdx};
-%             
-%              % SAVING ONLY EVERY X ITERATIONS        
-%              for k = 1:size(idxsIters,2)
-%                 z = idxsIters(k);
-%                 stepData = simData(z);
-%                 % 1 Line
-%                 clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
-%                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
-%    
-%                 % SAVING ONLY CLUSTERS of SIZE > CUTOFF
-%                 idxs = find(stepData.clusters_size > CLU_CUTOFF);
-%                 
-%                 % Multiple Lines
-%                 for i=1:length(idxs)
-%                     clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, idxs(i)); 
-%                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
-%                 end
-%  
-%              end
-%              
-%         end
+        
+        if (CSV_DUMP)
+            
+            simData = summaryObj{validFileIdx};
+            
+             % SAVING ONLY EVERY X ITERATIONS        
+             for k = 1:size(idxsIters,2)
+                z = idxsIters(k);
+                stepData = simData(z);
+                % 1 Line
+                clu_macro_string = csv_format_row_clusters_macro(stepData, simName, z);
+                fprintf(fidClustersMacro,'%s\n', clu_macro_string);
+   
+                % SAVING ONLY CLUSTERS of SIZE > CUTOFF
+                idxs = find(stepData.clusters_size > CLU_CUTOFF);
+                
+                % Multiple Lines
+                for i=1:length(idxs)
+                    clu_micro_string = csv_format_row_clusters_micro(stepData, simName, z, idxs(i)); 
+                    fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
+                end
+ 
+             end
+             
+        end
         
     end % File loop
     
@@ -569,9 +572,3 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     
     
 end
-
-%%
-
-
-
-
