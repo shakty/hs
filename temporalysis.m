@@ -34,7 +34,10 @@ simName = 'attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0/attrZero_nav_rndseeds
 
 DUMPDIR = '/tmp/';
 simName = 'aa';
- 
+
+DUMPDIR = '/home/stefano/hs/test/';
+simName = 'TEST_ALPHA1-2013-11-14-10-43';
+
 dumpDir = [DUMPDIR simName '/']
 
 tic

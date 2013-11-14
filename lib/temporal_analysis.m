@@ -224,12 +224,6 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                 movs = abs(pos(:,:,i)-pos(:,:,i-1));
                 mean_cluster_move = mean(mean(movs));
             end
-
-            
-            %if (mean_cluster_move > 0.005)
-            %   mean_cluster_move 
-            %end
-            %mean_cluster_move
             
             %avg share of space
             coverage_matrix = countAgents(pos(:,:,i), PRECISION);
