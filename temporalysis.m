@@ -27,14 +27,15 @@ CLU_CUTOFF = 2;
 PRECISION = 100;
 
 CSV_DUMP = 0;
-PLOTS = 1;
+PLOTS = 0;
 
-DUMPDIR = 'dump/';
+DUMPDIR = '/mnt/tmp/dump/RND_SEED/';
+simName = 'attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0_s1';
 
-simName = 'attrExpo_nv_rndseq_tm_Rleft_reduced/'; 
-
+DUMPDIR = '/tmp/';
+simName = 'aa';
  
-dumpDir = [DUMPDIR simName '/'];
+dumpDir = [DUMPDIR simName '/']
 
 tic
 temporal_analysis(DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, DUMP_RATE, PLOTS);

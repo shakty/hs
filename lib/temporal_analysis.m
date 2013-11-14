@@ -210,7 +210,12 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
     
         v = dump.agentsv;
         pos = dump.agents;
-
+        
+        % vector of movements of agents at time t0
+        movs = zeros(size(pos,2), 1);
+        mean_cluster_move = 0;
+        sd_cluster_move = 0;
+        
         for i = 1:nIter
             %avg speed
             mean_cluster_speed = mean(colnorm(v(:,:,i),2));
@@ -220,6 +225,12 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                 mean_cluster_move = mean(mean(movs));
             end
 
+            
+            %if (mean_cluster_move > 0.005)
+            %   mean_cluster_move 
+            %end
+            %mean_cluster_move
+            
             %avg share of space
             coverage_matrix = countAgents(pos(:,:,i), PRECISION);
             avgcoverage = nnz(coverage_matrix) / TOTAL_CELLS;
@@ -260,8 +271,8 @@ function temporal_analysis( DUMPDIR, simName, PRECISION, CLU_CUTOFF, CSV_DUMP, D
                 global_count_sumsquared(i) = global_count_sumsquared(i) + C^2;
                 global_coverage_sum(i) = global_coverage_sum(i) + avgcoverage;
                 global_coverage_sumsquared(i) = global_coverage_sumsquared(i) + avgcoverage^2;
-                global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage(i);
-                global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage(i)^2;
+                global_coverage_cum_sum(i) = global_coverage_cum_sum(i) + cumcoverage;
+                global_coverage_cum_sumsquared(i) = global_coverage_cum_sumsquared(i) + cumcoverage^2;
                 global_speed_sum(i) = global_speed_sum(i) + mean_cluster_speed;
                 global_speed_sumsquared(i) = global_speed_sumsquared(i) + mean_cluster_speed^2;
                 global_move_sum(i) = global_move_sum(i) + mean_cluster_move;

@@ -8,6 +8,7 @@ simulation.m
 simulation*
 lib/simulation*
 conf/TESTS
+test
 
 log
 

@@ -26,8 +26,11 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
+simName = 'TEST_ALPHA1';
+dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
+
 VIDEO = 0;
-DUMP = 0;
+DUMP = 1;
 COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
