@@ -8,6 +8,7 @@ DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
 DIR = "attrZero_nav_rndseed_rndseq_tm_Rleft_n100_fv0/"
 
 DIR = "attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0/"
+DIR = "attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)
