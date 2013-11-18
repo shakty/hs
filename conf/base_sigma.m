@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _forceOnV
-simName = 'attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0';
-dumpDir = '/cluster/work/scr4/balistef/'; 
+simName = 'attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0';
+dumpDir = '/cluster/work/scr1/balistef/'; 
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -45,7 +45,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01:0.01:0.99];       	% weighting of velocity terms
-Rs     = [0.01:0.01:0.3];       	% cut-off radius
+Rs     = [0];       	% cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
