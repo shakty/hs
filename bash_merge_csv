@@ -1,29 +1,29 @@
 #!/bin/sh
-OUTFILE_PARAMS="/cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/params_all.csv"
-OUTFILE_MACRO="/cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/clusters_macro_all.csv"
-OUTFILE_MICRO="/cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/clusters_micro_all.csv"
-OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/clusters_macro_avg_split.csv"
-cat /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s0/params.csv > $OUTFILE_PARAMS
-cat /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s0/clusters_macro.csv > $OUTFILE_MACRO
-cat /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s0/clusters_micro.csv > $OUTFILE_MICRO
-cat /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s0/clusters_macro_avg.csv > $OUTFILE_MACRO_AVG_SPLIT
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/params.csv >> $OUTFILE_PARAMS
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/clusters_macro.csv >> $OUTFILE_MACRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/clusters_micro.csv >> $OUTFILE_MICRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s2/params.csv >> $OUTFILE_PARAMS
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s2/clusters_macro.csv >> $OUTFILE_MACRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s2/clusters_micro.csv >> $OUTFILE_MICRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s2/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s3/params.csv >> $OUTFILE_PARAMS
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s3/clusters_macro.csv >> $OUTFILE_MACRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s3/clusters_micro.csv >> $OUTFILE_MICRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s3/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s4/params.csv >> $OUTFILE_PARAMS
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s4/clusters_macro.csv >> $OUTFILE_MACRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s4/clusters_micro.csv >> $OUTFILE_MICRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s4/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s5/params.csv >> $OUTFILE_PARAMS
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s5/clusters_macro.csv >> $OUTFILE_MACRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s5/clusters_micro.csv >> $OUTFILE_MICRO
-sed -e '1d' /cluster/work/scr6/balistef/NEW/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s5/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+OUTFILE_PARAMS="/cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/params_all.csv"
+OUTFILE_MACRO="/cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/clusters_macro_all.csv"
+OUTFILE_MICRO="/cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/clusters_micro_all.csv"
+OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/clusters_macro_avg_split.csv"
+cat /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s0/params.csv > $OUTFILE_PARAMS
+cat /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s0/clusters_macro.csv > $OUTFILE_MACRO
+cat /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s0/clusters_micro.csv > $OUTFILE_MICRO
+cat /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s0/clusters_macro_avg.csv > $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s2/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s2/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s2/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s2/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s3/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s3/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s3/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s3/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s4/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s4/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s4/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s4/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s5/params.csv >> $OUTFILE_PARAMS
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s5/clusters_macro.csv >> $OUTFILE_MACRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s5/clusters_micro.csv >> $OUTFILE_MICRO
+sed -e '1d' /cluster/work/scr3/balistef/NEW/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0/attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s5/clusters_macro_avg.csv >> $OUTFILE_MACRO_AVG_SPLIT

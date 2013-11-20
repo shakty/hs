@@ -40,6 +40,13 @@ DIR = "attrLinear_nv_rndseq_tm_Rleft/"
 # DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
 # DIR = "attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/"
 
+
+# DUMPDIR VELOCITY
+DUMPDIR = "/mnt/tmp/dump/EXP_BUG/"
+DIR = "attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0/"
+DIR = "attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0/"
+
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
