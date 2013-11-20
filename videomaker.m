@@ -7,20 +7,26 @@ clear
 path(path,'util/');
 
 
-DUMPDIR = '/mnt/tmp/dump/RND_SEED/';
+DUMPDIR = '/mnt/tmp/dump/EXP_BUG/';
 MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0';
-
+MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0';
 
 SIGMA = '_s1';
 
 dumpDir = [DUMPDIR MYDIR '/' MYDIR SIGMA '/'];
+
+
+DUMPDIR = '/home/stefano/hs/test/';
+simName = 'TEST_SIZE10-2013-11-20-22-10/';
+
+dumpDir = [DUMPDIR simName '/']
 
 VIDEODIR = '/home/stefano/hs/videos/NEW/';
 
 
 SAVE_VIDEO = 0;
 SHOW_POTENTIAL = 1;
-plottype = 0;
+plottype = 0 ;
 
 % PLOT TYPE
 % plot_cross = 0;
@@ -28,7 +34,7 @@ plottype = 0;
 % plot_number_color = 2;
 % plot_arrow = 3;
     
-myFile = '15-1.mat';
+myFile = '1-1.mat';
 videoSubDir = [ MYDIR '/' ];
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
 if (exist([VIDEODIR videoSubDir],'dir') == 0)

@@ -34,7 +34,8 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
    
     allStepsAgents = dump.agents;
     truth = dump.truth;
-    
+    ideas_space_size = dump.parameters.ideas_space_size;
+        
     % not used for now
     % Creating a string with the description of the parameters
     paramString = ['File: ' fileIn];
@@ -48,7 +49,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         attrtype = dump.parameters.attrtype;
         tau = dump.parameters.tau;
         colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
-    
+        
         switch (attrtype)
 
             case attr_zero
@@ -92,7 +93,7 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
         if (attrtype > 1)
             PRECISION = 0.01;
-            a = [0:PRECISION:1;0:PRECISION:1];
+            a = [0:PRECISION:ideas_space_size; 0:PRECISION:ideas_space_size];
             [X,Y] = meshgrid(a(1,:), a(1,:));
             Z = zeros(size(X));
             for i=1:length(X)
@@ -142,8 +143,9 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             case plot_arrow
             % PLOT VELOCITY ARROWS
             v = dump.agentsv;
-            quiver(agents(1,:),agents(2,:),v(1,:),v(2,:));
-            
+            % no rescaling
+            %quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j), 0);
+            quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j));
 
         end
         hold on;
@@ -156,9 +158,8 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
         hold off;
         
-        % TODO: change here if the idea_dim_size changes
-        xlim([0 1]);
-        ylim([0 1]);
+        xlim([0 ideas_space_size])
+        ylim([0 ideas_space_size]);
         % TODO move the title in the first frame
         title(['T: ' int2str(j) ' ' paramString]);
 
@@ -179,13 +180,13 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         end
         
         % no need for pause for complicated plots
-        if (plottype == plot_cross)
+        %if (plottype == plot_cross)
             pause(0.01);
-        end
+        %end
        
-        if (j > 1490)
-            waitforbuttonpress
-        end
+        % if (j > 1490)
+        %    waitforbuttonpress
+        % end
     end      
  
 %%    

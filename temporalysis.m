@@ -36,7 +36,7 @@ DUMPDIR = '/tmp/';
 simName = 'aa';
 
 DUMPDIR = '/home/stefano/hs/test/';
-simName = 'TEST_ALPHA1-2013-11-14-10-43';
+simName = 'TEST_SIZE10-2013-11-20-22-10/';
 
 dumpDir = [DUMPDIR simName '/']
 

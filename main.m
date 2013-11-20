@@ -26,21 +26,25 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'TEST_ALPHA1';
+simName = 'TEST_SIZE10';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
-DUMP = 1;
+DUMP = 10;
 COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
+
+% Size
+ideas_space_sizes = [10];
+ideas_space_dims = [2];
 
 % Scaling and nAgents
 vScalings = 1;
 n_agents = 100;
 
 % Influence
-alphas = 1;
+alphas = 0.1;
 Rs = 0.14;
 
 % Noise
@@ -49,8 +53,8 @@ noisetype = 1;
 
 % Truth
 taus = 0.1;
-truths = [0.5;0.5];
-attrtype = 0;
+truths = [5;5];
+attrtype = 2;
 forces_on_v = 0;
 
 % Seed
