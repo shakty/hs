@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrHard_nav_rndseeds_rndseq_tm_R0_n100_fv0';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
+dumpDir = '/cluster/work/scr3/balistef/';
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -30,7 +30,7 @@ t_ends = [20];          % running time
 
 n_agents = [100];       % number of agents
 
-ideas_space_sizes = [1];% size of ideas space
+ideas_space_sizes = [10];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
 
 % If A = B repulsion and attraction nullify
@@ -45,7 +45,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01:0.01:0.99]; % weighting of velocity terms
-Rs     = [0];       	   % cut-off radius
+Rs     = [0.01:0.01:0.3];       	   % cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 5;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
