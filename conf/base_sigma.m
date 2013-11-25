@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
-dumpDir = '/cluster/work/scr1/balistef/';
+simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr2/balistef/';
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -30,7 +30,7 @@ t_ends = [20];          % running time
 
 n_agents = [100];       % number of agents
 
-ideas_space_sizes = [10];% size of ideas space
+ideas_space_sizes = [1];% size of ideas space
 ideas_space_dims = [2]; % dimension of ideas space
 
 % If A = B repulsion and attraction nullify
@@ -83,7 +83,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [5; 5];
+truths = [0.5; 1.5];
 
 
 % BOUNDARY CONDITIONS (not used yet)
@@ -126,7 +126,7 @@ noise_on_v = 1;
 noise_adaptive_on_v = 2;
 noise_on_v_angular = 3;
 
-noisetype = 1;
+noisetype = 3;
 
 % FORCES INTEGRATION on V
 forces_on_v = 0;
