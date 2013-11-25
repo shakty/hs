@@ -124,6 +124,7 @@ seedtype = seed_random;
 noise_on_p = 0;
 noise_on_v = 1;
 noise_adaptive_on_v = 2;
+noise_on_v_angular = 3;
 
 noisetype = 1;
 

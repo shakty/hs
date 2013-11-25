@@ -8,9 +8,7 @@ DUMPDIR = "/mnt/tmp/dump/SIZE10/"
 DIR = "attrZero_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
 
 # Linear
-# DIR = "attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0/"
-DIR = "attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s10/"
-# DIR = "attrLinear_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0/"
+DIR = "attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
 
 # Hard
 # DIR = "attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/"
