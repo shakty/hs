@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 4;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
