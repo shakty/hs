@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
-dumpDir = '/cluster/work/scr4/balistef/';
+simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr5/balistef/';
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 4;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
