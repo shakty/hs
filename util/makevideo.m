@@ -29,7 +29,24 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     load(fileIn);
     
+    p = dump.parameters;
     
+    fprintf('\n%s\n',fileIn);
+    fprintf('------------------------------------\n');
+    fprintf('%+15s = %2.3f\n','alpha',p.alpha);
+    fprintf('%+15s = %2.3f\n','R',p.R);
+    fprintf('%+15s = %2.3f\n','sigma',p.sigma);
+    fprintf('%+15s = %d\n','steps',p.t_end);
+    fprintf('%+15s = %d\n','nAgents',p.n_agents);  
+    fprintf('%+15s = %1d\n','IdeasSpace size',p.ideas_space_size);
+    fprintf('%+15s = %2.3f\n','tau',p.tau)
+    fprintf('%+15s = %2.3f\n','v_scaling',p.v_scaling);
+    fprintf('%+15s = [%2.3f:%2.3f]\n','truth',p.truth(1,1), p.truth(2,1));
+    fprintf('%+15s = %d\n', 'Attr. type', p.attrtype);
+    fprintf('%+15s = %d\n', 'Noise type', p.noisetype);
+    fprintf('%+15s = %d\n', 'Forces on V', p.forces_on_v);
+    fprintf('%+15s = %d\n','Seed', p.seed);
+    fprintf('------------------------------------\n');
     
    
     allStepsAgents = dump.agents;
@@ -43,12 +60,13 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     
     %% Video Plotting
-
+    attrtype = dump.parameters.attrtype;
+    
     % Showing the potential of the attraction to truth
-    if (SHOW_POTENTIAL)
-        attrtype = dump.parameters.attrtype;
+    if (SHOW_POTENTIAL && attrtype > 1)  
         tau = dump.parameters.tau;
         colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
+        DIAG = norm([ideas_space_size;ideas_space_size]);
         
         switch (attrtype)
 
@@ -187,6 +205,8 @@ function makevideo( fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         % if (j > 1490)
         %    waitforbuttonpress
         % end
+        
+        % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
     end      
  
 %%    

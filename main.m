@@ -29,14 +29,17 @@ load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_
 simName = 'TEST_SIZE10';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
-VIDEO = 1;
+VIDEO = 0;
 DUMP = 0;
 COMPUTATION = 0;
-plottype = 3;
-SHOW_POTENTIAL = 1;
+plottype = 0;
+SHOW_POTENTIAL = 0;
+
+% Duration
+t_ends = 2;
 
 % Size
-ideas_space_sizes = [10];
+ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
@@ -44,7 +47,7 @@ vScalings = 1;
 n_agents = 100;
 
 % Influence
-alphas = 0.1;
+alphas = 1;
 Rs = 0.14;
 
 % Noise
@@ -53,7 +56,7 @@ noisetype = 3;
 
 % Truth
 taus = 0.1;
-truths = [5;5];
+truths = [.5;.5];
 attrtype = 2;
 forces_on_v = 0;
 

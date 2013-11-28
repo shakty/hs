@@ -6,26 +6,45 @@ clear
 
 path(path,'util/');
 
+% EXP_BUG
 
 DUMPDIR = '/mnt/tmp/dump/EXP_BUG/';
-MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0';
+
+% R CLEAN
+MYDIR = 'attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0';
+MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0';
 MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0';
+MYDIR = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0';
 
-SIGMA = '_s1';
+% R = 0;
+MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0';
+%MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_Alpha1_n100_fv0';
+MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0';
+MYDIR = 'attrHard_nav_rndseeds_rndseq_tm_R0_n100_fv0';
+MYDIR = 'attrMillean_nav_rndseeds_rndseq_tm_R0_n100_fv0';
 
+% SIZE 10
+
+% R CLEAN
+MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
+MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
+MYDIR = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
+% MYDIR = 'attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10'; (TODO);
+
+DUMPDIR = '/mnt/tmp/dump/SIZE10/';
+
+
+SIGMA = '_s0';
+
+% DUMP DIR
 dumpDir = [DUMPDIR MYDIR '/' MYDIR SIGMA '/'];
+% FILE
+myFile = '1000-1.mat';
 
-
-DUMPDIR = '/home/stefano/hs/test/';
-simName = 'TEST_SIZE10-2013-11-20-22-10/';
-
-dumpDir = [DUMPDIR simName '/']
 
 VIDEODIR = '/home/stefano/hs/videos/NEW/';
-
-
 SAVE_VIDEO = 0;
-SHOW_POTENTIAL = 1;
+SHOW_POTENTIAL = 0;
 plottype = 0 ;
 
 % PLOT TYPE
@@ -34,10 +53,10 @@ plottype = 0 ;
 % plot_number_color = 2;
 % plot_arrow = 3;
     
-myFile = '1-1.mat';
+
 videoSubDir = [ MYDIR '/' ];
 videoFile = [VIDEODIR videoSubDir myFile '.avi'];
-if (exist([VIDEODIR videoSubDir],'dir') == 0)
+if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
     mkdir([VIDEODIR videoSubDir]);
 end
 makevideo([dumpDir myFile], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);

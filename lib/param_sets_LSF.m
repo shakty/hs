@@ -15,6 +15,7 @@ path(path,'lib/'); % Help functions
 
 parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
+TASKLIST_LIMIT = 5; % group together the tasks
 TASKS4JOB = 20; % How many tasks group in one job
 jobCount = 1;
 
@@ -191,13 +192,29 @@ for i1=1:size(params.dts)
                 'forces_on_v', forces_on_v, ...
                 'seed', seed ...
             );
-            
+            %%%
+          
 
-						
-            createTask(j, @simulation, 0, {paramsObj});
+            taskIdx = mod(simCount, TASKLIST_LIMIT);
+            paramObjs{taskIdx} = paramsObj;
+            tasklist = sprintf('%s simulation(params{%d})', tasklist, taskIdx);
+
+            if (taskIdx ~= 0)
+                % separater commas except after the last element.
+                tasklist = [ tasklist, ',' ];
+            else
+                tasklist = [ tasklist, ']' ];
+                
+                tasks = str2func(tasklist);
+                createTask(j, @tasks, 0, paramObjs);
+            end
+  
+            
+            %%%
+            % createTask(j, @simulation, 0, {paramsObj});
 
             % Submit the job to the scheduler in batches
-            if (mod(simCount,TASKS4JOB)==0)
+            if (mod(simCount, TASKS4JOB)==0)
                 submit(j);
 
                 if (simCount ~= nCombinations)
