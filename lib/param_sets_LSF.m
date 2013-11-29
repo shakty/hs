@@ -15,8 +15,12 @@ path(path,'lib/'); % Help functions
 
 parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
-TASKLIST_LIMIT = 5; % group together the tasks
-TASKS4JOB = 20; % How many tasks group in one job
+
+% How many sequential simulations in one task.
+SIMS4TASK = 4; 
+% How many tasks group in one job. Should be multiple with SIMS4TASK.
+TASKS4JOB = 20;
+
 jobCount = 1;
 
 logFolder = ['log/' params.simName];
@@ -43,7 +47,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2);
 
 % Init cell array of cell arrays           
-paramObjs = cell(TASKLIST_LIMIT,1);            
+paramObjs = cell(SIMS4TASK,1);            
 
 % Counter of all simulations.
 simCount = 1;
@@ -197,19 +201,18 @@ for i1=1:size(params.dts)
                 'forces_on_v', forces_on_v, ...
                 'seed', seed ...
             );
-            %%%
-          
-
-            taskIdx = mod(simCount, TASKLIST_LIMIT);
+  
+            % It is convenient to group together more simulations in one
+            % task if simulations are short. Matlab overhead to start on
+            % each cluster node is about 1 minute.
+            taskIdx = mod(simCount, SIMS4TASK);
             paramObjs{taskIdx} = {paramsObj};
 
             if (taskIdx ~= 0)
                 createTask(j, @simulation, 0, paramObjs);
-                paramObjs = cell(TASKLIST_LIMIT, 1);
+                paramObjs = cell(SIMS4TASK, 1);
             end
   
-            
-            %%%
             % createTask(j, @simulation, 0, {paramsObj});
 
             % Submit the job to the scheduler in batches
@@ -226,7 +229,7 @@ for i1=1:size(params.dts)
             fprintf('\n\n');
         end
         % updating the simulations count
-        simCount=simCount+1;
+        simCount = simCount + 1;
     end
     end
     end
@@ -249,8 +252,11 @@ for i1=1:size(params.dts)
     end
 end  
 
-% Submit the left-over tasks
-if (mod(simCount,TASKS4JOB) ~= 1) % 1: it has always one last increment
+% Submit the left-over tasks.
+if (mod(simCount, TASKS4JOB) ~= 1) % 1: it has always one last increment.
+    if (taskIdx ~= 0)
+        createTask(j, @simulation, 0, paramObjs);
+    end
     submit(j);
 end
 
