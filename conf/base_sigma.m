@@ -206,9 +206,9 @@ for i=1:size(sigmas,2)
     
     % Creating the GO_FUN file
     if (i == 1)
-        cmdStr = sprintf('bsub -J hs_chain -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'',''%d'')"', DIR, confFile, batchSeed);
+        cmdStr = sprintf('bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'',''%d'')"', DIR, confFile, batchSeed);
     else
-        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -W 36:00 -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'', ''%d'')"', DIR, confFile, batchSeed);
+        cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'', ''%d'')"', DIR, confFile, batchSeed);
     end
     fprintf(fidMain, '%s\n', cmdStr);   
     
