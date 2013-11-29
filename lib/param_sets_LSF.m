@@ -206,9 +206,11 @@ for i1=1:size(params.dts)
             % task if simulations are short. Matlab overhead to start on
             % each cluster node is about 1 minute.
             taskIdx = mod(simCount, SIMS4TASK);
-            paramObjs{taskIdx} = {paramsObj};
 
             if (taskIdx ~= 0)
+                paramObjs{taskIdx} = {paramsObj};
+            else
+                paramObjs{taskIdx+1} = {paramsObj};
                 createTask(j, @simulation, 0, paramObjs);
                 paramObjs = cell(SIMS4TASK, 1);
             end
