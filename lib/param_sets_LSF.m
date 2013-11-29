@@ -257,7 +257,7 @@ end
 % Submit the left-over tasks.
 if (mod(simCount, TASKS4JOB) ~= 1) % 1: it has always one last increment.
     if (taskIdx ~= 0)
-        createTask(j, @simulation, 0, paramObjs);
+        createTask(j, @wrappersim, 0, paramObjs);
     end
     submit(j);
 end

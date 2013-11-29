@@ -1,7 +1,7 @@
 function wrappersim( paramArgs )
 
     for i=1:length(paramArgs)
-        simulation(paramArgs(i))
+        simulation(paramArgs{i})
     end
 
 end
