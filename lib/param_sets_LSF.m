@@ -41,9 +41,14 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2);
-      
-simCount=1; %counter of all simulations
-%nest several loops to simulate parameter sets
+
+% Init cell array of cell arrays           
+paramObjs = cell(TASKLIST_LIMIT,1);            
+
+% Counter of all simulations.
+simCount = 1;
+
+% Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
     dt = params.dts(i1);
      
@@ -196,17 +201,11 @@ for i1=1:size(params.dts)
           
 
             taskIdx = mod(simCount, TASKLIST_LIMIT);
-            paramObjs{taskIdx} = paramsObj;
-            tasklist = sprintf('%s simulation(params{%d})', tasklist, taskIdx);
+            paramObjs{taskIdx} = {paramsObj};
 
             if (taskIdx ~= 0)
-                % separater commas except after the last element.
-                tasklist = [ tasklist, ',' ];
-            else
-                tasklist = [ tasklist, ']' ];
-                
-                tasks = str2func(tasklist);
-                createTask(j, @tasks, 0, paramObjs);
+                createTask(j, @simulation, 0, paramObjs);
+                paramObjs = cell(TASKLIST_LIMIT, 1);
             end
   
             
