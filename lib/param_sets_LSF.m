@@ -208,17 +208,17 @@ for i1=1:size(params.dts)
             taskIdx = mod(simCount, SIMS4TASK);
 
             if (taskIdx ~= 0)
-                paramObjs{taskIdx} = {paramsObj};
+                paramObjs{taskIdx} = paramsObj;
             else
-                paramObjs{taskIdx+1} = {paramsObj};
-                createTask(j, @simulation, 0, paramObjs);
+                paramObjs{taskIdx+1} = paramsObj;
+                createTask(j, @simulation_wrapper, 0, paramObjs);
                 paramObjs = cell(SIMS4TASK, 1);
             end
   
             % createTask(j, @simulation, 0, {paramsObj});
 
             % Submit the job to the scheduler in batches
-            if (mod(simCount, TASKS4JOB)==0)
+            if (mod(simCount, TASKS4JOB) == 0)
                 submit(j);
 
                 if (simCount ~= nCombinations)
