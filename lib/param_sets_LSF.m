@@ -211,7 +211,7 @@ for i1=1:size(params.dts)
                 paramObjs{taskIdx} = paramsObj;
             else
                 paramObjs{taskIdx+1} = paramsObj;
-                createTask(j, @simulation_wrapper, 0, paramObjs);
+                createTask(j, @wrappersim, 0, paramObjs);
                 paramObjs = cell(SIMS4TASK, 1);
             end
   
