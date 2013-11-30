@@ -5,19 +5,19 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 DUMPDIR = "/mnt/tmp/dump/NAV/"
 
 # Zero
-DIR = "attrZero_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
-DIR = "attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s10/"
+DIR = "attrZero_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/"
+#DIR = "attrZero_nav_rndseeds_rndseq_tm_R0_n100_fv0_s10/"
 
 # Linear
 #DIR = "attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
-DIR = "attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s10/"
+#DIR = "attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s10/"
 
 # Hard
 # DIR = "attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0/"
 
 # Millean (TODO)
-DIR = "attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
-DIR = "attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/"
+#DIR = "attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10/"
+#DIR = "attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR,DIR)

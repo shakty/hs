@@ -32,10 +32,10 @@ MYDIR = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s10';
 DUMPDIR = '/mnt/tmp/dump/EXP_BUG/';
 
 % R CLEAN
-MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0';
 MYDIR = 'attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0';
 MYDIR = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0';
 MYDIR = 'attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0';
+MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0';
 
 % SIGMA
 SIGMA = '_s1';
@@ -50,6 +50,7 @@ VIDEODIR = '/home/stefano/hs/videos/LAST/';
 SAVE_VIDEO = 1;
 SHOW_POTENTIAL = 0;
 plottype = 0 ;
+SINGLE = 1;
 
 % PLOT TYPE
 % plot_cross = 0;
@@ -58,13 +59,14 @@ plottype = 0 ;
 % plot_arrow = 3;
     
 
-
-%videoFile = [VIDEODIR videoSubDir myFile '.avi'];
-%if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
-%    mkdir([VIDEODIR videoSubDir]);
-%end
-%makevideo([dumpDir myFile], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
-
+if (SINGLE)
+    videoFile = [VIDEODIR videoSubDir myFile '.avi'];
+    if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
+        mkdir([VIDEODIR videoSubDir]);
+    end
+    makevideo([dumpDir myFile], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
+    return
+end
 
 myFiles = {
    '1-1.mat', '3-1.mat', '7-1.mat', '30-1.mat', '2970-1.mat' ...

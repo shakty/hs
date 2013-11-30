@@ -15,7 +15,12 @@ path(path,'lib/'); % Help functions
 
 parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
-TASKS4JOB = 20; % How many tasks group in one job
+
+% How many sequential simulations in one task.
+SIMS4TASK = 4; 
+% How many tasks group in one job. Should be multiple with SIMS4TASK.
+TASKS4JOB = 20;
+
 jobCount = 1;
 
 logFolder = ['log/' params.simName];
@@ -40,9 +45,14 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2);
-      
-simCount=1; %counter of all simulations
-%nest several loops to simulate parameter sets
+
+% Init cell array of cell arrays           
+paramObjs = cell(SIMS4TASK,1);            
+
+% Counter of all simulations.
+simCount = 1;
+
+% Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
     dt = params.dts(i1);
      
@@ -191,13 +201,24 @@ for i1=1:size(params.dts)
                 'forces_on_v', forces_on_v, ...
                 'seed', seed ...
             );
-            
+  
+            % It is convenient to group together more simulations in one
+            % task if simulations are short. Matlab overhead to start on
+            % each cluster node is about 1 minute.
+            taskIdx = mod(simCount, SIMS4TASK);
 
-						
-            createTask(j, @simulation, 0, {paramsObj});
+            if (taskIdx ~= 0)
+                paramObjs{taskIdx} = paramsObj;
+            else
+                paramObjs{taskIdx+1} = paramsObj;
+                createTask(j, @wrappersim, 0, paramObjs);
+                paramObjs = cell(SIMS4TASK, 1);
+            end
+  
+            % createTask(j, @simulation, 0, {paramsObj});
 
             % Submit the job to the scheduler in batches
-            if (mod(simCount,TASKS4JOB)==0)
+            if (mod(simCount, TASKS4JOB) == 0)
                 submit(j);
 
                 if (simCount ~= nCombinations)
@@ -210,7 +231,7 @@ for i1=1:size(params.dts)
             fprintf('\n\n');
         end
         % updating the simulations count
-        simCount=simCount+1;
+        simCount = simCount + 1;
     end
     end
     end
@@ -233,8 +254,11 @@ for i1=1:size(params.dts)
     end
 end  
 
-% Submit the left-over tasks
-if (mod(simCount,TASKS4JOB) ~= 1) % 1: it has always one last increment
+% Submit the left-over tasks.
+if (mod(simCount, TASKS4JOB) ~= 1) % 1: it has always one last increment.
+    if (taskIdx ~= 0)
+        createTask(j, @wrappersim, 0, paramObjs);
+    end
     submit(j);
 end
 
