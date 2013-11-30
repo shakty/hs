@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
-dumpDir = '/cluster/work/scr5/balistef/';
+simName = 'attrHard_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr1/balistef/';
 %dumpDir = 'dump/';
 bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
@@ -103,7 +103,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 2;
+attrtype = 5;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -150,6 +150,24 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
 fprintf('Total number of simulations = %u x %u: = %u\n', nRuns, nCombinations, nRuns*nCombinations);
 
+
+% Printing parameters (has some assumptions)
+fprintf('\n%s\n', simName);
+fprintf('------------------------------------\n');
+fprintf('%+15s = %s\n','alpha', mat2str(alphas));
+fprintf('%+15s = %s\n','R', mat2str(Rs));
+fprintf('%+15s = %s\n','sigma', mat2str(sigmas));
+fprintf('%+15s = %s\n','steps', mat2str(t_ends));
+fprintf('%+15s = %s\n','nAgents', mat2str(n_agents));  
+fprintf('%+15s = %s\n','IdeasSpace size', mat2str(ideas_space_sizes));
+fprintf('%+15s = %s\n','tau', mat2str(taus));
+fprintf('%+15s = %s\n','v_scaling', mat2str(vScalings));
+fprintf('%+15s = [%2.3f:%2.3f]\n','truth', truths(1,1), truths(2,1));
+fprintf('%+15s = %d\n', 'Attr. type', attrtype);
+fprintf('%+15s = %d\n', 'Noise type', noisetype);
+fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
+fprintf('%+15s = %d\n','Seed', seed);
+fprintf('------------------------------------\n');
 
 % CREATING FOLDERS
 CONF_SUBDIR = 'NEW/';
@@ -260,3 +278,6 @@ copyfile(launcherAggr, COPYDIR);
 copyfile(file_merge, COPYDIR);
 copyfile(launcherMain, COPYDIR);
 copyfile(launcherCl, COPYDIR);
+
+
+
