@@ -1,10 +1,19 @@
 %% Perform Cluster Analysis on the dump
-
+tic
 close all
 clc
 clear
 
 path(path,'util/');
+
+% Change default axes fonts.
+set(0,'DefaultAxesFontName', 'Times New Roman')
+set(0,'DefaultAxesFontSize', 14)
+
+% Change default text fonts.
+set(0,'DefaultTextFontname', 'Times New Roman')
+set(0,'DefaultTextFontSize', 14)
+
 
 % R = 0;
 
@@ -47,7 +56,7 @@ myFile = '1-1.mat';
 
 videoSubDir = [ MYDIR '/' ];
 VIDEODIR = '/home/stefano/hs/videos/LAST/';
-SAVE_VIDEO = 1;
+SAVE_VIDEO = 0;
 SHOW_POTENTIAL = 0;
 plottype = 0 ;
 SINGLE = 1;
@@ -64,7 +73,7 @@ if (SINGLE)
     if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
         mkdir([VIDEODIR videoSubDir]);
     end
-    makevideo([dumpDir myFile], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
+    makevideo(dumpDir, myFile, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
     return
 end
 
@@ -79,9 +88,7 @@ for i=1:length(myFiles)
         mkdir([VIDEODIR videoSubDir]);
     end
 
-   makevideo([dumpDir myFiles{i}], SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
+    makevideo(dumpDir, myFiles{i}, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
 end
 
-files = dir(dumpDir);
-fileIndex = find(~[files.isdir]);
-
+toc

@@ -1,7 +1,7 @@
-function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
+function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_POTENTIAL)
     close all;
     
-    path2file = [ dirIn fileIn ];
+    path2file = [ dumpDirIn subDirIn '/' fileIn ];
     
     % PLOT TYPE
     plot_cross = 0;
@@ -24,8 +24,6 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     elseif nargin < 5
         SHOW_POTENTIAL = 0;
     end
-    
-    DEBUG = 0; % not used for now
  
     colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
     
@@ -152,22 +150,15 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         end
     end
     
-    
-    xlim([0 1]);
-    ylim([0 1]);
-    
-
-    % Get the handle of the figure
-    %h = figure();
-
-    if (MPEG)
-        % Prepare the new file.
-        vidObj = VideoWriter(fileOut);
-        open(vidObj);
-    end
-
-    for j=1:size(allStepsAgents,3)
-        agents = allStepsAgents(:,:,j);
+    for j=1:length(frames)
+        frame = frames(j);
+        
+        if (frame > size(allStepsAgents, 3)) 
+            agents = allStepsAgents(:,:,size(allStepsAgents, 3));
+        else
+            agents = allStepsAgents(:,:,frame);
+        end
+        
         %v = dump.agentsv(:,:,j);
         switch (plottype)
         
@@ -212,42 +203,14 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         xlim([0 ideas_space_size])
         ylim([0 ideas_space_size]);
         % TODO move the title in the first frame
-        paramString{1} = [attrName ' - T: ' int2str(j)];
+        paramString{1} = [attrName ' - T: ' int2str(frame)];
         title(paramString);
 
-        if (MPEG)
-            % Get the very last frame
-            currFrame = getframe();
-            writeVideo(vidObj,currFrame);
-        end 
+        pause(0.01);
+        [fileInPath,fileInName, fileInExt] = fileparts(fileIn);
+        saveas(gcf, [dirOut subDirIn '_' fileInName '_T' int2str(frame) '.jpeg']);
         
-        if (DEBUG)
-            %Debugging: Calculate energy and control whether it is constant
-            E=0;
-            for i=1:n_agents
-                E=E+0.5*(v(:,i))'*v(:,i);
-            end
-            energy=num2str(E);
-            legend(energy);
-        end
-        
-        % no need for pause for complicated plots
-        %if (plottype == plot_cross)
-            pause(0.01);
-        %end
-       
-        if (j == 200)
-            waitforbuttonpress
-            saveas(gcf,'/tmp/filename.jpg') 
-        end
-        
-        % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
     end      
- 
-%%    
-    if (MPEG)
-        % Close the video file.
-        close(vidObj)
-    end
+
 end
 
