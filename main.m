@@ -29,10 +29,10 @@ load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_
 simName = 'TEST_SIZE10';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
-VIDEO = 0;
+VIDEO = 1;
 DUMP = 0;
 COMPUTATION = 0;
-plottype = 0;
+plottype = 3;
 SHOW_POTENTIAL = 0;
 
 % Duration
@@ -43,12 +43,12 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 1;
+vScalings = 10;
 n_agents = 100;
 
 % Influence
-alphas = 1;
-Rs = 0.14;
+alphas = 0.1;
+Rs = 0.05;
 
 % Noise
 sigmas = 0.1;
@@ -56,14 +56,14 @@ noisetype = 3;
 
 % Truth
 taus = 0.1;
-truths = [.5;.5];
-attrtype = 2;
+truths = [0.5; 0.5];
+attrtype = 4;
 forces_on_v = 0;
 
 % Seed
 seedtype = 0; % 0 = fixed
-seed = 819325;
-batchSeed = 819325; %randi(1000000);
+seed = randi(1000000); % 819325;
+batchSeed = randi(1000000); % 819325; 
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
