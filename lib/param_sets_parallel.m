@@ -42,7 +42,7 @@ truthss = zeros(size(truths,1),nCombinations);
 % TODO: there is probably a method to do this, like when you do the
 % meshgrids. Investigate it.
 
-%nest several loops to simulate parameter sets
+% nest several loops to simulate parameter sets
 for i1=1:size(dts,2)
     dt = dts(i1);
        
