@@ -22,28 +22,28 @@ compLSF = 2;
 
 %% Loading Conf
 % load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200/attrLinear_nv_Kseed_rndseq_tm_Rleft_n200_s0']);
-%load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tc_Rleft/attrLinear_nv_Kseed_rndseq_tc_Rleft_s0']);
+% load([confDir 'NEW/attrLinear_nv_Kseed_rndseq_tc_Rleft/attrLinear_nv_Kseed_rndseq_tc_Rleft_s0']);
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'TEST_SIZE10';
+simName = 'NEWTEST';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
-VIDEO = 1;
-DUMP = 0;
+VIDEO = 0;
+DUMP = 1;
 COMPUTATION = 0;
 plottype = 3;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 2;
+t_ends = 20;
 
 % Size
 ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 10;
+vScalings = 1;
 n_agents = 100;
 
 % Influence

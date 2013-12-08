@@ -1,19 +1,93 @@
-function [ output_args ] = truthradius_onefile(fileName, simnameidx, RADIUSs, ...
-    STAY_FOR, CONSENSUS_ON_TRUTH_FOR, CONSENSUS_THRESHOLD )
+function truthradius_onefile(params)
 
-    simnameidx = strfind(NAME, '-');
-    simnameidx = str2double(NAME(1:simnameidx-1));
+    % Counts the number of agents that are distant R from the truth
+    % R is every value in the array RADIUSs
+    
+    % To be considered stable the agent must stay in the same within
+    % the same radius for STAY_FOR steps
 
-    load(fileName);
+    folderName = params.folderName;
+    fileName = params.fileName;
 
+    RADIUSs = params.RADIUSs;
+    STAY_FOR = params.STAY_FOR;
+    CONSENSUS_ON_TRUTH_FOR = params.CONSENSUS_ON_TRUTH_FOR;
+    CONSENSUS_THRESHOLD = params.CONSENSUS_THRESHOLD;
+    
+    DUMP = params.DUMP;
+    DUMP_RATE = params.DUMP_RATE;
+    outDir = params.outDir;
+
+    PLOTS = params.PLOTS;
+
+    path = [folderName fileName];
+    load(path);
+    
+    % Creating variables used to save results to file.
+    headers_truthradius = {
+        'simname', ...
+        'simcount', ...
+        'run', ...
+        't' ...
+    };
+   
+    row_string_sprintf = '"%s",%u,%u,%u';
+    
+    % nRadiuses
+    nRadiuses = length(RADIUSs);
+    hStartFrom = 4;
+    for i = 1 : nRadiuses
+        radiusStr = ['r_' num2str(RADIUSs(i))];
+        headers_truthradius{i + hStartFrom} = radiusStr;
+        row_string_sprintf = [row_string_sprintf ',%u'];
+    end
+    
+    % Adding not in radius
+    i = i + 1;
+    radiusStr = 'r_out';
+    headers_truthradius{i + hStartFrom} = radiusStr;
+    row_string_sprintf = [row_string_sprintf ',%u'];
+    
+    % Adding flag consensus on Truth.
+    i = i + 1;
+    radiusStr = 'consensus';
+    headers_truthradius{i + hStartFrom} = radiusStr;
+    row_string_sprintf = [row_string_sprintf ',%u']; 
+    
+    % End creating variables used to save results to file.
+    
     pos = dump.agents;
     truth = dump.truth;
     run = dump.run;
-
+    simName = dump.name;
+    simnameidx = dump.sim;
+    
+    v = dump.agentsv;
+    nIter = size(v,3);
+    nAgents = size(v,2);
+    AGENTS_4_CONSENSUS = floor(nAgents * CONSENSUS_THRESHOLD);
+    
+    TRUTH_RADIUS_IDX = 1;
+    
+    NOT_IN_RADIUS = -1;
+    nRadiusesPlusOne = nRadiuses + 1;
+    
     agentBelong2Radius = zeros(1, nAgents);
     agentInRadiusFor = zeros(1, nAgents);
     consensusOnTruth = zeros(1, nIter);
     consensusHoldsFor = 0;
+    
+    globalRadiusCounts = zeros(nIter, nRadiusesPlusOne);
+    globalRadiusCounts_squared = zeros(nIter, nRadiusesPlusOne);
+    globalConsensusOnTruth = zeros(1, nIter);
+    globalConsensusOnTruth_squared = zeros(1, nIter);
+    
+    if (DUMP)
+        dataFileName = [outDir 'truth_radius_' fileName '.csv'];
+        write_csv_headers(dataFileName, headers_truthradius);
+        fidTruthRadius = fopen(dataFileName,'a');
+    end
+    
 
     for i = 1:nIter
 
@@ -26,7 +100,7 @@ function [ output_args ] = truthradius_onefile(fileName, simnameidx, RADIUSs, ..
             for r = 1 : nRadiuses
                 radius = RADIUSs(r);
 
-                if (norm(pos(:,a) - truth) <= radius)
+                if (norm(pos(:, a, i) - truth) <= radius)
                     found = 1;
                     break;
                 end
@@ -53,36 +127,56 @@ function [ output_args ] = truthradius_onefile(fileName, simnameidx, RADIUSs, ..
         end
 
         % Is there a consenus on Truth? How long for?
-        if (agentBelong2Radius(TRUTH_RADIUS) > AGENTS_4_CONSENSUS)
+        if (radiusCounts(TRUTH_RADIUS_IDX) > AGENTS_4_CONSENSUS)
             consensusHoldsFor = consensusHoldsFor + 1;                
         else
             consensusHoldsFor = 0;
         end
 
-        if (consensusHoldsFor > STAY_FOR)
+        if (consensusHoldsFor > CONSENSUS_ON_TRUTH_FOR)
             consensusOnTruth(i) = 1;
         end
 
-        if (CSV_DUMP)                        
+        if (DUMP)                        
             % SAVING ONLY EVERY X ITERATIONS        
             if (mod(i, DUMP_RATE) == 0)                                
                 row_string_final = sprintf(row_string_sprintf, ...
-                    simName, simnameidx, run, i, radiusCount, ...
+                    simName, simnameidx, run, i, radiusCounts, ...
                     consensusOnTruth(i));                    
                 fprintf(fidTruthRadius, '%s\n', row_string_final);   
             end
-
         end
-
-
+        
+        
+        if (PLOTS)
+            %bar(radiusCounts());
+            %pause(0.1);
+            %waitforbuttonpress
+            plot(pos(1,:,i), pos(2,:,i),'rx');
+            pause(0.1);            
+        end
+     
         % SUMMING UP AVG statistics
-        globalRadiusCounts(i,:) = globalRadiusCounts(i,:) + radiusCounts;
-        globalRadiusCounts_squared(i,:) = globalRadiusCounts_squared(i,:) + radiusCounts.^2;
-        globalConsensusOnTruth(i) = globalConsensusOnTruth(i) + consensusOnTruth(i)^2;
-        globalConsensusOnTruth_squared(i) = globalConsensusOnTruth_squared(i) + consensusOnTruth(i)^2;
+        globalRadiusCounts(i,:) = globalRadiusCounts(i) + radiusCounts;
+        globalRadiusCounts_squared(i,:) = globalRadiusCounts_squared(i) + radiusCounts.^2;
     end
         
+    % consensusOnTruth is dicotomous.
+    globalConsensusOnTruth = consensusOnTruth;
+    globalConsensusOnTruth_squared = consensusOnTruth;
+    
+    if (DUMP)
+        save([ outDir 'radiusCounts_' fileName ], ...
+                                 'globalRadiusCounts', ...
+                                 'globalRadiusCounts_squared', ...
+                                 'globalConsensusOnTruth', ...
+                                 'globalConsensusOnTruth_squared' ...                                 
+        );
+    
+    
         
+    
+    end
         
         
 
