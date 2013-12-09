@@ -16,7 +16,7 @@ function truthradius_onefile(params)
     
     DUMP = params.DUMP;
     DUMP_RATE = params.DUMP_RATE;
-    outDir = params.outDir;
+    outDir = params.outDirRadius;
 
     PLOTS = params.PLOTS;
 
@@ -79,8 +79,6 @@ function truthradius_onefile(params)
     
     globalRadiusCounts = zeros(nIter, nRadiusesPlusOne);
     globalRadiusCounts_squared = zeros(nIter, nRadiusesPlusOne);
-    globalConsensusOnTruth = zeros(1, nIter);
-    globalConsensusOnTruth_squared = zeros(1, nIter);
     
     if (DUMP)
         dataFileName = [outDir 'truth_radius_' fileName '.csv'];
@@ -172,9 +170,6 @@ function truthradius_onefile(params)
                                  'globalConsensusOnTruth', ...
                                  'globalConsensusOnTruth_squared' ...                                 
         );
-    
-    
-        
     
     end
         

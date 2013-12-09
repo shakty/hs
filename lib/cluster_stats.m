@@ -1,6 +1,4 @@
-function [ distances, groupCounts, avgGroupDist, avgGroupSpeed, avgGroupMove ] = cluster_stats( T, truth, posagents , v, movs)
-
-    nGroups = max(T);
+function [ distances, groupCounts, avgGroupDist, avgGroupSpeed, avgGroupMove ] = cluster_stats( T, nGroups, truth, posagents , v, movs)
 
     avgGroupDist = zeros(nGroups,1);
     groupCounts = zeros(nGroups,1);
@@ -21,6 +19,5 @@ function [ distances, groupCounts, avgGroupDist, avgGroupSpeed, avgGroupMove ] =
     avgGroupDist = avgGroupDist ./ groupCounts;
     avgGroupSpeed = avgGroupSpeed ./ groupCounts;
     avgGroupMove = avgGroupMove ./ groupCounts;
-
 end
 

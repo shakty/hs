@@ -171,3 +171,188 @@ function aggregate_truthradius(params)
 
 end
 
+%% params
+
+   %% Param
+             
+  headers_agents = {
+        'simname', ...
+        'simcount', ...
+        'run', ...
+        't', ...
+        'coverage', ...
+        'coverage.cum', ...
+        'speed.avg', ...
+        'speed.sd', ...
+        'move.avg', ...
+        'move.sd', ...
+        'fromtruth.avg', ...
+        'fromtruth.sd', ...
+        'pdist.mean', ...
+        'pdist.sd' ...   
+    };
+
+   
+    headers_params = {
+        'simname', ...
+        'simcount', ...
+        'run', ...
+        'timestamp', ...
+        't.end', ...
+        'dt', ...
+        'nagents', ...
+        'spacesize',...
+        'spacedim', ...
+        'alpha', ... % Own velocity
+        'R', ...
+        'k', ... % Exponent forces
+        'A', ... % Attractive force
+        'd0', ... 
+        'B', ... % Repulsive force
+        'd1', ... 
+        'tau', ... % Truth strength
+        'sigma', ... % Std noise
+        'init.vscaling', ...
+        'init.nclusters', ...
+        'init.clusterradio', ...
+        'truth.x', ...
+        'truth.y', ...
+        'noisetype', ...
+        'attrtype', ...
+        'attr_on_v', ...
+        'seed', ...
+        };
+
+
+
+%% Create headers for csv
+write_csv_headers(dataFileName, headers_clusters_macro);
+        
+write_csv_headers(dataFileName, headers_agents);
+
+
+ % Computing global stats: AGENTS
+ 
+ 
+    dataFileName = [dumpDir 'agents_macro_avg.csv'];
+    write_csv_headers(dataFileName, headers_agents_avg);
+    fidClustersMacroAvg = fopen(dataFileName,'a');
+ 
+    
+    t_cover_avg = global_coverage_sum / N; 
+    t_cover_sd = sqrt(((global_coverage_sumsquared - ((global_coverage_sum).^2 / N))) / df);
+    t_cover_se = t_cover_sd / sqrt(N);  
+    t_cover_ci = t_cover_se * tquant(CI_INT, df);
+    
+    t_cover_cum_avg = global_coverage_cum_sum / N; 
+    t_cover_cum_sd = sqrt(((global_coverage_cum_sumsquared - ((global_coverage_cum_sum).^2 / N))) / df);
+    t_cover_cum_se = t_cover_cum_sd / sqrt(N);  
+    t_cover_cum_ci = t_cover_cum_se * tquant(CI_INT, df);
+    
+    t_speed_avg = global_speed_sum / N; 
+    t_speed_sd = sqrt(((global_speed_sumsquared - ((global_speed_sum).^2 / N))) / df);
+    t_speed_se = t_speed_sd / sqrt(N);  
+    t_speed_ci = t_speed_se * tquant(CI_INT, df);
+    
+    t_movs_avg = global_movs_sum / N; 
+    t_movs_sd = sqrt(((global_movs_sumsquared - ((global_movs_sum).^2 / N))) / df);
+    t_movs_se = t_movs_sd / sqrt(N);  
+    t_movs_ci = t_movs_se * tquant(CI_INT, df);
+
+    t_fromtruth_avg = global_fromtruth_sum / N; 
+    t_fromtruth_sd = sqrt(((global_fromtruth_sumsquared - ((global_fromtruth_sum).^2 / N))) / df);
+    t_fromtruth_se = t_fromtruth_sd / sqrt(N);  
+    t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, df);
+ 
+    if (CSV_DUMP)
+        
+        fclose(fidParam);
+        fclose(fidClustersMacro);
+        
+        % SAVING ALL ITERATIONS for the AVG
+        for z = 1:nIter
+            % 23 elements
+            clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+                simName, N, z, ...
+                t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
+                t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
+                t_speed_avg(z), t_speed_sd(z), t_speed_se(z), t_speed_ci(z), ...
+                t_movs_avg(z), t_movs_sd(z), t_movs_se(z), t_movs_ci(z), ...
+                t_fromtruth_avg(z), t_fromtruth_sd(z), t_fromtruth_se(z), t_fromtruth_ci(z));
+            
+            fprintf(fidClustersMacroAvg,'%s\n', clu_macro_avg_string);   
+         end
+
+        fclose(fidClustersMacroAvg);
+    end
+
+    
+    
+    
+  %% Clusters
+  
+     
+    % Computing global stats  
+    t_count_avg = global_count_sum / N; 
+    t_count_sd = sqrt(((global_count_sumsquared - ((global_count_sum).^2 / N))) / df);
+    t_count_se = t_count_sd / sqrt(N);  
+    t_count_ci = t_count_se * tquant(CI_INT, df);
+    
+    t_cover_avg = global_coverage_sum / N; 
+    t_cover_sd = sqrt(((global_coverage_sumsquared - ((global_coverage_sum).^2 / N))) / df);
+    t_cover_se = t_cover_sd / sqrt(N);  
+    t_cover_ci = t_cover_se * tquant(CI_INT, df);
+    
+    t_cover_cum_avg = global_coverage_cum_sum / N; 
+    t_cover_cum_sd = sqrt(((global_coverage_cum_sumsquared - ((global_coverage_cum_sum).^2 / N))) / df);
+    t_cover_cum_se = t_cover_cum_sd / sqrt(N);  
+    t_cover_cum_ci = t_cover_cum_se * tquant(CI_INT, df);
+    
+    t_speed_avg = global_speed_sum / N; 
+    t_speed_sd = sqrt(((global_speed_sumsquared - ((global_speed_sum).^2 / N))) / df);
+    t_speed_se = t_speed_sd / sqrt(N);  
+    t_speed_ci = t_speed_se * tquant(CI_INT, df);
+    
+    t_move_avg = global_move_sum / N; 
+    t_move_sd = sqrt(((global_move_sumsquared - ((global_move_sum).^2 / N))) / df);
+    t_move_se = t_move_sd / sqrt(N);  
+    t_move_ci = t_move_se * tquant(CI_INT, df);
+    
+    t_size_avg = global_size_sum / N; 
+    t_size_sd = sqrt(((global_size_sumsquared - ((global_size_sum).^2 / N))) / df);
+    t_size_se = t_size_sd / sqrt(N);  
+    t_size_ci = t_size_se * tquant(CI_INT, df);
+
+    t_fromtruth_avg = global_fromtruth_sum / N; 
+    t_fromtruth_sd = sqrt(((global_fromtruth_sumsquared - ((global_fromtruth_sum).^2 / N))) / df);
+    t_fromtruth_se = t_fromtruth_sd / sqrt(N);  
+    t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, df);
+ 
+    
+    % Save summaryObj
+    % save([dumpDir 'temporalysis.mat'], 'summaryObj');
+    
+    if (CSV_DUMP)
+        
+       
+        fclose(fidClustersMacro);
+        fclose(fidClustersMicro);
+        
+        % SAVING ALL ITERATIONS for the AVG
+        for z = 1:nIter
+            clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+                simName, N, z, t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
+                t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
+                t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
+                t_speed_avg(z), t_speed_sd(z), t_speed_se(z), t_speed_ci(z), ...
+                t_move_avg(z), t_move_sd(z), t_move_se(z), t_move_ci(z), ...
+                t_size_avg(z),t_size_sd(z), t_size_se(z), t_size_ci(z), ...
+                t_fromtruth_avg(z), t_fromtruth_sd(z), t_fromtruth_se(z), t_fromtruth_ci(z));
+            
+            fprintf(fidClustersMacroAvg,'%s\n', clu_macro_avg_string);   
+         end
+
+        fclose(fidClustersMacroAvg);
+    end
+  
+    
