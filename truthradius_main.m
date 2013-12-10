@@ -44,7 +44,7 @@ simName = 'NEWTEST-2013-12-8-17-49/';
 
 dumpDir = [DUMPDIR simName];
 
-outDir = [dumpDir '/' 'tmp/'];
+outDir = [dumpDir '/' 'truthradius/'];
 % Creating outDir if not existing.
 if (exist(outDir, 'dir') == 0)
     mkdir(outDir);

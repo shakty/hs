@@ -9,6 +9,7 @@ path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
 aggrParams = 1;
+RADIUSs = [.01, .05, .1, .25, .4];
 
 DUMPDIR = '/home/stefano/hs/test/';
 subDir = 'NEWTEST-2013-12-8-17-49/';
@@ -16,5 +17,6 @@ subDir = 'NEWTEST-2013-12-8-17-49/';
 outDir = [DUMPDIR subDir 'aggr/'];
 
 
-aggregate_agents(DUMPDIR, subDir, outDir, aggrParams)
-aggregate_clusters(DUMPDIR, subDir, outDir)
+% aggregate_agents(DUMPDIR, subDir, outDir, aggrParams);
+% aggregate_clusters(DUMPDIR, subDir, outDir);
+aggregate_truthradius(DUMPDIR, subDir, outDir, RADIUSs);

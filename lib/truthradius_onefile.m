@@ -60,7 +60,6 @@ function truthradius_onefile(params)
     pos = dump.agents;
     truth = dump.truth;
     run = dump.run;
-    simName = dump.name;
     simnameidx = dump.sim;
     
     v = dump.agentsv;
@@ -75,14 +74,14 @@ function truthradius_onefile(params)
     
     agentBelong2Radius = zeros(1, nAgents);
     agentInRadiusFor = zeros(1, nAgents);
-    consensusOnTruth = zeros(1, nIter);
+    consensusOnTruth = zeros(nIter, 1);
     consensusHoldsFor = 0;
     
     globalRadiusCounts = zeros(nIter, nRadiusesPlusOne);
     globalRadiusCounts_squared = zeros(nIter, nRadiusesPlusOne);
     
     if (DUMP)
-        dataFileName = [outDir 'truth_radius_' fileName '.csv'];
+        dataFileName = [outDir 'truthradius_' fileName '.csv'];
         write_csv_headers(dataFileName, headers_truthradius);
         fidTruthRadius = fopen(dataFileName, 'w');
     end
@@ -165,7 +164,7 @@ function truthradius_onefile(params)
     globalConsensusOnTruth_squared = consensusOnTruth;
     
     if (DUMP)
-        save([ outDir 'radiusCounts_' fileName ], ...
+        save([ outDir 'sums_' fileName ], ...
                                  'globalRadiusCounts', ...
                                  'globalRadiusCounts_squared', ...
                                  'globalConsensusOnTruth', ...
