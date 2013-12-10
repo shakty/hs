@@ -2,7 +2,9 @@ function agents_onefile(params)
 
     % Save statistiscs at the agent level, clusters are not computed.
     
+    
     folderName = params.folderName;
+    simName = params.simName;
     fileName = params.fileName;
     PRECISION = params.PRECISION;
     DUMP = params.DUMP;
@@ -10,7 +12,7 @@ function agents_onefile(params)
     PLOTS = params.PLOTS;
     outDir = params.outDirAgents;
     
-    path = [folderName fileName];
+    path = [folderName simName fileName];
     load(path);
     
     % Date and Time
@@ -20,7 +22,6 @@ function agents_onefile(params)
     pos = dump.agents;
     truth = dump.truth;
     run = dump.run;
-    simName = dump.name;
     simnameidx = dump.sim;
     
     nIter = size(pos,3);
@@ -49,9 +50,8 @@ function agents_onefile(params)
     
     
     if (DUMP)
-        % params (one line)
         paramFileName = [outDir 'params_' fileName '.csv'];
-        fidParam = fopen(paramFileName,'a');
+        fidParam = fopen(paramFileName,'w');
         param_string = csv_format_row_params(simName, simnameidx, run, ...
             mytimestamp, dump.parameters, truth);
         
@@ -60,7 +60,7 @@ function agents_onefile(params)
         fclose(fidParam);
         
         dataFileName = [outDir 'agents_' fileName '.csv'];
-        fidAgents = fopen(dataFileName,'a');  
+        fidAgents = fopen(dataFileName,'w');  
     end
 
     for i = 1:nIter

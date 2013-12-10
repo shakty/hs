@@ -17,3 +17,4 @@ outDir = [DUMPDIR subDir 'aggr/'];
 
 
 aggregate_agents(DUMPDIR, subDir, outDir, aggrParams)
+aggregate_clusters(DUMPDIR, subDir, outDir)

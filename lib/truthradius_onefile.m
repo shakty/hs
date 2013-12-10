@@ -7,6 +7,7 @@ function truthradius_onefile(params)
     % the same radius for STAY_FOR steps
 
     folderName = params.folderName;
+    simName = params.simName;
     fileName = params.fileName;
 
     RADIUSs = params.RADIUSs;
@@ -20,7 +21,7 @@ function truthradius_onefile(params)
 
     PLOTS = params.PLOTS;
 
-    path = [folderName fileName];
+    path = [folderName simName fileName];
     load(path);
     
     % Creating variables used to save results to file.
@@ -83,7 +84,7 @@ function truthradius_onefile(params)
     if (DUMP)
         dataFileName = [outDir 'truth_radius_' fileName '.csv'];
         write_csv_headers(dataFileName, headers_truthradius);
-        fidTruthRadius = fopen(dataFileName,'a');
+        fidTruthRadius = fopen(dataFileName, 'w');
     end
     
 

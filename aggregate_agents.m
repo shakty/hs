@@ -8,7 +8,6 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
         mkdir(outDir);
     end
     
-    
     % PARAMS (for all)
     
     if (aggrParams)
@@ -124,16 +123,16 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
         
         % Merge the corresponding CSV file.        
         agentsFileCSV = [dirPath 'agents_' simnameidx '.csv'];
-        mergeCommand = sprintf('sed -e ''1d'' %s >> %s', ...
+        mergeCommand = sprintf('cat %s >> %s', ...
             agentsFileCSV, agentsFileName);        
         system(mergeCommand);
         
         if (aggrParams)
             % Just in this case, merge also the params file.
             paramsFileCSV = [dirPath 'params_' simnameidx '.csv'];
-            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', ...
+            mergeCommand = sprintf('cat %s >> %s', ...
                 paramsFileCSV, paramsFileName);        
-            system(mergeCommand);
+            system(mergeCommand,'-echo');
         end
         
         % Load file to compute round statistics.
