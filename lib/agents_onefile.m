@@ -59,8 +59,8 @@ function agents_onefile(params)
         fprintf(fidParam, '%s\n', param_string);
         fclose(fidParam);
         
-        dataFileName = [outDir 'agents_macro_' fileName '.csv'];
-        fidAgentsMacro = fopen(dataFileName,'a');  
+        dataFileName = [outDir 'agents_' fileName '.csv'];
+        fidAgents = fopen(dataFileName,'a');  
     end
 
     for i = 1:nIter
@@ -103,14 +103,7 @@ function agents_onefile(params)
         pairwise_dist = pdist(pos(:,:,i)', 'euclidean');
         pairwise_dist_mean = mean(pairwise_dist);
         pairwise_dist_sd = std(pairwise_dist);
-        
-        
-        
-        
-        
-        
-        
-
+  
         if (DUMP)
 
             % SAVING ONLY EVERY X ITERATIONS        
@@ -133,7 +126,7 @@ function agents_onefile(params)
 
                 % 1 Line
                 agents_string = csv_format_row_agents_macro(stepData, simName, i);
-                fprintf(fidAgentsMacro, '%s\n', agents_string);
+                fprintf(fidAgents, '%s\n', agents_string);
 
             end
 
@@ -221,8 +214,8 @@ function agents_onefile(params)
                                     'global_movs_sumsquared', ...
                                     'global_fromtruth_sum', ...
                                     'global_fromtruth_sumsquared', ...
-                                    'pairwise_dist_mean', ...
-                                    'pairwise_dist_sd'...
+                                    'global_pdist_sum', ...
+                                    'global_pdist_sumsquared' ...
         );
     
     end

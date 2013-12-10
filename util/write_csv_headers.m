@@ -11,7 +11,7 @@ end
 
 %write the string to a file
 fid = fopen(filename,'w');
-fprintf(fid,'%s\n', header_string);
+fprintf(fid, '%s\n', header_string);
 fclose(fid);
 
 end

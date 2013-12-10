@@ -124,8 +124,6 @@ function [] = aggregate_fun(dumpDir, subDir)
     CI_INT = 0.95/2 + 0.5;
     N = totalFiles;
     df = N - 1;
-
-    
     
     % Computing g_global stats
     t_count_avg = g_global_count_sum / N; 
