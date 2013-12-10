@@ -1,3 +1,19 @@
+
+# test load
+DUMPDIR = "/home/stefano/hs/test/"
+
+# Zero
+DIR = "NEWTEST-2013-12-8-17-49/aggr/"
+
+PATH = paste0(DUMPDIR,DIR)
+setwd(PATH)
+
+params <- read.table('params.csv', head=TRUE, sep=",")
+
+agents <- read.table('agents.csv', head=TRUE, sep=",")
+
+agents.avg.all<- read.table('agents_avg_all.csv', head=TRUE, sep=",")
+
 # BIGMEMORY
 library(bigmemory)
 library(biganalytics)

@@ -193,7 +193,7 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
  
     t_fromtruth_avg = g_global_fromtruth_sum / N; 
     t_fromtruth_sd = sqrt(((g_global_fromtruth_sumsquared - ((g_global_fromtruth_sum).^2 / N))) / df);
-    t_fromtruth_se = t_fromtruth_sd / sqrt(N);
+    t_fromtruth_se = t_fromtruth_sd / sqrt(N);  
     t_fromtruth_ci = t_fromtruth_se * tquant(CI_INT, df);
     
     t_pdist_avg = g_global_pdist_sum / N; 
@@ -231,13 +231,13 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
         'pdist.ci' ...        
     };
 
-    agentsAvgFileName = [outDir 'agents_avg_all.csv'];
-    write_csv_headers(agentsAvgFileName, headers_agents_avg);
+    agentsAvgFileName = [outDir 'agents_avg_all.csv'];    
+    write_csv_headers(agentsAvgFileName, headers_agents_avg);    
     fidAgentsAvg = fopen(agentsAvgFileName, 'a');
 
     % Saving all iterations
     for z = 1:nIter
-        agents_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+        agents_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f%.4f,%.4f,%.4f,%.4f', ...
             subDir, N, z, ...
             t_cover_avg(z), t_cover_sd(z), t_cover_se(z), t_cover_ci(z), ...
             t_cover_cum_avg(z), t_cover_cum_sd(z), t_cover_cum_se(z), t_cover_cum_ci(z), ...
@@ -247,8 +247,8 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
             t_pdist_avg(z), t_pdist_sd(z), t_pdist_se(z), t_pdist_ci(z) ...
         );
 
-        fprintf(fidAgentsAvg, '%s\n', agents_avg_string);   
-    end
+        fprintf(fidAgentsAvg,'%s\n', agents_avg_string);   
+     end
 
     fclose(fidAgentsAvg);
     
