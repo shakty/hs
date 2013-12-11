@@ -129,19 +129,19 @@ for d = 1:length(dirIndex)
         tg_globalConsensusOnTruth_squared = zeros(nIter,1);
         
         % Merging CSV files.
-        mergeCommand = sprintf('cat %s >> %s', agentsFileCSV, agentsFileName);
+        mergeCommand = sprintf('cat %s > %s', agentsFileCSV, agentsFileName);
         system(mergeCommand);
         
-        mergeCommand = sprintf('cat %s >> %s', paramsFileCSV, paramsFileName);
+        mergeCommand = sprintf('cat %s > %s', paramsFileCSV, paramsFileName);
         system(mergeCommand);
         
-        mergeCommand = sprintf('cat %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
+        mergeCommand = sprintf('cat %s > %s', clustersMacroFileCSV, clustersMacroFileName);
         system(mergeCommand);
         
-        mergeCommand = sprintf('cat %s >> %s', clustersMicroFileCSV, clustersMicroFileName);
+        mergeCommand = sprintf('cat %s > %s', clustersMicroFileCSV, clustersMicroFileName);
         system(mergeCommand);
         
-        mergeCommand = sprintf('cat %s >> %s', truthradiusFileCSV, truthradiusFileName);
+        mergeCommand = sprintf('cat %s > %s', truthradiusFileCSV, truthradiusFileName);
         system(mergeCommand);
     else
         

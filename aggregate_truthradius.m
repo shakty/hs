@@ -90,9 +90,9 @@ function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
             continue;
         end
 
-        % Extracting the part 1-1.mat from sums_1-1.mat
-        % 6 = length('sums_') + 1;
-        simnameidx = [NAME(6:length(NAME)) EXT];
+        % Extracting the part 1-1 from sums_1-1.mat
+        % 6 = length('sums_') + 1; 4 = length('.mat');
+        simnameidx = NAME(6:length(NAME));
         
         % Merge the corresponding CSV file.        
         truthradiusFileCSV = [dirPath 'truthradius_' simnameidx '.csv'];
