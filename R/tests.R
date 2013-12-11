@@ -17,6 +17,8 @@ agents.avg.all<- read.table('agents_avg_all.csv', head=TRUE, sep=",")
 
 clusters <-  read.table('clusters_macro.csv', head=TRUE, sep=",")
 
+clusters.micro <-  read.table('clusters_micro.csv', head=TRUE, sep=",")
+
 clusters.avg <-  read.table('clusters_avg_all.csv', head=TRUE, sep=",")
 
 truthradius.avg <- read.table('truthradius_avg_all.csv', head=TRUE, sep=",")

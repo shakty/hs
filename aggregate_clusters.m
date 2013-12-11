@@ -80,7 +80,11 @@ function aggregate_clusters(dumpDir, subDir, outDir)
 
     clustersMacroFileName = [outDir 'clusters_macro.csv'];
     % This function overwrites exiting files.
-    write_csv_headers(clustersMacroFileName, headers_clusters_macro);   
+    write_csv_headers(clustersMacroFileName, headers_clusters_macro);
+    
+    clustersMicroFileName = [outDir 'clusters_micro.csv'];
+    % This function overwrites exiting files.
+    write_csv_headers(clustersMicroFileName, headers_clusters_micro); 
     
     % Scan all files (also those we are interested in.
     for f = 1:nFiles
@@ -104,6 +108,11 @@ function aggregate_clusters(dumpDir, subDir, outDir)
         clustersFileCSV = [dirPath 'clusters_macro_' simnameidx '.csv'];
         mergeCommand = sprintf('cat %s >> %s', ...
             clustersFileCSV, clustersMacroFileName);        
+        system(mergeCommand);
+        
+        clustersFileCSV = [dirPath 'clusters_micro_' simnameidx '.csv'];
+        mergeCommand = sprintf('cat %s >> %s', ...
+            clustersFileCSV, clustersMicroFileName);        
         system(mergeCommand);
         
         % Load file to compute round statistics.

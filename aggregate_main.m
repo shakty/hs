@@ -19,7 +19,7 @@ simName = 'NEWTEST-2013-12-8-17-49/';
 
 path2sim = [DUMPDIR simName];
 
-aggregateSims = 0;
+aggregateSims = 1;
 
 % Every subdirectory of path2sim contains simulations results.
 dirs = dir(path2sim);
@@ -39,6 +39,7 @@ end
 agentsFileName = [outDir 'agents.csv'];
 paramsFileName = [outDir 'params.csv'];
 clustersMacroFileName = [outDir 'clusters_macro.csv'];
+clustersMicroFileName = [outDir 'clusters_micro.csv'];
 truthradiusFileName = [outDir 'truthradius.csv'];
 
 validFiles = 0;
@@ -77,6 +78,7 @@ for d = 1:length(dirIndex)
     agentsFileCSV = [dirPath 'agents/agents.csv'];
     paramsFileCSV = [dirPath 'agents/params.csv'];
     clustersMacroFileCSV = [dirPath 'clusters/clusters_macro.csv'];
+    clustersMicroFileCSV = [dirPath 'clusters/clusters_micro.csv'];
     truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];    
     
     % Aggregate all levels of sigmas.
@@ -136,6 +138,9 @@ for d = 1:length(dirIndex)
         mergeCommand = sprintf('cat %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
         system(mergeCommand);
         
+        mergeCommand = sprintf('cat %s >> %s', clustersMicroFileCSV, clustersMicroFileName);
+        system(mergeCommand);
+        
         mergeCommand = sprintf('cat %s >> %s', truthradiusFileCSV, truthradiusFileName);
         system(mergeCommand);
     else
@@ -148,6 +153,9 @@ for d = 1:length(dirIndex)
         system(mergeCommand);
         
         mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
+        system(mergeCommand);
+        
+        mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMicroFileCSV, clustersMacroFileName);
         system(mergeCommand);
         
         mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusFileCSV, truthradiusFileName);

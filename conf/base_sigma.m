@@ -137,6 +137,33 @@ forces_on_v = 0;
 % generator of random seeds before the loop of param vectorization
 seed = randi(1000000);
 
+% PARAMS 4 ANALYSIS
+
+
+DUMP_ANALYSIS = 1;
+DUMP_RATE_ANALYSIS = 100; % Dump every x steps
+
+% Only clusters of size above the cutoff are included in the analysis
+CLU_CUTOFF = 2;
+
+% When computing the coverage we build a grid on top of the space of cell
+% size = PRECISION
+PRECISION = 100;
+
+% Different radius to try out (around truth).
+RADIUSs = [0.01, 0.05, 0.1, 0.25, 0.4];
+
+% An agent must stay for at least STAY_FOR iterations.
+STAY_FOR = 1;
+
+% A share of at least CONSENSUS_THRESHOLD agents must stay within the
+% smallest radius to be say that there is a consensus on truth.
+CONSENSUS_THRESHOLD = 2/3;
+
+% Consenus must on truth must hold for at least CONSENSUS_ON_TRUTH_FOR
+% iterations to say that there is really a consensus on truth.
+CONSENSUS_ON_TRUTH_FOR = 20;
+
 % Split by Sigma
 
 nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
@@ -170,7 +197,7 @@ fprintf('%+15s = %d\n','Seed', seed);
 fprintf('------------------------------------\n');
 
 % CREATING FOLDERS
-CONF_SUBDIR = 'NEW/';
+CONF_SUBDIR = 'NEW2/';
 DIR = [CONF_SUBDIR simName '/'];
 if (exist(DIR, 'dir')~=0 )
     error('Dir already exists');
@@ -180,7 +207,7 @@ mkdir(DIR);
 launcherMain = '../GO_FUN';
 fidMain = fopen(launcherMain, 'w');
 
-launcherCl = '../GOCL_FUN';
+launcherCl = '../GO_ANAL_FUN';
 fidCl = fopen(launcherCl, 'w');
 
 
@@ -229,53 +256,22 @@ for i=1:size(sigmas,2)
         cmdStr = sprintf('bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun(''conf/'',''%s'',''%s'', ''%d'')"', DIR, confFile, batchSeed);
     end
     fprintf(fidMain, '%s\n', cmdStr);   
-    
-    % Creating the GOCL_FUN
-    cmdStr = sprintf('bsub  -R "rusage[mem=8000]" -J hs_cl_%u -W 36:00 -N matlab -nodisplay -singleCompThread -r "temporalysis_fun(''%s'',''%s'',''%s'')"', S, dumpDir, DIR, confFile);
-    fprintf(fidCl, '%s\n', cmdStr);
-    
-    % Creating bash_merge_csv
-    if (i == 1)
-        cmdStr = sprintf('cat %s%s%s/%s > $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');       
-        cmdStr1 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
-        cmdStr2 = sprintf('cat %s%s%s/%s > $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
-        cmdStr3 = sprintf('cat %s%s%s/%s > $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
-    else
-        cmdStr = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_PARAMS', dumpDir, DIR, confFile, 'params.csv');
-        cmdStr1 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO', dumpDir, DIR, confFile, 'clusters_macro.csv');
-        cmdStr2 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MICRO', dumpDir, DIR, confFile, 'clusters_micro.csv');
-        cmdStr3 = sprintf('sed -e ''1d'' %s%s%s/%s >> $OUTFILE_MACRO_AVG_SPLIT', dumpDir, DIR, confFile, 'clusters_macro_avg.csv');
-    end
-    fprintf(fidFileMerge, '%s\n', cmdStr);
-    fprintf(fidFileMerge, '%s\n', cmdStr1);
-    fprintf(fidFileMerge, '%s\n', cmdStr2);
-    fprintf(fidFileMerge, '%s\n', cmdStr3);
+
 end
+
 fclose(fidMain);
-fclose(fidCl);
-fclose(fidFileMerge);
 
-% Creating the GOMERGECSV_FUN
-launcherMerge = '../GOMERGECSV_FUN';
-fidMerge = fopen(launcherMerge, 'w');
-cmdStr = sprintf('bsub -J hs_csv_merge -W 1:00 -N %sbash_merge_csv', bsubWD);
-fprintf(fidMerge, '%s\n', cmdStr);
-fclose(fidMerge);
-
-
-% Creating the GOAGGR_FUN
-launcherAggr = '../GOAGGR_FUN';
-fidAggr = fopen(launcherAggr, 'w');
-cmdStr = sprintf('bsub -J hs_cl_aggr -W 1:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''%s'',''%s'')"', dumpDir, DIR );
-fprintf(fidAggr, '%s\n', cmdStr);
-fclose(fidAggr);
+cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'')"', ...
+    [dumpDir CONF_SUBDIR], confFile, mat2str(old_sigmas), num2str(DUMP_ANALYSIS), num2str(DUMP_RATE_ANALYSIS), ...
+    mat2str(RADIUSs), num2str(STAY_FOR), num2str(CONSENSUS_ON_TRUTH_FOR), num2str(CONSENSUS_THRESHOLD), ... % Radius
+    num2str(PRECISION), ... % Agents
+    num2str(CLU_CUTOFF) ... % Clusters
+);
+fprintf(fidCl, '%s\n', cmdStr);
 
 % Saving a copy of all files in the conf dir
 COPYDIR = [DIR 'launchers/']; 
 mkdir(COPYDIR);
-copyfile(launcherMerge, COPYDIR);
-copyfile(launcherAggr, COPYDIR);
-copyfile(file_merge, COPYDIR);
 copyfile(launcherMain, COPYDIR);
 copyfile(launcherCl, COPYDIR);
 
