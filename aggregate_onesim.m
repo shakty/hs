@@ -38,5 +38,7 @@ function aggregate_onesim(params)
     aggregate_clusters(path2sim, subDir, dirPath);        
     aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
 
+    % Delete job.
+    delete(params.j);
     toc;
 end
