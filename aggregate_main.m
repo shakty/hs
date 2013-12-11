@@ -1,4 +1,5 @@
 %% Aggregates the results of the analysis of the simulation results.
+tic;
 
 close all;
 clear;
@@ -34,6 +35,7 @@ if (exist(outDir, 'dir') == 0)
 end
 
 agentsFileName = [outDir 'agents.csv'];
+paramsFileName = [outDir 'params.csv'];
 clustersMacroFileName = [outDir 'clusters_macro.csv'];
 truthradiusFileName = [outDir 'truthradius.csv'];
 
@@ -63,14 +65,15 @@ for d = 1:length(dirIndex)
     % Aggregate the results of each sub-simulation (level of sigma).
     % The aggregate output is saved in the same dir under a folder called
     % agents/, clusters/, truthradius/.
-    aggregate_agents(path2sim, subDir, dirPath, aggrParams);
+    aggregate_agents(path2sim, subDir, dirPath, aggrParams); %params.
     aggregate_clusters(path2sim, subDir, dirPath);        
     aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
     
     % Paths to CSV files.
     agentsFileCSV = [dirPath 'agents/agents.csv'];
+    paramsFileCSV = [dirPath 'agents/params.csv'];
     clustersMacroFileCSV = [dirPath 'clusters/clusters_macro.csv'];
-    truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];
+    truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];    
     
     % Aggregate all levels of sigmas.
     
@@ -123,6 +126,9 @@ for d = 1:length(dirIndex)
         mergeCommand = sprintf('cat %s >> %s', agentsFileCSV, agentsFileName);
         system(mergeCommand);
         
+        mergeCommand = sprintf('cat %s >> %s', paramsFileCSV, paramsFileName);
+        system(mergeCommand);
+        
         mergeCommand = sprintf('cat %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
         system(mergeCommand);
         
@@ -132,6 +138,9 @@ for d = 1:length(dirIndex)
         
         % Merging CSV files without headers.
         mergeCommand = sprintf('sed -e ''1d'' %s >> %s', agentsFileCSV, agentsFileName);
+        system(mergeCommand);
+        
+        mergeCommand = sprintf('sed -e ''1d'' %s >> %s', paramsFileCSV, paramsFileName);
         system(mergeCommand);
         
         mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
@@ -281,7 +290,7 @@ end
     fidClustersMacroAvg = fopen(clustersAvgFileName, 'a');
      
     for z = 1:nIter
-        clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
+        clu_macro_avg_string = sprintf('"%s",%u,%u,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f', ...
             simName, N, z, ...
             t_count_avg(z), t_count_sd(z), t_count_se(z), t_count_ci(z), ...
             t_meansize_avg(z),t_meansize_sd(z), t_meansize_se(z), t_meansize_ci(z), ...
@@ -389,10 +398,8 @@ end
         't' ...
     };
     
-    avgStartFrom = length(headers_truthradius_avg);
+    avgStartFrom = length(headers_truthradius_avg) + 1;
     
-    row_string_sprintf = '"%s",%u,%u,';
-    row_string_data = 'subDir, N, z,';
     row_string_data_cell = cell(nRadiusesPlusOne*4, 1);
     
     % Computing global stats            
@@ -430,12 +437,7 @@ end
         row_string_data_cell{hIdx} = [meanName '(z)'];
         row_string_data_cell{hIdx + 1} = [sdName '(z)'];
         row_string_data_cell{hIdx + 2} = [seName '(z)'];
-        row_string_data_cell{hIdx + 3} = [ciName '(z)'];
-        
-        row_string_sprintf = [row_string_sprintf ',%u,%u,%u,%u'];
-        row_string_data = [row_string_data meanName '(z),' sdName '(z),'];
-        row_string_data = [row_string_data seName '(z),' ciName '(z),'];
-        
+        row_string_data_cell{hIdx + 3} = [ciName '(z)'];                
     end
     
     t_consensusOnTruth_avg = tg_globalConsensusOnTruth_sum / N; 
@@ -443,11 +445,6 @@ end
     t_consensusOnTruth_se = t_consensusOnTruth_sd / sqrt(N);  
     t_consensusOnTruth_ci = t_consensusOnTruth_se * tquant(CI_INT, df);
     
-    row_string_sprintf = [row_string_sprintf ',%u,%u,%u,%u'];
-    row_string_data = [row_string_data 't_consensusOnTruth_avg(z),t_consensusOnTruth_sd(z),'];
-    row_string_data = [row_string_data 't_consensusOnTruth_se(z),t_consensusOnTruth_ci(z)'];
-    
-            
     hIdx = i*4 + avgStartFrom;
     headers_truthradius_avg{hIdx} = 'consensus.avg';
     headers_truthradius_avg{hIdx + 1} = 'consensus.sd';
@@ -464,7 +461,7 @@ end
         for j = 1 : length(row_string_data_cell)
             truthradius_avg_string = [truthradius_avg_string sprintf('%.4f',(eval(row_string_data_cell{j}))) ','];
         end
-        truthradius_avg_string = sprintf('%s,%.4f,%.4f,%.4f,%.4f', ...
+        truthradius_avg_string = sprintf('%s%.4f,%.4f,%.4f,%.4f', ...
             truthradius_avg_string, ...
             t_consensusOnTruth_avg(z), t_consensusOnTruth_sd(z), ...
             t_consensusOnTruth_se(z), t_consensusOnTruth_ci(z) ...
@@ -473,3 +470,5 @@ end
     end
 
     fclose(fidTruthRadiusAvg);
+    
+    toc;

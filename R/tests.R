@@ -4,6 +4,7 @@ DUMPDIR = "/home/stefano/hs/test/"
 
 # Zero
 DIR = "NEWTEST-2013-12-8-17-49/aggr/"
+#DIR = "NEWTEST-2013-12-8-17-49/A/clusters/"
 
 PATH = paste0(DUMPDIR,DIR)
 setwd(PATH)
@@ -13,6 +14,16 @@ params <- read.table('params.csv', head=TRUE, sep=",")
 agents <- read.table('agents.csv', head=TRUE, sep=",")
 
 agents.avg.all<- read.table('agents_avg_all.csv', head=TRUE, sep=",")
+
+clusters <-  read.table('clusters_macro.csv', head=TRUE, sep=",")
+
+clusters.avg <-  read.table('clusters_avg_all.csv', head=TRUE, sep=",")
+
+truthradius.avg <- read.table('truthradius_avg_all.csv', head=TRUE, sep=",")
+
+truthradius.csv <-  read.table('truthradius.csv', head=TRUE, sep=",")
+
+
 
 # BIGMEMORY
 library(bigmemory)

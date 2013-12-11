@@ -133,11 +133,8 @@ function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
         't' ...
     };
     
-    avgStartFrom = length(headers_truthradius_avg);
-    
-    
-    row_string_sprintf = '"%s",%u,%u,';
-    row_string_data = 'subDir, N, z,';
+    avgStartFrom = length(headers_truthradius_avg) + 1;
+
     row_string_data_cell = cell(nRadiusesPlusOne*4, 1);
     
     % Computing global stats            
@@ -146,8 +143,7 @@ function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
         meanName = ['t_' radiusesStr{i} '_mean'];      
         eval([meanName ' = g_globalRadiusCounts_sum(:,i) / N;']);
 
-        sdName = ['t_' radiusesStr{i} '_sd'];        
-        % sdValue = sqrt(((g_globalRadiusCounts_squared(i) - ((g_globalRadiusCounts_sum(i)).^2 / N))) / df);
+        sdName = ['t_' radiusesStr{i} '_sd'];
         eval([sdName ' = sqrt(((g_globalRadiusCounts_squared(:,i) - ((g_globalRadiusCounts_sum(:,i)).^2 / N))) / df);']);
 
         seName = ['t_' radiusesStr{i} '_se'];
@@ -165,23 +161,13 @@ function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
         row_string_data_cell{hIdx} = [meanName '(z)'];
         row_string_data_cell{hIdx + 1} = [sdName '(z)'];
         row_string_data_cell{hIdx + 2} = [seName '(z)'];
-        row_string_data_cell{hIdx + 3} = [ciName '(z)'];
-        
-        row_string_sprintf = [row_string_sprintf ',%u,%u,%u,%u'];
-        row_string_data = [row_string_data meanName '(z),' sdName '(z),'];
-        row_string_data = [row_string_data seName '(z),' ciName '(z),'];
-        
+        row_string_data_cell{hIdx + 3} = [ciName '(z)'];        
     end
     
     t_consensusOnTruth_avg = g_globalConsensusOnTruth_sum / N; 
     t_consensusOnTruth_sd = sqrt(((g_globalConsensusOnTruth_squared - ((g_globalConsensusOnTruth_sum).^2 / N))) / df);
     t_consensusOnTruth_se = t_consensusOnTruth_sd / sqrt(N);  
-    t_consensusOnTruth_ci = t_consensusOnTruth_se * tquant(CI_INT, df);
-    
-    row_string_sprintf = [row_string_sprintf ',%u,%u,%u,%u'];
-    row_string_data = [row_string_data 't_consensusOnTruth_avg(z),t_consensusOnTruth_sd(z),'];
-    row_string_data = [row_string_data 't_consensusOnTruth_se(z),t_consensusOnTruth_ci(z)'];
-    
+    t_consensusOnTruth_ci = t_consensusOnTruth_se * tquant(CI_INT, df);    
             
     hIdx = i*4 + avgStartFrom;
     headers_truthradius_avg{hIdx} = 'consensus.avg';
@@ -199,14 +185,11 @@ function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
         for j = 1 : length(row_string_data_cell)
             truthradius_avg_string = [truthradius_avg_string sprintf('%.4f',(eval(row_string_data_cell{j}))) ','];
         end
-        truthradius_avg_string = sprintf('%s,%.4f,%.4f,%.4f,%.4f', ...
+        truthradius_avg_string = sprintf('%s%.4f,%.4f,%.4f,%.4f', ...
             truthradius_avg_string, ...
             t_consensusOnTruth_avg(z), t_consensusOnTruth_sd(z), ...
             t_consensusOnTruth_se(z), t_consensusOnTruth_ci(z) ...
         );
-        % eval([truthradius_avg_string '= [row_string_data_array];']);
-        % eval([truthradius_avg_string '= [row_string_data];']);
-        % eval([truthradius_avg_string ' = sprintf(row_string_sprintf, row_string_data);']);
         fprintf(fidTruthRadiusAvg, '%s\n', truthradius_avg_string);
     end
 
