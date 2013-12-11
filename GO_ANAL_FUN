@@ -1,1 +1,1 @@
-bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis('/cluster/work/scr1/balistef/NEW2/','attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1_s5','[0 0.1 0.2 0.3 0.4 0.5]','1','100','[0.01 0.05 0.1 0.25 0.4]','1','20','0.66667','100','2')"
+bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis('/cluster/work/scr1/balistef/NEW2/','attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1','[0 0.1 0.2 0.3 0.4 0.5]','1','100','[0.01 0.05 0.1 0.25 0.4]','1','20','0.66667','100','2')"

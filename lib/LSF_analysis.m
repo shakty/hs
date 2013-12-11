@@ -20,21 +20,16 @@ function LSF_analysis( DUMPDIR, simName, sigmas, DUMP, DUMP_RATE, ...
     for s = 1 : length(sigmas)
         
         sigma = sigmas(s);
-        dumpDir = [DUMPDIR simName '_' sigma '/'];
-        outDir = [dumpDir 'tmp/'];
-
+        sigmaSimName = [simName '_' sigma '/'];
+        dumpDir = [DUMPDIR sigmaSimName];
+        
         files = dir(dumpDir);
         fileIndex = find(~[files.isdir]);
 
         if (isempty(fileIndex))
             error('Invalid Directory Selected');
         end
-
-        % Creating outDir if not existing.
-        if (exist(outDir, 'dir') == 0)
-            mkdir(outDir);
-        end
-    
+        
         % Log: Matlab will try to create intermediate non-existing folders.
         logFolder = ['log/' simName];
         mkdir(logFolder);
@@ -43,16 +38,34 @@ function LSF_analysis( DUMPDIR, simName, sigmas, DUMP, DUMP_RATE, ...
         submitArgs = [' -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
         set(sched, 'SubmitArguments',submitArgs);
         set(sched, 'DataLocation', [logFolder '/']);
-    
         
         % Create a new Job for each sub folder.
         j = createJob(sched, 'name', ['analysis_' sigma]);
         
+        paramsArgs = cell(FILES4TASK, 1);
+
+        outDirAgents = [dirPath '/' 'agents/'];
+        outDirRadius = [dirPath '/' 'truthradius/'];
+        outDirClusters = [dirPath '/' 'clusters/'];
+        
+        % Creating outDir if not existing.
+        if (exist(outDirAgents, 'dir') == 0)
+            mkdir(outDirAgents);
+        end
+        
+        % Creating outDir if not existing.
+        if (exist(outDirRadius, 'dir') == 0)
+            mkdir(outDirRadius);
+        end
+        
+        % Creating outDir if not existing.
+        if (exist(outDirClusters, 'dir') == 0)
+            mkdir(outDirClusters);
+        end
+        
         % Number of files.
         nFiles = length(fileIndex);
         
-        paramsArgs = cell(FILES4TASK, 1);
-
         % Load all parameters matrices in one.
         for f = 1:nFiles
 
@@ -60,21 +73,14 @@ function LSF_analysis( DUMPDIR, simName, sigmas, DUMP, DUMP_RATE, ...
             fileName = [dumpDir, append];
 
             % We load only .mat
-            [PATH, NAME, EXT_tmp] = fileparts(fileName);
-            if (~strcmpi(EXT_tmp,'.mat') ...                
-                || strfind(NAME, 'sums_') == 1 ...
-                || strcmp(NAME_tmp, 'temporalysis') == 1 ...
-                || strcmp(NAME_tmp, 'global_count_sum') == 1 ...
-                || strcmp(NAME_tmp, 'global_count_sumsquared') == 1 ...
-                || strcmp(NAME_tmp, 'radiusCounts') == 1 ...
-                || strcmp(NAME_tmp, 'radiusCountsAvg') == 1) ...
-
+            [PATH, NAME, EXT] = fileparts(fileName);            
+            if (~strcmpi(EXT,'.mat') || ~isempty(strfind(NAME, 'sums_')))  
                 continue;
             end
 
             paramsObj = struct( ...
                     'folderName', DUMPDIR, ...
-                    'simName', simName, ...
+                    'simName', sigmaSimName, ...
                     'fileName', NAME, ...
                     'RADIUSs', RADIUSs, ...
                     'STAY_FOR', STAY_FOR, ...

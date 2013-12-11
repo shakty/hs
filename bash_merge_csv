@@ -1,0 +1,5 @@
+#!/bin/sh
+OUTFILE_PARAMS="/cluster/work/scr1/balistef/NEW2/attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/params_all.csv"
+OUTFILE_MACRO="/cluster/work/scr1/balistef/NEW2/attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_macro_all.csv"
+OUTFILE_MICRO="/cluster/work/scr1/balistef/NEW2/attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_micro_all.csv"
+OUTFILE_MACRO_AVG_SPLIT="/cluster/work/scr1/balistef/NEW2/attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1/clusters_macro_avg_split.csv"

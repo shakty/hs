@@ -59,14 +59,6 @@ if (exist(outDir, 'dir') == 0)
     mkdir(outDir);
 end
 
-agentsFileName = [outDir 'agents.csv'];
-paramsFileName = [outDir 'params.csv'];
-clustersMacroFileName = [outDir 'clusters_macro.csv'];
-clustersMicroFileName = [outDir 'clusters_micro.csv'];
-truthradiusFileName = [outDir 'truthradius.csv'];
-
-validFiles = 0;
-
 % Each subdir containing results must be aggregated (they are divided by
 % run) and then the aggregated results must be aggregated overall.
 for d = 1:length(dirIndex)
@@ -84,30 +76,72 @@ for d = 1:length(dirIndex)
 
     subDir = [subDir '/'];
     
-    validFiles = validFiles + 1;
+    dirPath = [path2sim subDir];   
+ 
+    outDirAgents = [dirPath '/' 'agents/'];
+    outDirRadius = [dirPath '/' 'truthradius/'];
+    outDirClusters = [dirPath '/' 'clusters/'];
 
-    dirPath = [path2sim subDir];
-    
-    paramsObj = struct( ...
-            'folderName', DUMPDIR, ...
-            'simName', simName, ...
-            'fileName', NAME, ...
-            'RADIUSs', RADIUSs, ...
-            'STAY_FOR', STAY_FOR, ...
-            'CONSENSUS_ON_TRUTH_FOR', CONSENSUS_ON_TRUTH_FOR, ...
-            'CONSENSUS_THRESHOLD', CONSENSUS_THRESHOLD, ...
-            'DUMP', DUMP, ...
-            'DUMP_RATE', DUMP_RATE, ...
-            'PLOTS', 0, ...
-            'CLU_CUTOFF', CLU_CUTOFF, ...
-            'PRECISION', PRECISION, ...
-            'outDirRadius', outDirRadius, ...
-            'outDirAgents', outDirAgents, ...
-            'outDirClusters', outDirClusters ...      
-    );
-    
+    % Creating outDir if not existing.
+    if (exist(outDirAgents, 'dir') == 0)
+        mkdir(outDirAgents);
+    end
 
+    % Creating outDir if not existing.
+    if (exist(outDirRadius, 'dir') == 0)
+        mkdir(outDirRadius);
+    end
+
+    % Creating outDir if not existing.
+    if (exist(outDirClusters, 'dir') == 0)
+        mkdir(outDirClusters);
+    end
+    
+    files = dir(dirPath);
+    fileIndex = find(~[files.isdir]);
+
+    if (isempty(fileIndex))
+        error('Invalid Directory Selected');
+    end
+    
+    % Number of files.
+    nFiles = length(fileIndex);
+    
+    % Load all parameters matrices in one.
+    for f = 1:nFiles
+
+        append = files(fileIndex(f)).name;
+        fileName = [dirPath append];
+
+        % We load only .mat
+        [PATH, NAME, EXT] = fileparts(fileName);
+        if (~strcmpi(EXT,'.mat') ||  ~isempty(strfind(NAME, 'sums_')))  
+            continue;
+        end
+    
+        params = struct( ...
+                'folderName', path2sim, ...
+                'simName', subDir, ...
+                'fileName', NAME, ...
+                'RADIUSs', RADIUSs, ...
+                'STAY_FOR', STAY_FOR, ...
+                'CONSENSUS_ON_TRUTH_FOR', CONSENSUS_ON_TRUTH_FOR, ...
+                'CONSENSUS_THRESHOLD', CONSENSUS_THRESHOLD, ...
+                'DUMP', DUMP, ...
+                'DUMP_RATE', DUMP_RATE, ...
+                'PLOTS', 0, ...
+                'CLU_CUTOFF', CLU_CUTOFF, ...
+                'PRECISION', PRECISION, ...
+                'outDirRadius', outDirRadius, ...
+                'outDirAgents', outDirAgents, ...
+                'outDirClusters', outDirClusters ...      
+        );
+    end
   
+    clusters_onefile(params);    
+    truthradius_onefile(params);
+    agents_onefile(params);
+    
 end
 
 toc;
