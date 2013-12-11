@@ -139,7 +139,6 @@ seed = randi(1000000);
 
 % PARAMS 4 ANALYSIS
 
-
 DUMP_ANALYSIS = 1;
 DUMP_RATE_ANALYSIS = 100; % Dump every x steps
 
