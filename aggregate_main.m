@@ -19,6 +19,8 @@ simName = 'NEWTEST-2013-12-8-17-49/';
 
 path2sim = [DUMPDIR simName];
 
+aggregateSims = 0;
+
 % Every subdirectory of path2sim contains simulations results.
 dirs = dir(path2sim);
 dirIndex = find([dirs.isdir]);
@@ -62,12 +64,14 @@ for d = 1:length(dirIndex)
 
     dirPath = [path2sim subDir];
 
-    % Aggregate the results of each sub-simulation (level of sigma).
-    % The aggregate output is saved in the same dir under a folder called
-    % agents/, clusters/, truthradius/.
-    aggregate_agents(path2sim, subDir, dirPath, aggrParams); %params.
-    aggregate_clusters(path2sim, subDir, dirPath);        
-    aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
+    if (aggregateSims)
+        % Aggregate the results of each sub-simulation (level of sigma).
+        % The aggregate output is saved in the same dir under a folder called
+        % agents/, clusters/, truthradius/.
+        aggregate_agents(path2sim, subDir, dirPath, aggrParams); %params.
+        aggregate_clusters(path2sim, subDir, dirPath);        
+        aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
+    end
     
     % Paths to CSV files.
     agentsFileCSV = [dirPath 'agents/agents.csv'];

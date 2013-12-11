@@ -1,4 +1,4 @@
-function [] = temporalysis_truthradius_fun(dumpDir, subDir, simName)
+function [] = truthradius_fun(dumpDir, subDir, simName)
 
     %% Saves simulations into properly formatted CSV files
 
@@ -38,7 +38,7 @@ function [] = temporalysis_truthradius_fun(dumpDir, subDir, simName)
     DUMPDIR = [dumpDir subDir];
 
     tic
-    temporal_analysis_truthradius(DUMPDIR, simName, RADIUSs, STAY_FOR, ...
+    truthradius_onefile(DUMPDIR, simName, RADIUSs, STAY_FOR, ...
         CONSENSUS_ON_TRUTH_FOR, CONSENSUS_THRESHOLD, CSV_DUMP, ...
         DUMP_RATE, PLOTS);
     toc
