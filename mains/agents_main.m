@@ -5,8 +5,9 @@ clear;
 clc;
 
 %% Add other directories to path
-path(path,'util/'); % Help functions
-path(path,'lib/'); % Help functions
+path(path,'../'); % Help functions
+path(path,'../util/'); % Help functions
+path(path,'../lib/'); % Help functions
 
 % Change default axes fonts.
 set(0,'DefaultAxesFontName', 'Times New Roman')
@@ -19,17 +20,17 @@ set(0,'DefaultTextFontSize', 14)
 % Dump to CSV only every X steps. 
 DUMP_RATE = 1; % 100 should produces ~22 iterations
 
-CLU_CUTOFF = 2;
+PRECISION = 100;
 
-DUMP = 1;
+DUMP = 0;
 PLOTS = 0;
 
-DUMPDIR = '/home/stefano/hs/test/';
-simName = 'NEWTEST-2013-12-8-17-49/';
+DUMPDIR = '/home/stefano/hs/test/NEWTEST-2013-12-8-17-49/';
+simName = 'A/';
 
 dumpDir = [DUMPDIR simName];
 
-outDir = [dumpDir '/' 'clusters/'];
+outDir = [dumpDir '/' 'agents/'];
 % Creating outDir if not existing.
 if (exist(outDir, 'dir') == 0)
     mkdir(outDir);
@@ -40,14 +41,14 @@ fileName = '1-1.mat';
 paramsObj = struct( ...
                     'folderName', DUMPDIR, ...
                     'simName', simName, ...
-                    'fileName', fileName, ...                  
-                    'outDirClusters', outDir, ...
+                    'fileName', fileName, ...
+                    'outDirAgents', outDir, ...
                     'DUMP', DUMP, ...
                     'DUMP_RATE', DUMP_RATE, ...
                     'PLOTS', PLOTS, ...
-                    'CLU_CUTOFF', CLU_CUTOFF ...
+                    'PRECISION', PRECISION ...
 );
 
 tic
-clusters_onefile(paramsObj);
+agents_onefile(paramsObj);
 toc

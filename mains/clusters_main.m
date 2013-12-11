@@ -4,6 +4,8 @@ close all;
 clear;
 clc;
 
+% SEE AGENTS TO FIX.
+
 %% Add other directories to path
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
@@ -19,7 +21,7 @@ set(0,'DefaultTextFontSize', 14)
 % Dump to CSV only every X steps. 
 DUMP_RATE = 1; % 100 should produces ~22 iterations
 
-PRECISION = 100;
+CLU_CUTOFF = 2;
 
 DUMP = 1;
 PLOTS = 0;
@@ -29,7 +31,7 @@ simName = 'NEWTEST-2013-12-8-17-49/';
 
 dumpDir = [DUMPDIR simName];
 
-outDir = [dumpDir '/' 'agents/'];
+outDir = [dumpDir '/' 'clusters/'];
 % Creating outDir if not existing.
 if (exist(outDir, 'dir') == 0)
     mkdir(outDir);
@@ -40,14 +42,14 @@ fileName = '1-1.mat';
 paramsObj = struct( ...
                     'folderName', DUMPDIR, ...
                     'simName', simName, ...
-                    'fileName', fileName, ...
-                    'outDirAgents', outDir, ...
+                    'fileName', fileName, ...                  
+                    'outDirClusters', outDir, ...
                     'DUMP', DUMP, ...
                     'DUMP_RATE', DUMP_RATE, ...
                     'PLOTS', PLOTS, ...
-                    'PRECISION', PRECISION ...
+                    'CLU_CUTOFF', CLU_CUTOFF ...
 );
 
 tic
-agents_onefile(paramsObj);
+clusters_onefile(paramsObj);
 toc
