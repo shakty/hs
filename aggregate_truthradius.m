@@ -1,5 +1,7 @@
-function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
+function aggregate_truthradius(dumpDir, subDir, outDir, RADIUSs)
     tic;
+    
+    outDir = [outDir '/truthradius/'];
     
     % This function aggregates the params as well.
     
@@ -80,10 +82,11 @@ function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
         append = files(fileIndex(f)).name;
         fileName = [dirPath append];
 
-        % We load only sums_**.mat
+        % We load only sums_**.mat (not sums_all)
         [PATH, NAME, EXT] = fileparts(append);
         if (~strcmpi(EXT,'.mat') ...
-            || strfind(NAME, 'sums_') ~= 1)            
+            || strcmpi(NAME, 'sums_all') ...
+            || strfind(NAME, 'sums_') ~= 1)         
             continue;
         end
 
@@ -111,7 +114,7 @@ function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
     
         % Delete file variables to be sure we do not overwrite some by
         % mistake.
-        clearvars global_*;
+        clearvars global*;
         
     end
     
@@ -140,12 +143,12 @@ function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
     % Computing global stats            
     for i = 1 : nRadiusesPlusOne
         hIdx = (i-1)*4 + avgStartFrom;
-        meanName = ['t_' radiusesStr{i} '_mean'];        
-        eval([meanName ' = g_globalRadiusCounts_sum(i) / N;']);
+        meanName = ['t_' radiusesStr{i} '_mean'];      
+        eval([meanName ' = g_globalRadiusCounts_sum(:,i) / N;']);
 
         sdName = ['t_' radiusesStr{i} '_sd'];        
         % sdValue = sqrt(((g_globalRadiusCounts_squared(i) - ((g_globalRadiusCounts_sum(i)).^2 / N))) / df);
-        eval([sdName ' = sqrt(((g_globalRadiusCounts_squared(i) - ((g_globalRadiusCounts_sum(i)).^2 / N))) / df);']);
+        eval([sdName ' = sqrt(((g_globalRadiusCounts_squared(:,i) - ((g_globalRadiusCounts_sum(:,i)).^2 / N))) / df);']);
 
         seName = ['t_' radiusesStr{i} '_se'];
         eval([seName ' = ' sdName ' / sqrt(N);']);
@@ -153,10 +156,10 @@ function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
         ciName = genvarname(['t_' radiusesStr{i} '_ci']);            
         eval([ciName ' = ' seName ' * tquant(CI_INT, df);']);    
         
-        headers_truthradius_avg{hIdx} = strrep(meanName, 't_', '');
-        headers_truthradius_avg{hIdx + 1} = strrep(sdName, 't_', '');
-        headers_truthradius_avg{hIdx + 2} = strrep(seName, 't_', '');
-        headers_truthradius_avg{hIdx + 3} = strrep(ciName, 't_', ''); 
+        headers_truthradius_avg{hIdx} = regexprep(meanName, 't_', '', 'once');
+        headers_truthradius_avg{hIdx + 1} = regexprep(sdName, 't_', '', 'once');
+        headers_truthradius_avg{hIdx + 2} = regexprep(seName, 't_', '', 'once');
+        headers_truthradius_avg{hIdx + 3} = regexprep(ciName, 't_', '', 'once'); 
         
         hIdx = hIdx - avgStartFrom + 1;
         row_string_data_cell{hIdx} = [meanName '(z)'];
@@ -197,16 +200,26 @@ function aggregate_agents(dumpDir, subDir, outDir, RADIUSs)
             truthradius_avg_string = [truthradius_avg_string sprintf('%.4f',(eval(row_string_data_cell{j}))) ','];
         end
         truthradius_avg_string = sprintf('%s,%.4f,%.4f,%.4f,%.4f', ...
-            truthradius_avg_string, t_consensusOnTruth_avg, ...
-            t_consensusOnTruth_se, t_consensusOnTruth_ci ...
+            truthradius_avg_string, ...
+            t_consensusOnTruth_avg(z), t_consensusOnTruth_sd(z), ...
+            t_consensusOnTruth_se(z), t_consensusOnTruth_ci(z) ...
         );
         % eval([truthradius_avg_string '= [row_string_data_array];']);
         % eval([truthradius_avg_string '= [row_string_data];']);
         % eval([truthradius_avg_string ' = sprintf(row_string_sprintf, row_string_data);']);
-        fprintf(fidTruthRadiusAvg, '%s\n', truthradius_avg_string);   
+        fprintf(fidTruthRadiusAvg, '%s\n', truthradius_avg_string);
     end
 
     fclose(fidTruthRadiusAvg);
+    
+    
+    % Save sums_all
+    save([ dirPath 'sums_all'], ...
+                                 'g_globalRadiusCounts_sum', ...
+                                 'g_globalRadiusCounts_squared', ...
+                                 'g_globalConsensusOnTruth_sum', ...
+                                 'g_globalConsensusOnTruth_squared' ...                                 
+        );
     
     % Delete the files ?
 end

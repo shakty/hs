@@ -1,6 +1,8 @@
 function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
     tic;
     
+    outDir = [outDir '/agents/'];
+    
     % This function aggregates the params as well.
     
     % Creating outDir if not existing.
@@ -104,16 +106,17 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
     % This function overwrites exiting files.
     write_csv_headers(agentsFileName, headers_agents);   
     
-    % Scan all files (also those we are interested in.
+    % Scan all files
     for f = 1:nFiles
 
-        append = files(fileIndex(f)).name;
-        fileName = [dirPath append];
+        fileName = files(fileIndex(f)).name;
+        path2file = [dirPath fileName];
 
-        % We load only sums_**.mat
-        [PATH, NAME, EXT] = fileparts(append);
-        if (~strcmpi(EXT,'.mat') ...
-            || strfind(NAME, 'sums_') ~= 1)            
+        % We load only sums_**.mat (not sums_all)
+        [PATH, NAME, EXT] = fileparts(path2file);
+        if (~strcmpi(EXT, '.mat') ...
+            || strcmpi(NAME, 'sums_all') ...
+            || strfind(NAME, 'sums_') ~= 1)
             continue;
         end
 
@@ -136,7 +139,7 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
         end
         
         % Load file to compute round statistics.
-        load(fileName);
+        load(path2file);
         
         % Increment index of valid files.
         validFileIdx = validFileIdx + 1;
@@ -250,6 +253,22 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
     end
 
     fclose(fidAgentsAvg);
+    
+    % Save g_globals.    
+    save([ outDir 'sums_all' ], ...
+                            'g_global_coverage_sum', ...
+                            'g_global_coverage_sumsquared', ...
+                            'g_global_coverage_cum_sum', ...
+                            'g_global_coverage_cum_sumsquared', ...
+                            'g_global_speed_sum', ...
+                            'g_global_speed_sumsquared', ...
+                            'g_global_movs_sum', ...
+                            'g_global_movs_sumsquared', ...
+                            'g_global_fromtruth_sum', ...
+                            'g_global_fromtruth_sumsquared', ...
+                            'g_global_pdist_sum', ...
+                            'g_global_pdist_sumsquared' ...
+        );
     
     % Delete the files ?
 end
