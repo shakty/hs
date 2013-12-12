@@ -7,7 +7,7 @@ function LSF_analysis(path2conf)
 % )
     
     % Loads all variables that are described in the commented method.
-    load(path2conf);
+    load([path2conf 'params_all']);
     
     FILES4TASK_PLUSONE = FILES4TASK + 1;
     
