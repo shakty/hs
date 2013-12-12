@@ -11,8 +11,6 @@ function LSF_analysis(path2conf)
     
     FILES4TASK = 10;
     
-    FILES4TASK_PLUSONE = FILES4TASK + 1;
-    
     path(path,'util/'); % Help functions
     path(path,'lib/'); % Help functions
 
@@ -101,12 +99,15 @@ function LSF_analysis(path2conf)
                     'outDirClusters', outDirClusters ...      
             );
             
-            idx = mod(f, FILES4TASK_PLUSONE);
+            idx = mod(f, FILES4TASK) + 1;
             paramsArgs{idx} = paramsObj;
             
-            if (idx == FILES4TASK)
+            if (idx == 0)
+                paramsArgs{FILES4TASK} = paramsObj;
                 createTask(j, @wrapperanalysis, 0, {paramsArgs});
                 paramsArgs = cell(FILES4TASK, 1);
+            else
+                paramsArgs{idx} = paramsObj;
             end
         end % File loop
 
