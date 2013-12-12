@@ -24,7 +24,7 @@ function LSF_analysis(path2conf)
     % In each folder (sigma) we start the truthradius analysis.
     for s = 1 : length(sigmas)
         
-        sigma = sigmas(s);
+        sigma = num2str(sigmas(s)*10);
         sigmaSimName = [simName '_' sigma '/'];
         dumpDir = [DUMPDIR sigmaSimName];
         
