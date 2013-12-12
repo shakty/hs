@@ -112,7 +112,7 @@ function LSF_analysis(path2conf)
         end % File loop
 
         % Add files that are left over.
-        if (idx ~= FILES4TASK)
+        if (idx ~= 0)
             createTask(j, @wrapperanalysis, 0, {paramsArgs});         
         end
         
