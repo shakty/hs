@@ -25,7 +25,7 @@ function LSF_analysis(path2conf)
     for s = 1 : length(sigmas)
         
         sigma = num2str(sigmas(s)*10);
-        sigmaSimName = [simName '_' sigma '/'];
+        sigmaSimName = [simName '_s' sigma '/'];
         dumpDir = [DUMPDIR sigmaSimName];
         
         files = dir(dumpDir);
