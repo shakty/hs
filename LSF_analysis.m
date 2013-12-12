@@ -100,7 +100,6 @@ function LSF_analysis(path2conf)
             );
             
             idx = mod(f, FILES4TASK);
-            paramsArgs{idx} = paramsObj;
             
             if (idx == 0)
                 paramsArgs{FILES4TASK} = paramsObj;
@@ -109,6 +108,7 @@ function LSF_analysis(path2conf)
             else
                 paramsArgs{idx} = paramsObj;
             end
+            
         end % File loop
 
         % Add files that are left over.
