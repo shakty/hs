@@ -11,7 +11,7 @@ clc;
 simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
 dumpDir = '/cluster/work/scr5/balistef/';
 
-CONF_SUBDIR = 'NEW2/';
+CONF_SUBDIR = 'NEW/';
 DUMPDIR = [dumpDir CONF_SUBDIR];
 
 %dumpDir = 'dump/';
