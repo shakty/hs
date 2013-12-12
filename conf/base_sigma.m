@@ -203,7 +203,7 @@ fprintf('------------------------------------\n');
 
 DIR = [CONF_SUBDIR simName '/'];
 if (exist(DIR, 'dir')~=0 )
-    error('Dir already exists');
+    error(sprintf('Conf dir already exists: %s', DIR));
 end
 mkdir(DIR);
 

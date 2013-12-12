@@ -26,7 +26,7 @@ function LSF_analysis(path2conf)
         
         sigma = num2str(sigmas(s)*10);
         sigmaSimName = [simName '_s' sigma '/'];
-        dumpDir = [DUMPDIR sigmaSimName];
+        dumpDir = [DUMPDIR simName '/' sigmaSimName];
         
         files = dir(dumpDir);
         fileIndex = find(~[files.isdir]);
