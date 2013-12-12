@@ -99,7 +99,7 @@ function LSF_analysis(path2conf)
                     'outDirClusters', outDirClusters ...      
             );
             
-            idx = mod(f, FILES4TASK) + 1;
+            idx = mod(f, FILES4TASK);
             paramsArgs{idx} = paramsObj;
             
             if (idx == 0)
