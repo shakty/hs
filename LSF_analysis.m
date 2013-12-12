@@ -49,9 +49,9 @@ function LSF_analysis(path2conf)
         
         paramsArgs = cell(FILES4TASK, 1);
 
-        outDirAgents = [dirPath '/' 'agents/'];
-        outDirRadius = [dirPath '/' 'truthradius/'];
-        outDirClusters = [dirPath '/' 'clusters/'];
+        outDirAgents = [dumpDir '/' 'agents/'];
+        outDirRadius = [dumpDir '/' 'truthradius/'];
+        outDirClusters = [dumpDir '/' 'clusters/'];
         
         % Creating outDir if not existing.
         if (exist(outDirAgents, 'dir') == 0)
