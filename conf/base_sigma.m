@@ -8,10 +8,14 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_nav_rndseeds_rndseq_tm_R0_n100_fv0_s1';
-dumpDir = '/cluster/work/scr1/balistef/';
+simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr5/balistef/';
+
+CONF_SUBDIR = 'NEW2/';
+DUMPDIR = [dumpDir CONF_SUBDIR];
+
 %dumpDir = 'dump/';
-bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
+%bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
 
 VIDEO = 0;
 DEBUG = 0;
@@ -196,7 +200,7 @@ fprintf('%+15s = %d\n','Seed', seed);
 fprintf('------------------------------------\n');
 
 % CREATING FOLDERS
-CONF_SUBDIR = 'NEW2/';
+
 DIR = [CONF_SUBDIR simName '/'];
 if (exist(DIR, 'dir')~=0 )
     error('Dir already exists');
@@ -231,6 +235,11 @@ else
     batchSeed = seed;
 end
 
+% Save a file with all the parameters. 
+% Later it will be saved one for each sigma.
+paramsAllFile = sprintf('%s/params_all', DIR);
+save(paramsAllFile);
+
 old_sigmas = sigmas;
 for i=1:size(sigmas,2)
     
@@ -260,13 +269,18 @@ end
 
 fclose(fidMain);
 
-cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'')"', ...
-    [dumpDir CONF_SUBDIR], simName, mat2str(old_sigmas), num2str(DUMP_ANALYSIS), num2str(DUMP_RATE_ANALYSIS), ...
-    mat2str(RADIUSs), num2str(STAY_FOR), num2str(CONSENSUS_ON_TRUTH_FOR), num2str(CONSENSUS_THRESHOLD), ... % Radius
-    num2str(PRECISION), ... % Agents
-    num2str(CLU_CUTOFF) ... % Clusters
-);
+cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
+
 fprintf(fidCl, '%s\n', cmdStr);
+
+
+% cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'')"', ...
+%     [dumpDir CONF_SUBDIR], simName, mat2str(old_sigmas), num2str(DUMP_ANALYSIS), num2str(DUMP_RATE_ANALYSIS), ...
+%     mat2str(RADIUSs), num2str(STAY_FOR), num2str(CONSENSUS_ON_TRUTH_FOR), num2str(CONSENSUS_THRESHOLD), ... % Radius
+%     num2str(PRECISION), ... % Agents
+%     num2str(CLU_CUTOFF) ... % Clusters
+% );
+% fprintf(fidCl, '%s\n', cmdStr);
 
 % Saving a copy of all files in the conf dir
 COPYDIR = [DIR 'launchers/']; 
