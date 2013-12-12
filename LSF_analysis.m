@@ -35,7 +35,9 @@ function LSF_analysis(path2conf)
         
         % Log: Matlab will try to create intermediate non-existing folders.
         logFolder = ['log/' simName];
-        mkdir(logFolder);
+        if (exist(logFolder, 'dir') == 0)
+            mkdir(logFolder);
+        end
         
         % Dump Folder        
         submitArgs = [' -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
@@ -116,16 +118,17 @@ function LSF_analysis(path2conf)
             createTask(j, @wrapperanalysis, 0, {paramsArgs});         
         end
         
+        diary(j, [logFolder 'job_' sigma '.diary']);
         % Submit all the truthradius tasks.
         submit(j);
 
         % Create a task that waits to aggregate their results.
-        paramsObjWait = paramsObj;
-        paramsObjWait.j = j;
-        paramsObj.LSF = 1;
-        jWait = createJob(sched, 'name', 'wait2analize');
-        createTask(jWait, @aggregate_onesim, 0, {paramsObjWait});
-        submit(jWait);
+%         paramsObjWait = paramsObj;
+%         paramsObjWait.j = j;
+%         paramsObj.LSF = 1;
+%         jWait = createJob(sched, 'name', 'wait2analize');
+%         createTask(jWait, @aggregate_onesim, 0, {paramsObjWait});
+%         submit(jWait);
 
     end % Sigmas loop
     
