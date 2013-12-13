@@ -26,7 +26,9 @@ function aggregate_onesim(params)
     end
     
     if (params.LSF)
-        wait(params.j)
+        c = parcluster;
+        j = findJob(c,'name', params.jobName);
+        wait(j)
     end
     
     tic;

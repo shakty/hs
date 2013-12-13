@@ -5,7 +5,9 @@ function LSF_analysis(path2conf)
 %     PRECISION, ... % Agents
 %     CLU_CUTOFF ... % Clusters
 % )
-    
+
+dbstop if error   
+ 
     % Loads all variables that are described in the commented method.
     load([path2conf 'params_all']);
     
@@ -15,8 +17,8 @@ function LSF_analysis(path2conf)
     path(path,'lib/'); % Help functions
 
     % Import LSF Profile
-    parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings');
-    sched = findResource('scheduler','type','lsf');
+    % parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings');
+    % sched = findResource('scheduler','type','lsf');
     
     % In a dump directory simulations are divided by level of noise (sigma)
     % In each folder (sigma) we start the truthradius analysis.
@@ -41,11 +43,11 @@ function LSF_analysis(path2conf)
         
         % Dump Folder        
         submitArgs = [' -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
-        set(sched, 'SubmitArguments',submitArgs);
-        set(sched, 'DataLocation', [logFolder '/']);
+        % set(sched, 'SubmitArguments',submitArgs);
+        % set(sched, 'DataLocation', [logFolder '/']);
         
         % Create a new Job for each sub folder.
-        j = createJob(sched, 'name', ['analysis_' sigma]);
+        % j = createJob(sched, 'name', ['analysis_' sigma]);
         
         paramsArgs = cell(FILES4TASK, 1);
 
@@ -82,15 +84,11 @@ function LSF_analysis(path2conf)
             if (~strcmpi(EXT,'.mat') || ~isempty(strfind(NAME, 'sums_')))  
                 continue;
             end
-            
-            % Extracting the part 1-1 from 1-1.mat
-            % 6 = length('sums_') + 1; 4 = length('.mat');
-            simnameidx = NAME(1:length(NAME));
 
             paramsObj = struct( ...
                     'folderName', [DUMPDIR simName], ...
                     'simName', sigmaSimName, ...
-                    'fileName', simnameidx, ...
+                    'fileName', NAME, ...
                     'RADIUSs', RADIUSs, ...
                     'STAY_FOR', STAY_FOR, ...
                     'CONSENSUS_ON_TRUTH_FOR', CONSENSUS_ON_TRUTH_FOR, ...
@@ -107,13 +105,10 @@ function LSF_analysis(path2conf)
             
             idx = mod(f, FILES4TASK);
             
-            % paramsArgs needs to be enclosed in two cells because
-            % otherwise matlab thinks that he needs to pass each cell as a
-            % input parameter of wrapperanalysis instead of giving it all
-            % to the function that will loop through them.            
             if (idx == 0)
                 paramsArgs{FILES4TASK} = paramsObj;
-                createTask(j, @wrapperanalysis, 0, {{paramsArgs}});
+								wrapperanalysis({paramsArgs});
+                % createTask(j, @wrapperanalysis, 0, {{paramsArgs}});
                 paramsArgs = cell(FILES4TASK, 1);
             else
                 paramsArgs{idx} = paramsObj;
@@ -121,12 +116,16 @@ function LSF_analysis(path2conf)
             
         end % File loop
 
+        
         % Add files that are left over.
         if (idx ~= 0)
-            createTask(j, @wrapperanalysis, 0, {{paramsArgs}});
+            wrapperanalysis({paramsArgs});
+           %createTask(j, @wrapperanalysis, 0, {{paramsArgs}});         
         end
         
-        % Diary works only with batch.
+        return
+        
+				% Diary works only with batch.
         % diary(j, [logFolder 'job_' sigma '.diary']);
         % Submit all the truthradius tasks.
         submit(j);
