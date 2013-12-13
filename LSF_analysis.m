@@ -5,6 +5,7 @@ function LSF_analysis(path2conf)
 %     PRECISION, ... % Agents
 %     CLU_CUTOFF ... % Clusters
 % )
+    tic
     
     % Loads all variables that are described in the commented method.
     load([path2conf 'params_all']);
@@ -88,7 +89,7 @@ function LSF_analysis(path2conf)
             simnameidx = NAME(1:length(NAME));
 
             paramsObj = struct( ...
-                    'folderName', [DUMPDIR simName], ...
+                    'folderName', [DUMPDIR simName '/'], ...
                     'simName', sigmaSimName, ...
                     'fileName', simnameidx, ...
                     'RADIUSs', RADIUSs, ...
@@ -140,7 +141,7 @@ function LSF_analysis(path2conf)
 %         submit(jWait);
 
     end % Sigmas loop
-    
+    toc 
 end
 
 %%
