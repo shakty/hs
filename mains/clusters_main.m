@@ -4,11 +4,10 @@ close all;
 clear;
 clc;
 
-% SEE AGENTS TO FIX.
-
 %% Add other directories to path
-path(path,'util/'); % Help functions
-path(path,'lib/'); % Help functions
+path(path,'../'); % Help functions
+path(path,'../util/'); % Help functions
+path(path,'../lib/'); % Help functions
 
 % Change default axes fonts.
 set(0,'DefaultAxesFontName', 'Times New Roman')

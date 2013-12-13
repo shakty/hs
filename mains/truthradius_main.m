@@ -4,11 +4,10 @@ close all;
 clear;
 clc;
 
-% SEE AGENTS TO FIX.
-
 %% Add other directories to path
-path(path,'util/'); % Help functions
-path(path,'lib/'); % Help functions
+path(path,'../'); % Help functions
+path(path,'../util/'); % Help functions
+path(path,'../lib/'); % Help functions
 
 % Change default axes fonts.
 set(0,'DefaultAxesFontName', 'Times New Roman')
@@ -38,11 +37,11 @@ CONSENSUS_ON_TRUTH_FOR = 20;
 DUMP = 1;
 PLOTS = 0;
 
-DUMPDIR = '/mnt/tmp/dump/EXP_BUG/';
-simName = 'attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0/attrLinear_nav_rndseeds_rndseq_tm_Rclean_n100_fv0_s1';
-
 DUMPDIR = '/home/stefano/hs/test/';
 simName = 'NEWTEST-2013-12-8-17-49/';
+
+DUMPDIR = '/home/stefano/hs/test/NEWTEST-2013-12-8-17-49/';
+simName = 'A/';
 
 dumpDir = [DUMPDIR simName];
 

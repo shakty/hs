@@ -2,7 +2,6 @@ function agents_onefile(params)
 
     % Save statistiscs at the agent level, clusters are not computed.
     
-    
     folderName = params.folderName;
     simName = params.simName;
     fileName = params.fileName;
