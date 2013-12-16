@@ -2,10 +2,6 @@ function aggregate_fun(path2conf)
 
     tic
     
-    close all;
-    clear;
-    clc;
-    
     %% Aggregates the results of the analysis of the simulation results.
     load([path2conf 'params_all']);
 
