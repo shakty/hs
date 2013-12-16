@@ -213,19 +213,22 @@ fidMain = fopen(launcherMain, 'w');
 launcherCl = '../GO_ANAL_FUN';
 fidCl = fopen(launcherCl, 'w');
 
+launcherMerge = '../GO_MERGE_FUN';
+fidMerge = fopen(launcherMerge, 'w');
 
-file_merge = '../bash_merge_csv';
-fidFileMerge = fopen(file_merge, 'w');
-cmdStr = sprintf('#!/bin/sh');
-fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
-fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
-fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
-fprintf(fidFileMerge, '%s\n', cmdStr);
-cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
-fprintf(fidFileMerge, '%s\n', cmdStr);
+
+% file_merge = '../bash_merge_csv';
+% fidFileMerge = fopen(file_merge, 'w');
+% cmdStr = sprintf('#!/bin/sh');
+% fprintf(fidFileMerge, '%s\n', cmdStr);
+% cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
+% fprintf(fidFileMerge, '%s\n', cmdStr);
+% cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
+% fprintf(fidFileMerge, '%s\n', cmdStr);
+% cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
+% fprintf(fidFileMerge, '%s\n', cmdStr);
+% cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
+% fprintf(fidFileMerge, '%s\n', cmdStr);
 
 % Random seed must be initialized for each batch (level of sigma)
 if (seedtype ~= seed_fixed)
@@ -270,23 +273,18 @@ end
 fclose(fidMain);
 
 cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
-
 fprintf(fidCl, '%s\n', cmdStr);
+fclose(fidCl);
 
-
-% cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'',''%s'')"', ...
-%     [dumpDir CONF_SUBDIR], simName, mat2str(old_sigmas), num2str(DUMP_ANALYSIS), num2str(DUMP_RATE_ANALYSIS), ...
-%     mat2str(RADIUSs), num2str(STAY_FOR), num2str(CONSENSUS_ON_TRUTH_FOR), num2str(CONSENSUS_THRESHOLD), ... % Radius
-%     num2str(PRECISION), ... % Agents
-%     num2str(CLU_CUTOFF) ... % Clusters
-% );
-% fprintf(fidCl, '%s\n', cmdStr);
+cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_merge -W 24:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun(''conf/%s'')"', DIR);
+fprintf(fidMerge, '%s\n', cmdStr);
+fclose(fidMerge);
 
 % Saving a copy of all files in the conf dir
 COPYDIR = [DIR 'launchers/']; 
 mkdir(COPYDIR);
 copyfile(launcherMain, COPYDIR);
 copyfile(launcherCl, COPYDIR);
-
+copyfile(launcherMerge, COPYDIR);
 
 
