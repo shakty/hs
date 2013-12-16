@@ -14,7 +14,7 @@ function aggregate_fun(path2conf)
     aggrParams = 1;
     nRadiusesPlusOne = length(RADIUSs) + 1;
 
-    path2sim = [DUMPDIR simName];
+    path2sim = [DUMPDIR simName '/'];
 
     aggregateSims = 1;
 
