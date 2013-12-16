@@ -99,7 +99,7 @@ boundaryCondition = bBounce;
 
 % TRUTH ATTRACTION FORCE TYPE
 attr_zero = 0;
-attr_const = 1;
+attr_const = 1
 attr_linear = 2;
 attr_expo = 3;
 attr_millean_arena = 4;
@@ -215,20 +215,6 @@ fidCl = fopen(launcherCl, 'w');
 
 launcherMerge = '../GO_MERGE_FUN';
 fidMerge = fopen(launcherMerge, 'w');
-
-
-% file_merge = '../bash_merge_csv';
-% fidFileMerge = fopen(file_merge, 'w');
-% cmdStr = sprintf('#!/bin/sh');
-% fprintf(fidFileMerge, '%s\n', cmdStr);
-% cmdStr = sprintf('OUTFILE_PARAMS="%s%s%s"', dumpDir, DIR, 'params_all.csv');
-% fprintf(fidFileMerge, '%s\n', cmdStr);
-% cmdStr = sprintf('OUTFILE_MACRO="%s%s%s"', dumpDir, DIR, 'clusters_macro_all.csv');
-% fprintf(fidFileMerge, '%s\n', cmdStr);
-% cmdStr = sprintf('OUTFILE_MICRO="%s%s%s"', dumpDir, DIR, 'clusters_micro_all.csv');
-% fprintf(fidFileMerge, '%s\n', cmdStr);
-% cmdStr = sprintf('OUTFILE_MACRO_AVG_SPLIT="%s%s%s"', dumpDir, DIR, 'clusters_macro_avg_split.csv');
-% fprintf(fidFileMerge, '%s\n', cmdStr);
 
 % Random seed must be initialized for each batch (level of sigma)
 if (seedtype ~= seed_fixed)
