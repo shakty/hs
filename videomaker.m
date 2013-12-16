@@ -72,7 +72,7 @@ SINGLE = 1;
 DUMPDIR = '/home/stefano/hs/test/'; 
 simName = 'TESTLINEAR/';
 dumpDir = [DUMPDIR simName];
-myFile = '486-1';
+myFile = '1291-1';
 
 
 if (SINGLE)

@@ -53,7 +53,7 @@ function clusters_onefile(params)
         dataFileName = [outDir 'clusters_micro_' fileName '.csv'];
         fidClustersMicro = fopen(dataFileName, 'w');     
     end
-    
+    a = 0
     for i = 1:nIter
        
         % Movement.
@@ -63,11 +63,27 @@ function clusters_onefile(params)
             movs = colnorm(pos(:,:,i) - pos(:,:,i-1), 2);
         end
         
+        A = pos(:,:,i);
+        idx = randperm(size(A,2));
+        B = A(:,idx);
+        
+        if (i == 1142)
+            i
+        end
         
         % If agents are too clustered matlab freezes on LINKAGE
         % calculation. We keep the values from last time.            
-        if (pdist(pos(:,:,i)) > 1e-14)
-        
+%         if (mean(abs(mean(A - B))) < 1e-14 || ...
+%             mean(std(A,0,2)) < 0.002 || ...
+%             pdist(A) < 1e-14)
+%             a = a + 1
+% This meaure is the most restrictive (it throws away quite a few
+% simulation steps, but it is the only one that make the algorithm robust.
+        if (mean(std(A,0,2)) < 0.002)
+            a = a + 1
+            sprintf('Too clustered at iter: %i, fileName: %s', i, fileName)
+
+        else    
             try
                 % Z the results of HCLUST 
                 % T the cluster of each agent
@@ -129,10 +145,6 @@ function clusters_onefile(params)
                 clusters_move = 0;
 
             end
-
-
-        else                
-            sprintf('Too clustered at iter: %i, fileName: %s', i, fileName)
         end
             
         % GLOBAL statistics: will be used by aggregate function.
