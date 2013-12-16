@@ -37,7 +37,7 @@ if (exist(outDir, 'dir') == 0)
     mkdir(outDir);
 end
 
-fileName = '486-1.mat';
+fileName = '2526-1.mat';
 
 paramsObj = struct( ...
                     'folderName', DUMPDIR, ...
