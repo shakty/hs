@@ -63,67 +63,78 @@ function clusters_onefile(params)
             movs = colnorm(pos(:,:,i) - pos(:,:,i-1), 2);
         end
         
-        try
-            % Z the results of HCLUST 
-            % T the cluster of each agent
-            % nClusters the number of clusters            
-            [Z, T, nClusters] = clusterize(pos(:,:,i));
-            
-            [d, clusters_size, clusters_fromtruth, clusters_speed, clusters_move] = ...
+        
+        % If agents are too clustered matlab freezes on LINKAGE
+        % calculation. We keep the values from last time.            
+        if (pdist(pos(:,:,i)) > 1e-14)
+        
+            try
+                % Z the results of HCLUST 
+                % T the cluster of each agent
+                % nClusters the number of clusters            
+                [Z, T, nClusters] = clusterize(pos(:,:,i));
+                
+                [d, clusters_size, clusters_fromtruth, clusters_speed, clusters_move] = ...
                 cluster_stats(T, nClusters, truth, pos(:,:,i), v(:,:,i), movs);
 
-            max_cluster_size = max(clusters_size);
-            bigGroupId = find(clusters_size == max_cluster_size);
-            if (length(bigGroupId) > 1) 
-                bigGroupId = bigGroupId(1);
+                max_cluster_size = max(clusters_size);
+                bigGroupId = find(clusters_size == max_cluster_size);
+                if (length(bigGroupId) > 1) 
+                    bigGroupId = bigGroupId(1);
+                end
+
+                mean_cluster_size = mean(clusters_size);
+                sd_cluster_size = std(clusters_size);
+
+                bigc_agents = pos(:, T == bigGroupId, i);
+
+                pairwise_dist_bigc = pdist(bigc_agents', 'euclidean');
+                pairwise_dist_bigc_mean = mean(pairwise_dist_bigc);
+                pairwise_dist_bigc_sd = std(pairwise_dist_bigc);
+
+                mean_cluster_fromtruth = mean(clusters_fromtruth);
+                sd_cluster_fromtruth = std(clusters_fromtruth);
+
+                mean_cluster_speed = mean(clusters_speed);
+                sd_cluster_speed = std(clusters_speed);
+                mean_cluster_move = mean(clusters_move);
+                sd_cluster_move = std(clusters_move);
+
+
+            catch err
+
+                err
+                sprintf('Error at iter: %i, fileName: %s', i, fileName)
+
+                max_cluster_size = 0;
+                mean_cluster_size = 0;
+                sd_cluster_size = 0;
+
+                mean_cluster_fromtruth = 0;
+                sd_cluster_fromtruth = 0;
+
+                mean_cluster_speed = 0;
+                sd_cluster_speed = 0;
+                mean_cluster_move = 0;            
+                sd_cluster_move = 0;
+
+                % pdist
+                pairwise_dist_bigc_mean = 0;
+                pairwise_dist_bigc_sd = 0;
+
+                % micro.
+                clusters_size = 0;
+                clusters_fromtruth = 0;
+                clusters_speed = 0;
+                clusters_move = 0;
+
             end
-            
-            mean_cluster_size = mean(clusters_size);
-            sd_cluster_size = std(clusters_size);
-        
-            bigc_agents = pos(:, T == bigGroupId, i);
-            
-            pairwise_dist_bigc = pdist(bigc_agents', 'euclidean');
-            pairwise_dist_bigc_mean = mean(pairwise_dist_bigc);
-            pairwise_dist_bigc_sd = std(pairwise_dist_bigc);
 
-            mean_cluster_fromtruth = mean(clusters_fromtruth);
-            sd_cluster_fromtruth = std(clusters_fromtruth);
 
-            mean_cluster_speed = mean(clusters_speed);
-            sd_cluster_speed = std(clusters_speed);
-            mean_cluster_move = mean(clusters_move);
-            sd_cluster_move = std(clusters_move);
-
-        catch err
-
-            err
-            sprintf('Error at iter: %i, fileName: %s', i, fileName)
-
-            max_cluster_size = 0;
-            mean_cluster_size = 0;
-            sd_cluster_size = 0;
-
-            mean_cluster_fromtruth = 0;
-            sd_cluster_fromtruth = 0;
-
-            mean_cluster_speed = 0;
-            sd_cluster_speed = 0;
-            mean_cluster_move = 0;            
-            sd_cluster_move = 0;
-
-            % pdist
-            pairwise_dist_bigc_mean = 0;
-            pairwise_dist_bigc_sd = 0;
-
-            % micro.
-            clusters_size = 0;
-            clusters_fromtruth = 0;
-            clusters_speed = 0;
-            clusters_move = 0;
-
+        else                
+            sprintf('Too clustered at iter: %i, fileName: %s', i, fileName)
         end
-       
+            
         % GLOBAL statistics: will be used by aggregate function.
         global_count_sum(i) = nClusters;
         global_count_sumsquared(i) = nClusters^2;
@@ -181,7 +192,7 @@ function clusters_onefile(params)
                         stepData, simName, i, idxs(jj));
                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
                 end
-
+                
              end
 
         end           

@@ -236,10 +236,10 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             pause(0.01);
         %end
        
-        if (j == 200)
-            waitforbuttonpress
-            saveas(gcf,'/tmp/filename.jpg') 
-        end
+        %if (j == 200)
+        %    waitforbuttonpress
+        %    saveas(gcf,'/tmp/filename.jpg') 
+        %end
         
         % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
     end      

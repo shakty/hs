@@ -49,6 +49,7 @@ MYDIR = 'attrZero_nav_rndseeds_rndseq_tm_RleftClean_n100_fv0';
 % SIGMA
 SIGMA = '_s1';
 
+
 % DUMP DIR
 dumpDir = [DUMPDIR MYDIR '/' MYDIR SIGMA '/'];
 % FILE
@@ -66,7 +67,13 @@ SINGLE = 1;
 % plot_number = 1;
 % plot_number_color = 2;
 % plot_arrow = 3;
-    
+
+% SINGLE
+DUMPDIR = '/home/stefano/hs/test/'; 
+simName = 'TESTLINEAR/';
+dumpDir = [DUMPDIR simName];
+myFile = '486-1';
+
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];
