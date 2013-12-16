@@ -1,1 +1,0 @@
-bsub -J hs_csv_merge -W 1:00 -N /cluster/home/gess/balistef/matlab/hsnew/bash_merge_csv
