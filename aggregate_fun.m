@@ -3,16 +3,16 @@ function aggregate_fun(path2conf)
     tic
     
     %% Aggregates the results of the analysis of the simulation results.
-    load([path2conf 'params_all']);
+    %load([path2conf 'params_all']);
 
     %% Add other directories to path
     path(path,'util/'); % Help functions
     path(path,'lib/'); % Help functions
 
     % These parameters are loaded above (here are for test).
-    % RADIUSs = [.01, .05, .1, .25, .4];
-    % DUMPDIR = '/home/stefano/hs/test/';
-    % simName = 'NEWTEST-2013-12-8-17-49/';
+    RADIUSs = [.01, .05, .1, .25, .4];
+    DUMPDIR = '/home/stefano/hs/test/';
+    simName = 'NEWTEST-2013-12-8-17-49/';
     
     aggrParams = 1;
     nRadiusesPlusOne = length(RADIUSs) + 1;
@@ -41,6 +41,10 @@ function aggregate_fun(path2conf)
     clustersMacroFileName = [outDir 'clusters_macro.csv'];
     clustersMicroFileName = [outDir 'clusters_micro.csv'];
     truthradiusFileName = [outDir 'truthradius.csv'];
+    
+    agentsAvgFileName = [outDir 'agents_avg_all_split.csv'];
+    clustersMacroAvgFileName = [outDir 'clusters_macro_avg_all_split.csv'];
+    truthradiusAvgFileName = [outDir 'truthradius_avg_all_split.csv'];
 
     validFiles = 0;
 
@@ -76,11 +80,15 @@ function aggregate_fun(path2conf)
 
         % Paths to CSV files.
         agentsFileCSV = [dirPath 'agents/agents.csv'];
+        agentsAvgFileCSV = [dirPath 'agents/agents_avg_all.csv'];
         paramsFileCSV = [dirPath 'agents/params.csv'];
         clustersMacroFileCSV = [dirPath 'clusters/clusters_macro.csv'];
+        clustersMacroAvgFileCSV = [dirPath 'clusters/clusters_avg_all.csv'];
         clustersMicroFileCSV = [dirPath 'clusters/clusters_micro.csv'];
+        % Micro has no AVG file.
         truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];    
-
+        truthradiusAvgFileCSV = [dirPath 'truthradius/truthradius_avg_all.csv'];   
+        
         % Aggregate all levels of sigmas.
 
         % Clusters.
@@ -143,6 +151,17 @@ function aggregate_fun(path2conf)
 
             mergeCommand = sprintf('cat %s > %s', truthradiusFileCSV, truthradiusFileName);
             system(mergeCommand);
+            
+            % Merging AVG CSV files.
+            mergeCommand = sprintf('cat %s > %s', agentsAvgFileCSV, agentsAvgFileName);
+            system(mergeCommand);
+
+            mergeCommand = sprintf('cat %s > %s', clustersMacroAvgFileCSV, clustersMacroAvgFileName);
+            system(mergeCommand);
+
+            mergeCommand = sprintf('cat %s > %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
+            system(mergeCommand);
+            
         else
 
             % Merging CSV files without headers.
@@ -153,12 +172,22 @@ function aggregate_fun(path2conf)
             system(mergeCommand);
 
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
-            [a b] = system(mergeCommand);
+            system(mergeCommand);
 
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMicroFileCSV, clustersMicroFileName);
             system(mergeCommand);
 
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusFileCSV, truthradiusFileName);
+            system(mergeCommand);
+            
+            % Merging AVG CSV files without headers.
+            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', agentsAvgFileCSV, agentsAvgFileName);
+            system(mergeCommand);
+
+            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroAvgFileCSV, clustersMacroAvgFileName);
+            system(mergeCommand);
+
+            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
             system(mergeCommand);
         end
 
@@ -297,7 +326,7 @@ function aggregate_fun(path2conf)
             'bigc.pdist.ci' ...
         };
 
-        clustersAvgFileName = [outDir 'clusters_avg_all.csv'];
+        clustersAvgFileName = [outDir 'clusters_macro_avg_all.csv'];
         write_csv_headers(clustersAvgFileName, headers_clusters_macro_avg);
         fidClustersMacroAvg = fopen(clustersAvgFileName, 'a');
 
@@ -417,7 +446,7 @@ function aggregate_fun(path2conf)
         % Computing global stats            
         for i = 1 : nRadiusesPlusOne
 
-            % This part is actally different from aggregate_truthradius, that
+            % This part is actually different from aggregate_truthradius, that
             % has cell array, and r_out is in the radius array.
             % Not a big deal anyway.
             if (i < nRadiusesPlusOne)            

@@ -10,7 +10,7 @@ path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
 DUMP = 1;
-DUMP_RATE = 1; % Dump every x steps
+DUMP_RATE_ANALYSIS = 100; % Dump every x steps
 
 % Only clusters of size above the cutoff are included in the analysis
 CLU_CUTOFF = 2;
@@ -128,7 +128,7 @@ for d = 1:length(dirIndex)
                 'CONSENSUS_ON_TRUTH_FOR', CONSENSUS_ON_TRUTH_FOR, ...
                 'CONSENSUS_THRESHOLD', CONSENSUS_THRESHOLD, ...
                 'DUMP', DUMP, ...
-                'DUMP_RATE', DUMP_RATE, ...
+                'DUMP_RATE', DUMP_RATE_ANALYSIS, ...
                 'PLOTS', 0, ...
                 'CLU_CUTOFF', CLU_CUTOFF, ...
                 'PRECISION', PRECISION, ...
@@ -136,11 +136,12 @@ for d = 1:length(dirIndex)
                 'outDirAgents', outDirAgents, ...
                 'outDirClusters', outDirClusters ...      
         );
+    
+        clusters_onefile(params);    
+        truthradius_onefile(params);
+        agents_onefile(params);
+    
     end
-  
-    clusters_onefile(params);    
-    truthradius_onefile(params);
-    agents_onefile(params);
     
 end
 
