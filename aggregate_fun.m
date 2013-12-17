@@ -3,16 +3,16 @@ function aggregate_fun(path2conf)
     tic
     
     %% Aggregates the results of the analysis of the simulation results.
-    %load([path2conf 'params_all']);
+    load([path2conf 'params_all']);
 
     %% Add other directories to path
     path(path,'util/'); % Help functions
     path(path,'lib/'); % Help functions
 
     % These parameters are loaded above (here are for test).
-    RADIUSs = [.01, .05, .1, .25, .4];
-    DUMPDIR = '/home/stefano/hs/test/';
-    simName = 'NEWTEST-2013-12-8-17-49/';
+    % RADIUSs = [.01, .05, .1, .25, .4];
+    % DUMPDIR = '/home/stefano/hs/test/';
+    % simName = 'NEWTEST-2013-12-8-17-49/';
     
     aggrParams = 1;
     nRadiusesPlusOne = length(RADIUSs) + 1;
