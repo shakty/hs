@@ -3,7 +3,7 @@ function aggregate_fun(path2conf)
     tic
     
     %% Aggregates the results of the analysis of the simulation results.
-    % load([path2conf 'params_all']);
+    load([path2conf 'params_all']);
 
     %% Add other directories to path
     path(path,'util/'); % Help functions

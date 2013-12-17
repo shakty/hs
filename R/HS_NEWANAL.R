@@ -3,9 +3,10 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR VELOCITY
 DUMPDIR = "/home/stefano/hs/test/"
-
-
 DIR = "NEWTEST-2013-12-8-17-49/"
+
+# DUMPDIR = "/home/stefano/"
+# DIR = ""
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
@@ -18,7 +19,7 @@ if (!file.exists(IMGPATH)) {
 } 
 
 ## TEST
-maCro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
 micro <- read.table('clusters_micro.csv', head=TRUE, sep=",")
 tr <- read.table('truthradius.csv', head=TRUE, sep=",")
 
@@ -48,27 +49,109 @@ cl <- macro
 #cl$t <- as.factor(cl$t)
 
 # SIZE with SD
-title = "Evolution of cluster size (+Std.Dev) by sigma"
+title = "Evolution of average cluster average size (+Std.Dev) by sigma"
 p.size <- ggplot(cl, aes(t,group=simname))
 p.size <- p.size + geom_area(aes(y = size.avg, colour=simname, group=simname))
 p.size <- p.size + geom_area(aes(y = size.sd, colour=simname, group=simname, fill=simname))
 p.size <- p.size + facet_grid(simname~.,margins=F)
-p.size <- p.size + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
+p.size <- p.size + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
 if (INTERACTIVE) {
   p.size
 }
-# SIZE with SE
-limits <- aes(ymax = cl$size.avg + cl$size.se, ymin=cl$size.avg - cl$size.se)
-title = "Evolution of cluster size (+Std.Err.) by sigma"
+
+# SIZE with SMOOTH (loess)
+title = "Evolution of average cluster size (+Std.Err.) by sigma"
 p.size.se <- ggplot(cl, aes(t,group=simname))
-#p.size.se <- p.size.se + geom_line(aes(y = size.avg, colour=simname, group=simname))
-#p.size.se <- p.size.se + geom_errorbar(limits, width=0.0002)
 p.size.se <- p.size.se + geom_smooth(aes(y = size.avg, colour=simname, group=simname))
-p.size.se <- p.size.se + ggtitle(title) + xlab("Rounds") + ylab("Agents per cluster")
-#p.size.se <- p.size.se + scale_x_log10()
+p.size.se <- p.size.se + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
 if (INTERACTIVE) {
   p.size.se
 }
+
+# SIZE MAX points with SMOOTH (loess)
+title = "Evolution of the size of the biggest cluster by sigma"
+p.size.max <- ggplot(cl, aes(t,group=simname))
+p.size.max <- p.size.max + geom_jitter(aes(y = size.max, colour=simname, group=simname), alpha=0.2)
+p.size.max <- p.size.max + geom_smooth(aes(y = size.max, colour=simname, group=simname))
+p.size.max <- p.size.max + facet_grid(simname~.,margins=F)
+p.size.max <- p.size.max + ggtitle(title) + xlab("Rounds") + ylab("Agents in biggest cluster")
+if (INTERACTIVE) {
+  p.size.max
+}
+
+# COUNT points with SMOOTH (loess)
+title = "Evolution of cluster counts by sigma"
+p.count.se <- ggplot(cl, aes(t, group=simname))
+p.count.se <- p.count.se + geom_jitter(aes(y = count, colour=simname, group=simname), alpha=0.2)
+p.count.se <- p.count.se + geom_smooth(aes(y = count, colour=simname, group=simname))
+p.count.se <- p.count.se + ggtitle(title) + xlab("Rounds") + ylab("Agents in biggest cluster")
+if (INTERACTIVE) {
+  p.count.se
+}
+bigc.pdist.mean" "bigc.pdist.sd
+
+# WITHIN-CLUSTER CONSENSUS with SD
+title = "Evolution of within-cluster consensus (+Std.Dev) by sigma"
+p.consensus <- ggplot(cl, aes(t,group=simname))
+p.consensus <- p.consensus + geom_area(aes(y = bigc.pdist.mean, colour=simname, group=simname))
+p.consensus <- p.consensus + geom_area(aes(y = bigc.pdist.sd, colour=simname, group=simname, fill=simname))
+p.consensus <- p.consensus + facet_grid(simname~.,margins=F)
+p.consensus <- p.consensus + ggtitle(title) + xlab("Rounds") + ylab("Average pair-wise distance in biggest cluster")
+if (INTERACTIVE) {
+  p.consensus
+}
+
+#  WITHIN-CLUSTER CONSENSUS with SMOOTH (loess)
+title = "Evolution of average cluster size (+Std.Err.) by sigma"
+p.consensus.se <- ggplot(cl, aes(t, group = simname))
+p.consensus.se <- p.consensus.se + geom_jitter(aes(y = bigc.pdist.mean, colour=simname, group=simname), alpha=0.2)
+p.consensus.se <- p.consensus.se + geom_smooth(aes(y = bigc.pdist.mean, colour=simname, group=simname))
+p.consensus.se <- p.consensus.se + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
+if (INTERACTIVE) {
+  p.consensus.se
+}
+
+# FROM TRUTH + SD
+title = "Evolution of distance from truth (+Std.Dev.) by sigma"
+p.ft <- ggplot(cl, aes(t))
+p.ft <- p.ft + geom_area(aes(y = fromtruth.avg, colour=simname, group=simname))
+p.ft <- p.ft + geom_area(aes(y = fromtruth.sd, colour=simname, group=simname, fill=simname))
+p.ft <- p.ft + facet_grid(simname~.,margins=F)
+p.ft <- p.ft + ggtitle(title) + xlab("Rounds") + ylab("Distance from truth")
+if (INTERACTIVE) {
+  p.ft
+}
+
+# FROM TRUTH + SE
+limits <- aes(ymax = cl$fromtruth.avg + cl$fromtruth.se, ymin=cl$fromtruth.avg - cl$fromtruth.se)
+title = "Evolution of distance from truth (+Std.Err.) by sigma"
+p.ft.se <- ggplot(cl, aes(t,group=simname))
+p.ft.se <- p.ft.se + geom_point(aes(y = fromtruth.avg, colour=simname, group=simname))
+#p.ft.se <- p.ft.se + geom_line(aes(y = fromtruth.avg, colour=simname, group=simname))
+#p.ft.se <- p.ft.se + geom_errorbar(limits, width=0.2)
+p.ft.se <- p.ft.se + ggtitle(title) + xlab("Rounds") + ylab("Distance from truth")
+if (INTERACTIVE) {
+  p.ft.se
+}
+
+### PLOTTING ALL OF THEM TOGETHER!!
+jpeg(paste0(IMGPATH, "t_avg_overview_split.jpeg"), width=2048, height=1024)
+p <- grid.arrange(p.size, p.size.se,
+                  p.size.max, p.size.max.se,
+                  p.count.se,
+                  p.consensus, p.consensus.se,
+                  ncol=4,
+                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+dev.off()
+
+
+#                  p.speed, p.speed.se,
+#                  p.move,p.move.se,
+#                  p.ft, p.ft.se,
+
+
+# Moved to agents
+
 
 # CUM EXPLORATION + SD
 title = "Cumulative exploration (+Std.Dev.) by sigma"
@@ -117,6 +200,7 @@ if (INTERACTIVE) {
   p.explo.se
 }
 
+
 # SPEED + SD
 title = "Mean and std. agents speed"
 p.speed <- ggplot(cl, aes(t))
@@ -163,40 +247,7 @@ if (INTERACTIVE) {
   p.move.se
 }
 
-# FROM TRUTH + SD
-title = "Evolution of distance from truth (+Std.Dev.) by sigma"
-p.ft <- ggplot(cl, aes(t))
-p.ft <- p.ft + geom_area(aes(y = fromtruth.avg, colour=simname, group=simname))
-p.ft <- p.ft + geom_area(aes(y = fromtruth.sd, colour=simname, group=simname, fill=simname))
-p.ft <- p.ft + facet_grid(simname~.,margins=F)
-p.ft <- p.ft + ggtitle(title) + xlab("Rounds") + ylab("Distance from truth")
-if (INTERACTIVE) {
-  p.ft
-}
 
-# FROM TRUTH + SE
-limits <- aes(ymax = cl$fromtruth.avg + cl$fromtruth.se, ymin=cl$fromtruth.avg - cl$fromtruth.se)
-title = "Evolution of distance from truth (+Std.Err.) by sigma"
-p.ft.se <- ggplot(cl, aes(t,group=simname))
-p.ft.se <- p.ft.se + geom_point(aes(y = fromtruth.avg, colour=simname, group=simname))
-#p.ft.se <- p.ft.se + geom_line(aes(y = fromtruth.avg, colour=simname, group=simname))
-#p.ft.se <- p.ft.se + geom_errorbar(limits, width=0.2)
-p.ft.se <- p.ft.se + ggtitle(title) + xlab("Rounds") + ylab("Distance from truth")
-if (INTERACTIVE) {
-  p.ft.se
-}
-
-### PLOTTING ALL OF THEM TOGETHER!!
-jpeg(paste0(IMGPATH, "t_avg_overview_split.jpeg"), width=2048, height=1024)
-p <- grid.arrange(p.size, p.size.se,
-                  p.explo.cum, p.explo.cum.se,
-                  p.explo, p.explo.se,
-                  p.speed, p.speed.se,
-                  p.move,p.move.se,
-                  p.ft, p.ft.se,
-                  ncol=4,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
-dev.off()
 
 ################################
 ## MACRO AVG Aggregated: Loading
