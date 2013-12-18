@@ -5,8 +5,8 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 DUMPDIR = "/home/stefano/hs/test/"
 DIR = "NEWTEST-2013-12-8-17-49/"
 
-# DUMPDIR = "/home/stefano/"
-# DIR = ""
+DUMPDIR = "/home/stefano/"
+DIR = ""
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
@@ -379,7 +379,7 @@ agents$run <- as.factor(agents$run)
 
 tr <- read.table('truthradius.csv', head=TRUE, sep=",")
 agents$simname <- as.factor(agents$simname)
-agents$simcount <- as.factor(agents$N)
+agents$simcount <- as.factor(agents$simcount) # or N?
 agents$run <- as.factor(agents$run)
 
 ## MACRO: Heatmap
@@ -469,9 +469,14 @@ for (t in unique(clu$t)) {
 }
 
 # Merging agents and params: clu.
-clu <- merge(params, agents, by=c("simname","simcount","run"))     
+clu <- merge(params, agents, by=c("simname","simcount","run"))   
+# Factorising
+for (n in names(clu[1:7])) {
+  clu[, n] <- as.factor(clu[, n])      
+}
 data <- clu
 idx = 1;
+
 for (t in unique(clu$t)) {
   data <- clu[clu$t == t,]
   # From truth

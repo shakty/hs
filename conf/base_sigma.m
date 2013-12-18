@@ -8,11 +8,14 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
-dumpDir = '/cluster/work/scr5/balistef/';
+simName = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr4/balistef/';
 
-CONF_SUBDIR = 'NEW/';
-DUMPDIR = [dumpDir CONF_SUBDIR];
+% we have two because we can save the new configuration in a separate
+% folder analyze an old one without deleting its conf files.
+CONF_SUBDIR = 'NEW2/';
+SIM_SUBDIR = 'NEW/'; 
+DUMPDIR = [dumpDir SIM_SUBDIR];
 
 %dumpDir = 'dump/';
 %bsubWD = '/cluster/home/gess/balistef/matlab/hsnew/';
@@ -49,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01:0.01:0.99]; % weighting of velocity terms
-Rs     = [0];       	   % cut-off radius
+Rs     = [0.01:0.01:0.3];       	   % cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -99,7 +102,7 @@ boundaryCondition = bBounce;
 
 % TRUTH ATTRACTION FORCE TYPE
 attr_zero = 0;
-attr_const = 1
+attr_const = 1;
 attr_linear = 2;
 attr_expo = 3;
 attr_millean_arena = 4;
@@ -107,7 +110,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 2;
+attrtype = 4;
 
 % PLOT TYPE
 plot_cross = 0;
