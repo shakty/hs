@@ -31,7 +31,7 @@ function LSF_analysis(path2conf)
         fileIndex = find(~[files.isdir]);
 
         if (isempty(fileIndex))
-            error('Invalid Directory Selected');
+            error(['Invalid Directory Selected: ' dumpDir]);
         end
         
         % Log: Matlab will try to create intermediate non-existing folders.
