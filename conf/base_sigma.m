@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrMillean_nav_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
-dumpDir = '/cluster/work/scr4/balistef/';
+simName = 'attrLinear_navnperravg_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
+dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -66,7 +66,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [0.1];     		% coupling coefficient (divisor)
+taus   = [1];     		% coupling coefficient (divisor)
 
 % WHITE NOISE
 sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
@@ -110,7 +110,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 4;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
