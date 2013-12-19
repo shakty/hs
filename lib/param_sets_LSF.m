@@ -17,7 +17,7 @@ parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
 
 % How many sequential simulations in one task.
-SIMS4TASK = 4; 
+SIMS4TASK = 10; 
 % How many tasks group in one job. Should be multiple with SIMS4TASK.
 TASKS4JOB = 20;
 
@@ -207,12 +207,12 @@ for i1=1:size(params.dts)
             % each cluster node is about 1 minute.
             taskIdx = mod(simCount, SIMS4TASK);
 
-            if (taskIdx ~= 0)
-                paramObjs{taskIdx} = paramsObj;
-            else
-                paramObjs{taskIdx+1} = paramsObj;
+            if (taskIdx == 0)
+                paramObjs{SIMS4TASK} = paramsObj;
                 createTask(j, @wrappersim, 0, {{paramObjs}});
                 paramObjs = cell(SIMS4TASK, 1);
+            else                
+                paramObjs{taskIdx} = paramsObj;
             end
   
             % createTask(j, @simulation, 0, {paramsObj});
