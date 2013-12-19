@@ -27,6 +27,8 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     DEBUG = 0; % not used for now
  
+    colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
+    
     colors = {'magenta','yellow','black', 'cyan', 'red', 'green', 'blue'};
     
     load(path2file);
@@ -193,7 +195,7 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             % no rescaling
             %quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j), 0);
             quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j));
-
+            mean(abs(colnorm(v(:,:,j),2)))
         end
         
         hold on;
@@ -231,17 +233,11 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             legend(energy);
         end
         
-        % no need for pause for complicated plots
-        %if (plottype == plot_cross)
-            pause(0.01);
-        %end
-       
-        %if (j == 200)
-        %    waitforbuttonpress
-        %    saveas(gcf,'/tmp/filename.jpg') 
-        %end
+        pause(0.01);
         
         % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
+        
+        mean(colnorm(dump.agentsv(:,:,j),2))
     end      
  
 %%    

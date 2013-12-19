@@ -155,9 +155,9 @@ if (INTERACTIVE) {
 }
 
 # CUM EXPLORATION + SE
-title = "Evolution of cumulative (Loess + Std.Errs) exploration by sigma"
+title = "Evolution of cumulative exploration (Loess + Std.Errs) by sigma"
 p.explo.cum.se <- ggplot(ag, aes(t, group=simname))
-p.explo.cum.se <- p.explo.cum.se + geom_jitter(aes(y = coverage.cum.avg, colour=simname, group=simname), alpha=0.2)
+#p.explo.cum.se <- p.explo.cum.se + geom_jitter(aes(y = coverage.cum.avg, colour=simname, group=simname), alpha=0.2)
 p.explo.cum.se <- p.explo.cum.se + geom_smooth(aes(y = coverage.cum.avg, colour=simname, group=simname))
 p.explo.cum.se <- p.explo.cum.se + ggtitle(title) + xlab("Rounds") + ylab("Cumulative % of explored space")
 if (INTERACTIVE) {

@@ -26,13 +26,13 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'NEWTEST';
+simName = 'VAGAIN';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
 DUMP = 1;
 COMPUTATION = 0;
-plottype = 3;
+plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
@@ -48,14 +48,14 @@ n_agents = 100;
 
 % Influence
 alphas = 0.1;
-Rs = 0.05;
+Rs = 0.03;
 
 % Noise
-sigmas = 0.1;
+sigmas = 0.01;
 noisetype = 3;
 
 % Truth
-taus = 0.1;
+taus = 1;
 truths = [0.5; 0.5];
 attrtype = 4;
 forces_on_v = 0;
@@ -64,6 +64,10 @@ forces_on_v = 0;
 seedtype = 0; % 0 = fixed
 seed = randi(1000000); % 819325;
 batchSeed = randi(1000000); % 819325; 
+
+% A and B
+
+% Bs = 1.2;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
