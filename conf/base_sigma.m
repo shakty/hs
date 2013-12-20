@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrHard_navnp_rndseeds_rndseq_tm_RClean_n100_fv0_s1';
-dumpDir = '/cluster/work/scr1/balistef/';
+simName = 'attrZero_navnp_rndseeds_rndseq_tm_R0_n100_fv0_s1';
+dumpDir = '/cluster/work/scr5/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01:0.01:0.99]; % weighting of velocity terms
-Rs     = [0.01:0.01:0.3];       	   % cut-off radius
+Rs     = [0];       	   % cut-off radius
 
 % ATTRACTIVE AND REPULSIVE FORCES
 

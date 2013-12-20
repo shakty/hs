@@ -96,17 +96,19 @@ simName = 'VAGAIN-2013-12-19-11-2-a/'; % social, noise a + noise on p (sigma x10
 % simName = 'VAGAIN-2013-12-19-11-14/'; % social, noise a (sigma 0.1) -> agents forms some clusters then go the truth
 % simName = 'VAGAIN-2013-12-19-11-21/'; % social, noise a (sigma 0.1) + repulsion 1.5 -> agents forms a circle very large around
 % simName = 'VAGAIN-2013-12-19-11-34/'; % social, noise a (sigma 0.1) (like above reduce velocity / 10) + repulsion 1.5
-% simName = 'VAGAIN-2013-12-19-11-37/'; % social, noise a (sigma 0.1) (like first reduce velocity / 10) B = 1.2 + repulsion 1.5 -> circle has a small radius
-simName = 'VAGAIN-2013-12-19-11-46/'; % social, noise a (sigma 0.01) -> agents go quickly in the middle three cluster forms very compact, very close to truth
-simName = 'VAGAIN-2013-12-19-11-54/'; % social, noise a (sigma 0.01) + noise also on average_velocity. -> agents increase / decrease velocity. three clusters forms going around. cool
-simName = 'VAGAIN-2013-12-19-11-58/'; % social, noise a (sigma 0.01) + noise also on average_velocity. -> agents increase / decrease velocity. clusters forms going around. cool
-simName = 'VAGAIN-2013-12-19-12-6/'; % like above + noise on p (like before a bit more spread (anyway noise on p is too small))
-simName = 'VAGAIN-2013-12-19-12-11/'; % like above + higher v (x10) -> more clusters and more spread
-simName = 'VAGAIN-2013-12-19-12-17/'; % like above + sigma on p (x10) -> many clusters less cohesive
-simName = 'VAGAIN-2013-12-19-12-22/'; % like above -> R much larger = .1 -> a big cluster and a small one
-simName = 'VAGAIN-2013-12-19-12-27/'; % no truth, R= 0.03, ALPHA = 0.1 velocity = 1 (like above), tau 1. some clustering. need to check with the default impl.
-simName = 'VAGAIN-2013-12-19-12-33/'; % Millean, R= 0.03, ALPHA = 0.1 velocity = 1 (like above), tau 1. some clusters in the radius, similar to standard settings
+simName = 'VAGAIN-2013-12-19-11-37/'; % social, noise a (sigma 0.1) (like first reduce velocity / 10) B = 1.2 + repulsion 1.5 -> circle has a small radius
+%simName = 'VAGAIN-2013-12-19-11-46/'; % social, noise a (sigma 0.01) -> agents go quickly in the middle three cluster forms very compact, very close to truth
+%simName = 'VAGAIN-2013-12-19-11-54/'; % social, noise a (sigma 0.01) + noise also on average_velocity. -> agents increase / decrease velocity. three clusters forms going around. cool
+%simName = 'VAGAIN-2013-12-19-11-58/'; % social, noise a (sigma 0.01) + noise also on average_velocity. -> agents increase / decrease velocity. clusters forms going around. cool
+%simName = 'VAGAIN-2013-12-19-12-6/'; % like above + noise on p (like before a bit more spread (anyway noise on p is too small))
+% simName = 'VAGAIN-2013-12-19-12-11/'; % like above + higher v (x10) -> more clusters and more spread
 
+%simName = 'VAGAIN-2013-12-19-12-17/'; % like above + sigma on p (x10) -> many clusters less cohesive
+% simName = 'VAGAIN-2013-12-19-12-22/'; % like above -> R much larger = .1 -> a big cluster and a small one
+% simName = 'VAGAIN-2013-12-19-12-27/'; % no truth, R= 0.03, ALPHA = 0.1 velocity = 1 (like above), tau 1. some clustering. need to check with the default impl.
+% simName = 'VAGAIN-2013-12-19-12-33/'; % Millean, R= 0.03, ALPHA = 0.1 velocity = 1 (like above), tau 1. some clusters in the radius, similar to standard settings
+simName = 'VAGAIN-2013-12-20-11-13/'; % Linear nav np
+% simName = 'VAGAIN-2013-12-20-11-23/'; % Small repulsion B = 1.001 navnp
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';

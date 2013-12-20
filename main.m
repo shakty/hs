@@ -57,7 +57,7 @@ noisetype = 3;
 % Truth
 taus = 1;
 truths = [0.5; 0.5];
-attrtype = 4;
+attrtype = 2;
 forces_on_v = 0;
 
 % Seed
@@ -67,7 +67,7 @@ batchSeed = randi(1000000); % 819325;
 
 % A and B
 
-% Bs = 1.2;
+Bs = 1.001;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
