@@ -8,13 +8,13 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrZero_navnp_rndseeds_rndseq_tm_R0_n100_fv0_s1';
+simName = 'attrMillean_navnp_rndseeds_rndseq_tm_R0_n100_fv0_s1';
 dumpDir = '/cluster/work/scr5/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
 CONF_SUBDIR = 'NEW2/';
-SIM_SUBDIR = 'NEW/'; 
+SIM_SUBDIR = 'NEW2/'; 
 DUMPDIR = [dumpDir SIM_SUBDIR];
 
 %dumpDir = 'dump/';
@@ -110,7 +110,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 5;
+attrtype = 4;
 
 % PLOT TYPE
 plot_cross = 0;
