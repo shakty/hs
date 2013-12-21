@@ -41,8 +41,8 @@ function LSF_analysis(path2conf)
         end
         
         % Dump Folder        
-        submitArgs = [' -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
-        set(sched, 'SubmitArguments',submitArgs);
+        submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
+        set(sched, 'SubmitArguments', submitArgs);
         set(sched, 'DataLocation', [logFolder '/']);
         
         % Create a new Job for each sub folder.
