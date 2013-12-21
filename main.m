@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'VAGAIN';
+simName = 'NAVPEPSILON';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -36,14 +36,14 @@ plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 20;
+t_ends = 7;
 
 % Size
 ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 1;
+vScalings = 0.5;
 n_agents = 100;
 
 % Influence
@@ -52,7 +52,8 @@ Rs = 0.03;
 
 % Noise
 sigmas = 0.01;
-noisetype = 3;
+epsilons = 0.1;
+noisetype = 4;
 
 % Truth
 taus = 1;
@@ -67,7 +68,8 @@ batchSeed = randi(1000000); % 819325;
 
 % A and B
 
-Bs = 1.001;
+Bs = 1;
+As = 1;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
@@ -94,6 +96,7 @@ simParamsStruct = struct( ...
                 'taus', taus, ...
                 'Rs', Rs, ...
                 'sigmas', sigmas, ...
+                'epsilons', epsilons, ...
                 'v_scalings', vScalings, ...
                 'nof_clusters', nClusters, ...
                 'clusterTightness', clusterTightness, ...

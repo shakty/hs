@@ -29,21 +29,6 @@ function [] = main_fun(confDir, subDir, confFile, batchSeed)
     %% Loading Conf
     load([confDir subDir '/' confFile]);
 
-    %% Modifying params locally
-    % VIDEO = 0;
-    % DUMP = 1;
-    % % alphas = [0.1 0.5 0.9];
-    % COMPUTATION = 0;
-    % attrtype = 7;
-    % alphas = 0.1;
-    % Rs = 0.07;
-    % plottype = 3;
-    % vScalings = 2;
-    % %n_agents = 10;
-    % sigmas = [0, 0.1, 0.2];
-    % simName = 'test_t';
-    % dumpDir = 'dump/';
-
     %% Creating simName and Struct
     myDumpDir = [ dumpDir subDir ];
     simName = createSimName(confFile, DUMP, myDumpDir, 0);
@@ -71,6 +56,7 @@ function [] = main_fun(confDir, subDir, confFile, batchSeed)
                     'taus', taus, ...
                     'Rs', Rs, ...
                     'sigmas', sigmas, ...
+                    'epsilons', epsilons, ...
                     'v_scalings', vScalings, ...
                     'nof_clusters', nClusters, ...
                     'clusterTightness', clusterTightness, ...

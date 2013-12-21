@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrMillean_navnp_rndseeds_rndseq_tm_R0_n100_fv0_s1';
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon';
 dumpDir = '/cluster/work/scr5/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -51,9 +51,9 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01:0.01:0.99]; % weighting of velocity terms
-Rs     = [0];       	   % cut-off radius
-
+alphas = [0.01:0.02:0.99]; % weighting of velocity terms
+Rs     = [0.01:0.01:0.1];       	   % cut-off radius
+         
 % ATTRACTIVE AND REPULSIVE FORCES
 
 ks     = [1];           % Power of distance in force term
@@ -68,8 +68,11 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 % HOW EASY IS TO FIND THE TRUTH (
 taus   = [1];     		% coupling coefficient (divisor)
 
-% WHITE NOISE
-sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
+% INDIVIDUALIZATION NOISE (position)
+epsilons = [0:0.1:0.5];   % Std. deviation of white noise term
+
+% NOISE on APPROACH (direction)
+sigmas = epsilons./10;   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1];     	% Scaling factor for initial (random) velocities
@@ -110,7 +113,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 4;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -132,8 +135,9 @@ noise_on_p = 0;
 noise_on_v = 1;
 noise_adaptive_on_v = 2;
 noise_on_v_angular = 3;
+noise_navp = 4; % both 0 and 3
 
-noisetype = 3;
+noisetype = 4;
 
 % FORCES INTEGRATION on V
 forces_on_v = 0;
@@ -177,7 +181,7 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2)*size(forces_on_v,2);
+                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
@@ -190,6 +194,7 @@ fprintf('------------------------------------\n');
 fprintf('%+15s = %s\n','alpha', mat2str(alphas));
 fprintf('%+15s = %s\n','R', mat2str(Rs));
 fprintf('%+15s = %s\n','sigma', mat2str(sigmas));
+fprintf('%+15s = %s\n','epsilon', mat2str(epsilons));
 fprintf('%+15s = %s\n','steps', mat2str(t_ends));
 fprintf('%+15s = %s\n','nAgents', mat2str(n_agents));  
 fprintf('%+15s = %s\n','IdeasSpace size', mat2str(ideas_space_sizes));

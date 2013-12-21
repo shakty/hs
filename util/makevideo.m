@@ -175,7 +175,10 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
             case plot_cross
             % PLOT red crosses
-            plot(agents(1,:),agents(2,:),'rx');     
+            plot(agents(1,:), agents(2,:),'ok', ...
+                'MarkerEdgeColor','k',...
+                'MarkerFaceColor','r',...
+                'MarkerSize',5);     
         
             case plot_number
             % PLOT BLACK NUMBERS

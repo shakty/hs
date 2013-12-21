@@ -110,6 +110,19 @@ simName = 'VAGAIN-2013-12-19-11-37/'; % social, noise a (sigma 0.1) (like first 
 simName = 'VAGAIN-2013-12-20-11-13/'; % Linear nav np
 % simName = 'VAGAIN-2013-12-20-11-23/'; % Small repulsion B = 1.001 navnp
 
+simName = 'NAVPEPSILON-2013-12-21-12-51/'; % Epsilon 0.1 Sigma 0.01
+simName = 'NAVPEPSILON-2013-12-21-13-3/'; % Epsilon 0.1 Sigma 0.05 -> clusters go towards the middle and merge
+simName = 'NAVPEPSILON-2013-12-21-13-5/'; % Epsilon 0.5 Sigma 0.05 -> too noisy
+simName = 'NAVPEPSILON-2013-12-21-13-10/'; % Epsilon 0.4 Sigma 0.04 -> too noisy
+simName = 'NAVPEPSILON-2013-12-21-13-13/'; % Epsilon 0.3 Sigma 0.03 -> kind of too noisy
+simName = 'NAVPEPSILON-2013-12-21-13-15/'; % Epsilon 0.2 Sigma 0.02 -> kind of OK for clusters
+simName = 'NAVPEPSILON-2013-12-21-13-19/'; % Epsilon 0.1 Sigma 0.01 -> very good for clusters
+simName = 'NAVPEPSILON-2013-12-21-13-23/'; % Epsilon 0.1 Sigma 0 -> very good for clusters (stable)
+%simName = 'NAVPEPSILON-2013-12-21-13-26/'; % Epsilon 0 Sigma 0 -> perfect stable clusters
+%simName = 'NAVPEPSILON-2013-12-21-13-30/'; % Epsilon 0.1 Sigma 0.01 R=0.1 -> 1 cluster near to truth
+%simName = 'NAVPEPSILON-2013-12-21-13-32/'; % Epsilon 0.01 Sigma 0.01 -> 1 clusters very cohesive
+simName = 'NAVPEPSILON-2013-12-21-13-58/'; % 
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 

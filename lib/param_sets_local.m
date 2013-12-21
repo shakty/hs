@@ -86,6 +86,9 @@ for i1=1:size(params.dts)
  
     for i19=1:size(params.forces_on_v,2)
         forces_on_v = params.forces_on_v(:,i19);
+            
+    for i20=1:size(params.epsilons,2)
+        epsilon = params.epsilons(i20);
         
         for rCount=1:params.nRuns
           
@@ -123,6 +126,7 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %2.3f\n','tau',tau);   
             fprintf('%+15s = %2.3f\n','R',R);
             fprintf('%+15s = %2.3f\n','sigma',sigma);
+            fprintf('%+15s = %2.3f\n','epsilon', epsilon);
             fprintf('%+15s = %2.3f\n','v_scaling',v_scaling);
             fprintf('%+15s = %1d\n','n cluster',nof_cluster);
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
@@ -159,6 +163,7 @@ for i1=1:size(params.dts)
                 'tau', tau, ...
                 'R', R, ...
                 'sigma', sigma, ...
+                'epsilon', epsilon, ...
                 'v_scaling', v_scaling, ...
                 'nof_cluster', nof_cluster, ...
                 'clusterTightness', clusterTightness, ...
@@ -176,6 +181,7 @@ for i1=1:size(params.dts)
         end % End n runs with identical param set
              
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end
