@@ -265,7 +265,8 @@ for i=1:size(sigmas,2)
 end
 
 fclose(fidMain);
-
+cmdStr = sprintf('# SCR: %s', dumpDir);
+fprintf(fidCl, '%s\n', cmdStr);
 cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
 fprintf(fidCl, '%s\n', cmdStr);
 fclose(fidCl);
