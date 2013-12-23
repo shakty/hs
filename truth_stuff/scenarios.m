@@ -21,9 +21,9 @@ x = [0:PRECISION:1;0:PRECISION:1];
 tau = 0.1;
 
 truth = [0.5;0.5];
-truth = [0.1;0.1];
+%truth = [0.1;0.1];
 
-% Social Constructionism
+% Relativistic World
 ths = @(x) (zeros(2, length(x)));
 
 % TRUTH Constant
@@ -53,7 +53,13 @@ POS = 0; SIGMA = 0.2;
 ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),0,0.2),2,1);
         
 
-str = 'Social Constructionism';
+% USED ONE (copied from above)
+
+% Hard to Find (NORMAL)
+POS = 100; SIGMA = 0.02;
+ths = @(x) (repmat(truth,1,length(x))-x)./tau.*repmat(normpdf(colnorm(repmat(truth,1,length(x))-x,2),(DIAG -norm(truth))/POS,SIGMA),2,1);
+
+str = 'Revolutionary Science';
 tp = '';
 h = figure;
 [X,Y] = meshgrid(x(1,:), x(1,:));
@@ -83,6 +89,9 @@ hold off
 title('1D');
 %Adding suptitle
 suptitle(str);
+
+return
+
 str = strrep(str, ' ', '_');
 saveas(h,[ 'scenarios/' str tp '.fig']);
 saveas(h,[ 'scenarios/' str tp '.png']);

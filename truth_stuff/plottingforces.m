@@ -16,6 +16,10 @@ truth = [0.5;0.5];
 n_agents = length(a);
 tau = 0.1;
 
+% NO TRUTH
+ths = @(x) (zeros(0,1,n_agents)-x);
+notruth = ths(a);
+
 % TRUTH Constant
 ths = @(x) (repmat(truth,1,n_agents)-x).*(repmat(tau./colnorm(repmat(truth,1,n_agents)-x,2),2,1));
 const = ths(a);
@@ -78,11 +82,13 @@ for SIGMA=0.1:0.1:20
         %ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(lognpdf(colnorm(repmat(truth,1,n_agents)-x,2),norm(truth),SIGMA),2,1);
         
         % MOVED NORMAL
-        ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),(DIAG -norm(truth))/POS,SIGMA);
+         ths = @(x) normpdf(colnorm(repmat(truth,1,n_agents)-x,2),(DIAG -norm(truth))/POS,SIGMA);
         
         % EXP
         %ths = @(x) (repmat(truth,1,n_agents)-x).*repmat(exppdf(colnorm(repmat(truth,1,n_agents) - abs((repmat(truth,1,n_agents)-x)),2),SIGMA),2,1);
 
+        % NO TRUTH 
+        %ths = @(x) (zeros(0,1,n_agents)-x);
 
         [X,Y] = meshgrid(a(1,:), a(1,:));
         Z = zeros(size(X));
