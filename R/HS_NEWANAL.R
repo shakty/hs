@@ -71,7 +71,6 @@ title = "Evolution of average size of the biggest (Loess + Std.Errs) by sigma"
 p.size.max.se <- ggplot(cl, aes(t,group=simname))
 p.size.max.se <- p.size.max.se + geom_jitter(aes(y = maxsize.avg, colour=simname, group=simname), alpha=0.2)
 p.size.max.se <- p.size.max.se + geom_smooth(aes(y = maxsize.avg, colour=simname, group=simname))
-p.size.max.se <- p.size.max.se + facet_grid(simname~.,margins=F)
 p.size.max.se <- p.size.max.se + ggtitle(title) + xlab("Rounds") + ylab("Agents in biggest cluster")
 if (INTERACTIVE) {
   p.size.max.se
@@ -436,11 +435,14 @@ for (n in names(clu[1:7])) {
 data <- clu
 idx = 1;
 for (t in unique(clu$t)) {
+
   data <- clu[clu$t == t,]
   # Count
   pt.c <- heatmapFacets_count(v1,v2,v3, data, t=t)
+
   ggsave(filename=paste0(IMGPATH,"count/count_",sprintf("%04d",idx),".jpg"),plot=pt.c$p)
-  # Size Mean
+
+                                        # Size Mean
   pt.s <- heatmapFacets_size(v1,v2,v3, data, t=t)
   ggsave(filename=paste0(IMGPATH,"size/size_",sprintf("%04d",idx),".jpg"),plot=pt.s$p)
   # Size Max
