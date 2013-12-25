@@ -2,6 +2,7 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR VELOCITY
+
 DUMPDIR = "/home/stefano/hs/test/"
 DIR = "NEWTEST-2013-12-8-17-49/"
 
@@ -476,7 +477,6 @@ for (n in names(clu[1:7])) {
 }
 data <- clu
 idx = 1;
-
 for (t in unique(clu$t)) {
   data <- clu[clu$t == t,]
   # From truth

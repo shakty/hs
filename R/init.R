@@ -426,7 +426,8 @@ heatmapFacets_size<- function(v1,v2,v3,data = clu, paramsData = params, imgpath 
   p <- ggplot(data, aes_string(x=v1, y=v2))
   p <- p + geom_tile(aes(fill=size.avg), colour = "white")
   p <- p + scale_fill_continuous(limits=c(1,N), breaks= seq(0,N,BR), low='lightblue',high='red') 
-  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData) + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
+  p <- p + hs.makeggtitle(title, c(v1, v2, v3), paramsData)
+  # p <- p + RXScale + scale_y_discrete(breaks= seq(0,100,0.1)) 
   p <- p + facet_grid(facetFormula)
 
   return(list(p=p,t=title))
