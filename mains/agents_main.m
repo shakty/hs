@@ -25,8 +25,8 @@ PRECISION = 100;
 DUMP = 0;
 PLOTS = 0;
 
-DUMPDIR = '/home/stefano/hs/test/NEWTEST-2013-12-8-17-49/';
-simName = 'A/';
+DUMPDIR = '/home/stefano/hs/test/';
+simName = 'FINALTEST/';
 
 dumpDir = [DUMPDIR simName];
 
@@ -36,7 +36,7 @@ if (exist(outDir, 'dir') == 0)
     mkdir(outDir);
 end
 
-fileName = '1-1.mat';
+fileName = '2801-1.mat';
 
 paramsObj = struct( ...
                     'folderName', DUMPDIR, ...

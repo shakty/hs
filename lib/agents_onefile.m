@@ -93,7 +93,7 @@ function agents_onefile(params)
         cumcoverage = nnz(cum_coverage_matrix) / TOTAL_CELLS;
 
         % avg from truth
-        norm_from_truth = norm(pos(:,:,i) - truth4all);
+        norm_from_truth = colnorm(pos(:,:,i) - truth4all, 2);
         mean_agents_fromtruth = mean(norm_from_truth);
         sd_agents_fromtruth = std(norm_from_truth);
         

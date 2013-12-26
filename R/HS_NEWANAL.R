@@ -126,7 +126,7 @@ p <- grid.arrange(p.size, p.size.se,
                   p.count, p.count.se,
                   p.bigc.consensus, p.bigc.consensus.se,
                   ncol=4,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(paste0("CLUSTERS: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
 
@@ -278,7 +278,7 @@ p <- grid.arrange(p.explo.cum, p.explo.cum.se,
                   p.ft, p.ft.se,
                   p.consensus, p.consensus.se,
                   ncol=4,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(paste0("AGENTS: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
 
@@ -342,7 +342,7 @@ p <- grid.arrange(p.radiuses,
                   p.radiuses.smooth,
                   p.consensus.reach,
                   ncol=3,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(paste0("TRADIUS: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
 ################################
@@ -435,14 +435,11 @@ for (n in names(clu[1:7])) {
 data <- clu
 idx = 1;
 for (t in unique(clu$t)) {
-
   data <- clu[clu$t == t,]
   # Count
   pt.c <- heatmapFacets_count(v1,v2,v3, data, t=t)
-
   ggsave(filename=paste0(IMGPATH,"count/count_",sprintf("%04d",idx),".jpg"),plot=pt.c$p)
-
-                                        # Size Mean
+  # Size Mean
   pt.s <- heatmapFacets_size(v1,v2,v3, data, t=t)
   ggsave(filename=paste0(IMGPATH,"size/size_",sprintf("%04d",idx),".jpg"),plot=pt.s$p)
   # Size Max
@@ -508,7 +505,7 @@ p <- grid.arrange(pt.s$p, pt.sm$p, pt.c$p, pt.bigcpdist$p,
                   pt.m$p, pt.sp$p, pt.ccov$p, pt.cov$p,
                   pt.ft$p, pt.pdist$p, pt.consensus$p,
                   ncol=4,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(pasteo("HT: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
 # Making a video out of the images
@@ -550,7 +547,7 @@ if (INTERACTIVE) {
 }
 
 #COVERAGE
-title = "Average and cumulative space exploration"
+title = "Average point and cumulative space exploration"
 p.explo <- ggplot(agents, aes(t))
 p.explo <- p.explo + geom_jitter(aes(y = coverage.avg), alpha=.2)
 p.explo <- p.explo + geom_smooth(aes(y = coverage.avg, colour="avg"), size=2)
@@ -631,6 +628,6 @@ jpeg(paste0(IMGPATH, "t_avg_overview.jpeg"), width=2048, height=1024)
 p <- grid.arrange(p.count, p.explo, p.speed, p.truth,
                   p.move, p.pdist, p.bigc.pdist, p.consensus,
                   ncol=4,
-                  main=textGrob(DIR, gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(paste0("Overview: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
