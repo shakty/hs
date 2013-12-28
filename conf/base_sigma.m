@@ -72,7 +72,7 @@ taus   = [1];     		% coupling coefficient (divisor)
 epsilons = 0.1;   % Std. deviation of white noise term
 
 % NOISE on APPROACH (direction)
-sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
+sigmas = [0:0.01:0.05];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [0.2, 0.5, 1, 2, 10, 100]; % Scaling factor for initial (random) velocities
