@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon';
-dumpDir = '/cluster/work/scr5/balistef/';
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v';
+dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -69,13 +69,13 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1];     		% coupling coefficient (divisor)
 
 % INDIVIDUALIZATION NOISE (position)
-epsilons = [0:0.1:0.5];   % Std. deviation of white noise term
+epsilons = 0.1;   % Std. deviation of white noise term
 
 % NOISE on APPROACH (direction)
-sigmas = epsilons./10;   % Std. deviation of white noise term
+sigmas = [0:0.1:0.5];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [1];     	% Scaling factor for initial (random) velocities
+vScalings = [0.2, 0.5, 1, 2, 10, 100]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions

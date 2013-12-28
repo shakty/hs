@@ -19,18 +19,45 @@ if (!file.exists(IMGPATH)) {
   dir.create(file.path(PATH, "/img/"))
 }
 
+
+##############################
+# Explanation of loaded files:
+##############################
+#
+# - *_avg_all_split.csv contains the averages for each time step of all
+#   the simulations diveded by each sigma level (~2000 * every sigma level).
+#
+# - *_avg_all.csv contains the averages for each time step (~2000) 
+#
+# - *.csv contains each ~20 snapshots of all simulations (every ~100 time step)
+#   (20 * nCombinations of parameter sweep * levels of sigma)
+#
+#############################
+
+
+##########
+# PARAMS #
+##########
+params <- read.table('params.csv', head=TRUE, sep=",")
+params$simname <- as.factor(params$simname)
+params$simcount <- as.factor(params$simcount)
+params$run <- as.factor(params$run)
+
+
+params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
+                                   truth.x, truth.y, init.clusterradio,
+                                   init.nclusters, tau,
+                                   d1, B, d0, A, k, spacesize, spacedim,
+                                   nagents, t.end, dt, timestamp))
+
 ######################################
 ## CLUSTER MACRO Average per round per simulation: Loading
 ######################################
 
-macro <- read.table('clusters_macro_avg_all_split.csv', head=TRUE, sep=",")
-macro$simname <- as.character(macro$simname)
-macro$simname <- substr(macro$simname, nchar(macro$simname)-1, nchar(macro$simname))
-macro$simname <- as.factor(macro$simname)
-macro$simcount <- as.factor(macro$simcount)
-macro$t <- as.factor(macro$t)
+## Chosing sigma and/or epsilon
 
-cl <- macro
+macro <- read.table('clusters_macro_avg_all_split.csv', head=TRUE, sep=",")
+
 #cl <- subset(macro, t %% 100 == 0)
 #cl$t <- as.factor(cl$t)
 
@@ -50,6 +77,7 @@ title = "Evolution of average cluster size (Loess + Std.Errs) by sigma"
 p.size.se <- ggplot(cl, aes(t,group=simname))
 p.size.se <- p.size.se + geom_jitter(aes(y = meansize.avg, colour=simname, group=simname), alpha=0.2)
 p.size.se <- p.size.se + geom_smooth(aes(y = meansize.avg, colour=simname, group=simname))
+p.size <- p.size + facet_grid(epsilon~.,margins=F)
 p.size.se <- p.size.se + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
 if (INTERACTIVE) {
   p.size.se
@@ -67,7 +95,7 @@ if (INTERACTIVE) {
 }
 
 # SIZE MAX points with SMOOTH (loess)
-title = "Evolution of average size of the biggest (Loess + Std.Errs) by sigma"
+title = "Evolution of average size of the biggest cluster (Loess + Std.Errs) by sigma"
 p.size.max.se <- ggplot(cl, aes(t,group=simname))
 p.size.max.se <- p.size.max.se + geom_jitter(aes(y = maxsize.avg, colour=simname, group=simname), alpha=0.2)
 p.size.max.se <- p.size.max.se + geom_smooth(aes(y = maxsize.avg, colour=simname, group=simname))
@@ -349,17 +377,6 @@ dev.off()
 ## HEATMAPS: 1 res every X time steps (default 100) per simulation (default 20 x 2970)
 ################################
 
-params <- read.table('params.csv', head=TRUE, sep=",")
-params$simname <- as.factor(params$simname)
-params$simcount <- as.factor(params$simcount)
-params$run <- as.factor(params$run)
-
-params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
-                                   truth.x, truth.y, init.clusterradio,
-                                   init.nclusters, init.vscaling, tau,
-                                   d1, B, d0, A, k, spacesize, spacedim,
-                                   nagents, t.end, dt, timestamp))
-
 macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
 macro$simname <- as.factor(macro$simname)
 macro$simcount <- as.factor(macro$simcount)
@@ -378,9 +395,9 @@ agents$simcount <- as.factor(agents$simcount)
 agents$run <- as.factor(agents$run)
 
 tr <- read.table('truthradius.csv', head=TRUE, sep=",")
-agents$simname <- as.factor(agents$simname)
-agents$simcount <- as.factor(agents$simcount) # or N?
-agents$run <- as.factor(agents$run)
+tr$simname <- as.factor(tr$simname)
+tr$simcount <- as.factor(tr$simcount) # or N?
+tr$run <- as.factor(tr$run)
 
 ## MACRO: Heatmap
 
@@ -423,14 +440,82 @@ if (!file.exists(paste0(IMGPATH, "consensus/"))) {
   dir.create(file.path(IMGPATH, "consensus/"))
 }
 
+if (!file.exists(paste0(IMGPATH, "noise/"))) {
+  dir.create(file.path(IMGPATH, "noise/"))
+}
+
 # Visualize the clusters.
 
 # Merging clusters macro and params: clu
+########################################
 clu <- merge(params, macro, by=c("simname","simcount","run"))
+clu$simname <- as.character(clu$simname)
+clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
+clu$simname <- as.factor(clu$simname)
+
 # Factorising
 for (n in names(clu[1:7])) {
   clu[, n] <- as.factor(clu[, n])      
 }
+
+cl <- clu
+
+# NOISE ANALYSIS
+################
+
+# SIZE.MAX distribution by sigma and epsilon
+title = "Distributions of size of the biggest cluster at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(size.max))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/sizemax_distributions.jpg"), plot=p)
+
+# SIZE.MAX heatmaps + R and Alpha
+title = "Distributions of size of the biggest cluster at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=size.max), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/sizemax_r_alpha_ht.jpg"), plot=p)
+
+# BIGC PDIST distribution by sigma and epsilon
+title = "Distributions of pairwise distances within biggest cluster at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(bigc.pdist.mean))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/bigcpdist_distributions.jpg"), plot=p)
+
+# BIGC PDIST heatmaps + R and Alpha
+title = "Distributions of pairwise distances within biggest cluster at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=bigc.pdist.mean), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/bigcpdist_r_alpha_ht.jpg"), plot=p)
+
+# End noise analysis
+####################
+
 
 data <- clu
 idx = 1;
@@ -450,13 +535,75 @@ for (t in unique(clu$t)) {
   ggsave(filename=paste0(IMGPATH,"size/size_",sprintf("%04d",idx),".jpg"),plot=pt.bigcpdist$p) 
   idx = idx + 1
 }
+# Creating an overview of the last frame of all indexes
+jpeg(paste0(IMGPATH, "ht_clusters.jpeg"), width=2048, height=768)
+p <- grid.arrange(pt.s$p, pt.sm$p, pt.c$p, pt.bigcpdist$p,
+                  ncol=2,
+                  main=textGrob(paste0("HT CLUSTERS: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
+dev.off()
+
+
 
 # Merging truthradius and params: clu
+#####################################
 clu <- merge(params, tr, by=c("simname","simcount","run"))
 # Factorising
 for (n in names(clu[1:7])) {
   clu[, n] <- as.factor(clu[, n])      
 }
+
+# NOISE ANALYSIS
+################
+
+cl <- clu
+
+# CONSENSUS distribution by sigma and epsilon
+title = "Consensus on truth at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(consensus))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/consensus_on_t_distributions.jpg"), plot=p)
+
+# CONSENSUS heatmaps + R and Alpha
+title = "Consensus on truth at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=consensus), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/consensus_on_t_r_alpha_ht.jpg"), plot=p)
+
+# RADIUSES distribution by sigma and epsilon
+cl.melted <- melt(cl,
+                  measure.vars=c("r_01","r_05","r_1","r_25", "r_4","r_out"),
+                  variable_name="condition")
+
+a <- givemeSummary(cl.melted, "value", c("condition","epsilon","sigma"), TRUE)
+
+title = "Average agent counts in each range (+Std.Err.) by sigma and epsilon"
+limits <- aes(ymax = value + value.se, ymin=value - value.se)
+p <- ggplot(a, aes(x = condition, y=value))
+p <- p + geom_bar(aes(color=condition, fill=condition))
+p <- p + geom_errorbar(limits, width=0.2)
+p <- p + facet_grid(epsilon ~ sigma)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/radiuses_hist.jpg"), plot=p)
+
+# End noise analysis
+####################
+
 
 data <- clu
 idx = 1;
@@ -469,13 +616,152 @@ for (t in unique(clu$t)) {
 }
 
 # Merging agents and params: clu.
+##################################
 clu <- merge(params, agents, by=c("simname","simcount","run"))   
 # Factorising
 for (n in names(clu[1:7])) {
   clu[, n] <- as.factor(clu[, n])      
 }
+
+# NOISE ANALYSIS
+################
+
+cl <- clu
+
+# CUM.COVERAGE distribution by sigma and epsilon
+title = "Distributions of cumulative space exploration the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(coverage.cum))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/cumcov_distributions.jpg"), plot=p)
+
+# CUM.COVERAGE heatmaps + R and Alpha
+title = "Distributions of cumulative space exploration at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=coverage.cum), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/cumcov_r_alpha_ht.jpg"), plot=p)
+
+
+# FROMTRUTH distribution by sigma and epsilon
+title = "Distributions of average distance from truth the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(fromtruth.avg))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/fromtruth_distributions.jpg"), plot=p)
+
+# FROMTRUTH heatmaps + R and Alpha
+title = "Distributions of average distance from truth at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=fromtruth.avg), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/fromtruth_r_alpha_ht.jpg"), plot=p)
+
+
+# FROMTRUTH distribution by sigma and epsilon
+title = "Distributions of average movements at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(move.avg))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/move_distributions.jpg"), plot=p)
+
+# FROMTRUTH heatmaps + R and Alpha
+title = "Distributions of average movements at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=move.avg), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/move_r_alpha_ht.jpg"), plot=p)
+
+
+# SPEED distribution by sigma and epsilon
+title = "Distributions of average speed at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(speed.avg))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/speed_distributions.jpg"), plot=p)
+
+# SPEED heatmaps + R and Alpha
+title = "Distributions of average speed at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=speed.avg), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/speed_r_alpha_ht.jpg"), plot=p)
+
+# MEAN PDIST distribution by sigma and epsilon
+title = "Distributions of average pair-wise distance at the end of simulation by sigma and epsilon"
+p <- ggplot(cl[cl$t == 2000,], aes(pdist.mean))
+p <- p + geom_bar(aes(color=sigma))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/pdist_distributions.jpg"), plot=p)
+
+# MEAN PDIST heatmaps + R and Alpha
+title = "Distributions of average speed at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+p <- ggplot(cl[cl$t == 2000,], aes(x=R, y=alpha))
+p <- p + geom_tile(aes(fill=pdist.mean), color="white")
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "noise/pdist_r_alpha_ht.jpg"), plot=p)
+
+
+# End noise analysis
+####################
 data <- clu
 idx = 1;
+
 for (t in unique(clu$t)) {
   data <- clu[clu$t == t,]
   # From truth
@@ -500,12 +786,11 @@ for (t in unique(clu$t)) {
 }
 
 # Creating an overview of the last frame of all indexes
-jpeg(paste0(IMGPATH, "ht_overview.jpeg"), width=2048, height=768)
-p <- grid.arrange(pt.s$p, pt.sm$p, pt.c$p, pt.bigcpdist$p,
-                  pt.m$p, pt.sp$p, pt.ccov$p, pt.cov$p,
+jpeg(paste0(IMGPATH, "ht_agents.jpeg"), width=2048, height=768)
+p <- grid.arrange(pt.m$p, pt.sp$p, pt.ccov$p, pt.cov$p,
                   pt.ft$p, pt.pdist$p, pt.consensus$p,
                   ncol=4,
-                  main=textGrob(pasteo("HT: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
+                  main=textGrob(paste0("HT AGENTS: ", DIR), gp=gpar(cex=1.5, fontface="bold")))
 dev.off()
 
 # Making a video out of the images
