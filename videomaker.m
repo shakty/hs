@@ -141,10 +141,13 @@ simName = 'VELTEST-2013-12-28-12-43/'; % like above, initV = 0.2 -> 1 big cluste
 % simName = 'VELTEST-2013-12-28-13-31/'; % again velocity 100, R=0.02 -> lot of chaos at the beginning, but then slowely clusters forms
 
 
+DUMPDIR = '/mnt/tmp/dump/NAVNP/';
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s1/';
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '1-1';
+myFile = '21-1';
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];

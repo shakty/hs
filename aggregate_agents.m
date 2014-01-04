@@ -273,4 +273,5 @@ function aggregate_agents(dumpDir, subDir, outDir, aggrParams)
         );
     
     % Delete the files ?
+    
 end

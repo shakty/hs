@@ -4,6 +4,8 @@ function [row] = create_params_string_small(params)
     
     row = [ row ' sigma: ' num2str(params.sigma)];
 
+    row = [ row ' epsilon: ' num2str(params.epsilon)];
+    
     row = [ row ' agents: ' num2str(params.n_agents)];
         
     row = [ row ' tau: ' num2str(params.tau)];

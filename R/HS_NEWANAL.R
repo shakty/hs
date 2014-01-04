@@ -9,6 +9,7 @@ DIR = "NEWTEST-2013-12-8-17-49/"
 DUMPDIR = "/home/stefano/"
 DIR = ""
 
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
@@ -57,6 +58,13 @@ params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
 ## Chosing sigma and/or epsilon
 
 macro <- read.table('clusters_macro_avg_all_split.csv', head=TRUE, sep=",")
+macro$simname <- as.character(macro$simname)
+macro$simname <- substr(macro$simname, nchar(macro$simname)-1, nchar(macro$simname))
+macro$simname <- as.factor(macro$simname)
+macro$simcount <- as.factor(macro$simcount)
+macro$t <- as.factor(macro$t)
+
+cl <- macro
 
 #cl <- subset(macro, t %% 100 == 0)
 #cl$t <- as.factor(cl$t)
@@ -66,7 +74,7 @@ title = "Evolution of average cluster size (+Std.Dev) by sigma"
 p.size <- ggplot(cl, aes(t,group=simname))
 p.size <- p.size + geom_area(aes(y = meansize.avg, colour=simname, group=simname))
 p.size <- p.size + geom_area(aes(y = meansize.sd, colour=simname, group=simname, fill=simname))
-p.size <- p.size + facet_grid(simname~.,margins=F)
+p.size <- p.size + facet_grid(simname ~ ., margins=F)
 p.size <- p.size + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
 if (INTERACTIVE) {
   p.size
@@ -77,7 +85,6 @@ title = "Evolution of average cluster size (Loess + Std.Errs) by sigma"
 p.size.se <- ggplot(cl, aes(t,group=simname))
 p.size.se <- p.size.se + geom_jitter(aes(y = meansize.avg, colour=simname, group=simname), alpha=0.2)
 p.size.se <- p.size.se + geom_smooth(aes(y = meansize.avg, colour=simname, group=simname))
-p.size <- p.size + facet_grid(epsilon~.,margins=F)
 p.size.se <- p.size.se + ggtitle(title) + xlab("Rounds") + ylab("Average cluster size")
 if (INTERACTIVE) {
   p.size.se
@@ -552,7 +559,7 @@ for (n in names(clu[1:7])) {
   clu[, n] <- as.factor(clu[, n])      
 }
 
-# NOISE ANALYSIS
+# Noise ANALYSIS
 ################
 
 cl <- clu
