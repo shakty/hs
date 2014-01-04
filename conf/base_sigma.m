@@ -247,7 +247,7 @@ for i=1:size(sigmas,2)
     
     sigmas = old_sigmas(i);
     % Sigma string
-    S = sigmas*100;
+    S = round(sigmas * 100);
     confFile = sprintf('%s_s%u', simName, S);
     fullName = sprintf('%s/%s', DIR, confFile);
     
