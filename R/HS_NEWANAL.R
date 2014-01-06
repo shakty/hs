@@ -1,14 +1,9 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
-# DUMPDIR VELOCITY
-
-DUMPDIR = "/home/stefano/hs/test/"
-DIR = "NEWTEST-2013-12-8-17-49/"
-
-DUMPDIR = "/home/stefano/"
-DIR = ""
-
+# DUMPDIR 
+DUMPDIR = "/mnt/tmp/dump/NAVNP_NOISE4/"
+DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")

@@ -1,10 +1,6 @@
-function aggregate_fun(path2conf, DELETE)
+function aggregate_fun(path2conf)
 
     tic
-    
-    if (nargin == 1)
-        DELETE = 0;
-    end
     
     %% Aggregates the results of the analysis of the simulation results.
     load([path2conf 'params_all']);
@@ -537,31 +533,6 @@ function aggregate_fun(path2conf, DELETE)
     end
 
     fclose(fidTruthRadiusAvg);    
-    
-    % Delete all temporary files after aggregation
-    if (DELETE)
-        % Each subdir containing partials results will be deleted
-        for d = 1:length(dirIndex)
-
-            subDir = dirs(dirIndex(d)).name;
-
-            if ( ...
-                strcmpi(subDir,'.') ...
-                || strcmpi(subDir,'..') ...
-                || strcmpi(subDir,'aggr') ...
-                || strcmpi(subDir,'img') ...        
-            )
-                continue;
-            end
-
-            dirPath = [path2sim subDir '/'];
-
-            rmdir([dirPath 'agents'], 's');
-            rmdir([dirPath 'clusters'], 's');
-            rmdir([dirPath 'truthradius'], 's');
-
-        end
-    end
     
     toc;
 end

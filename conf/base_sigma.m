@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v';
+simName = 'AAA';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -224,6 +224,9 @@ fidCl = fopen(launcherCl, 'w');
 launcherMerge = '../GO_MERGE_FUN';
 fidMerge = fopen(launcherMerge, 'w');
 
+launcherCleanup = '../GO_CLEANUP_FUN';
+fidClean = fopen(launcherCleanup, 'w');
+
 % Random seed must be initialized for each batch (level of sigma)
 if (seedtype ~= seed_fixed)
     s = RandStream('mcg16807','Seed', seed);
@@ -275,11 +278,15 @@ cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_merge -W 24:00 -N matlab -no
 fprintf(fidMerge, '%s\n', cmdStr);
 fclose(fidMerge);
 
+cmdStr = sprintf('matlab -nodisplay -singleCompThread -r "cleanup_fun(''%s%s'')"', dumpDir, DIR);
+fprintf(fidClean, '%s\n', cmdStr);
+fclose(fidClean);
+
+
 % Saving a copy of all files in the conf dir
 COPYDIR = [DIR 'launchers/']; 
 mkdir(COPYDIR);
 copyfile(launcherMain, COPYDIR);
 copyfile(launcherCl, COPYDIR);
 copyfile(launcherMerge, COPYDIR);
-
-
+copyfile(launcherCleanup, COPYDIR);

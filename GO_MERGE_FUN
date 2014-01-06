@@ -1,1 +1,1 @@
-bsub  -R "rusage[mem=4000]" -J hs_merge -W 24:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun('conf/NEW2/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/')"
+bsub  -R "rusage[mem=4000]" -J hs_merge -W 24:00 -N matlab -nodisplay -singleCompThread -r "aggregate_fun('conf/NEW2/AAA/')"
