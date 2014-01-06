@@ -17,7 +17,7 @@ function cleanup_fun(path2sim)
 
     dirs = dirs(dirIndex);
     
-    matlabpool(2)
+    matlabpool open
     
     % Each subdir containing partials results will be deleted
     parfor d = 1:length(dirs)
@@ -35,15 +35,16 @@ function cleanup_fun(path2sim)
 
         dirPath = [path2sim subDir '/'];
 
-        if (exist([dirPath 'agents'], 'dir') == 1)
+        % 7 is return code for folder
+        if (exist([dirPath 'agents'], 'dir') == 7)
             rmdir([dirPath 'agents'], 's');
         end
         
-        if (exist([dirPath 'clusters'], 'dir') == 1)
+        if (exist([dirPath 'clusters'], 'dir') == 7)
             rmdir([dirPath 'clusters'], 's');
         end
         
-        if (exist([dirPath 'truthradius'], 'dir') == 1)
+        if (exist([dirPath 'truthradius'], 'dir') == 7)
             rmdir([dirPath 'truthradius'], 's');
         end
 
