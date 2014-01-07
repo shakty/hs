@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'AAA';
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate

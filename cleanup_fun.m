@@ -17,10 +17,11 @@ function cleanup_fun(path2sim)
 
     dirs = dirs(dirIndex);
     
-    matlabpool open
+    % It seems to have some problems on the cluster. So no parfor
+    % matlabpool open
     
     % Each subdir containing partials results will be deleted
-    parfor d = 1:length(dirs)
+    for d = 1:length(dirs)
 
         subDir = dirs(d).name;
 
@@ -50,7 +51,7 @@ function cleanup_fun(path2sim)
 
     end
     
-    matlabpool close
+    % matlabpool close
     
     toc;
 end

@@ -1,2 +1,2 @@
 # SCR: /cluster/work/scr2/balistef/
-bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis('conf/NEW2/AAA/')"
+bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis('conf/NEW2/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/')"
