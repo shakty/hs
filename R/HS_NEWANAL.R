@@ -2,7 +2,7 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR 
-DUMPDIR = "/mnt/tmp/dump/NAVNP_NOISE4/"
+DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 
 INTERACTIVE = FALSE
@@ -470,7 +470,7 @@ title = "Distributions of size of the biggest cluster at the end of simulation b
 p <- ggplot(cl[cl$t == 2000,], aes(size.max))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -484,7 +484,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -495,7 +495,7 @@ title = "Distributions of pairwise distances within biggest cluster at the end o
 p <- ggplot(cl[cl$t == 2000,], aes(bigc.pdist.mean))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -509,7 +509,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -564,7 +564,7 @@ title = "Consensus on truth at the end of simulation by sigma and epsilon"
 p <- ggplot(cl[cl$t == 2000,], aes(consensus))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -578,7 +578,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -635,7 +635,7 @@ title = "Distributions of cumulative space exploration the end of simulation by 
 p <- ggplot(cl[cl$t == 2000,], aes(coverage.cum))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -649,7 +649,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -661,7 +661,7 @@ title = "Distributions of average distance from truth the end of simulation by s
 p <- ggplot(cl[cl$t == 2000,], aes(fromtruth.avg))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -675,7 +675,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -687,7 +687,7 @@ title = "Distributions of average movements at the end of simulation by sigma an
 p <- ggplot(cl[cl$t == 2000,], aes(move.avg))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -701,7 +701,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -713,7 +713,7 @@ title = "Distributions of average speed at the end of simulation by sigma and ep
 p <- ggplot(cl[cl$t == 2000,], aes(speed.avg))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -727,7 +727,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -738,7 +738,7 @@ title = "Distributions of average pair-wise distance at the end of simulation by
 p <- ggplot(cl[cl$t == 2000,], aes(pdist.mean))
 p <- p + geom_bar(aes(color=sigma))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -752,7 +752,7 @@ p <- p + scale_fill_continuous(low='lightblue',high='red')
 p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
 p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
 p <- p + facet_grid(sigma ~ epsilon)
-p <- p + ggtitle(title) + xlab("Sigmas") + ylab("Epsilons")
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 if (INTERACTIVE) {
   p
 }
@@ -900,7 +900,7 @@ if (INTERACTIVE) {
 }
 
 # CONSENSUS on TRUTH
-title = "Mean and std. consensus big cluster (pair-wise distance agents)"
+title = "Mean and std. consensus (2/3 agents on a 0.01 radius from truth for 20 timesteps)"
 p.consensus <- ggplot(tr, aes(t))
 p.consensus <- p.consensus + geom_jitter(aes(y = consensus.avg), alpha=.2)
 p.consensus <- p.consensus + geom_smooth(aes(y = consensus.avg, colour="avg"), size=2)

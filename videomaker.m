@@ -123,26 +123,45 @@ simName = 'NAVPEPSILON-2013-12-21-13-23/'; % Epsilon 0.1 Sigma 0 -> very good fo
 %simName = 'NAVPEPSILON-2013-12-21-13-32/'; % Epsilon 0.01 Sigma 0.01 -> 1 clusters very cohesive
 
 simName = 'VELTEST-2013-12-28-12-39/'; % test with velocity: initV = 0.5 -> still some clustering both feeble 
-simName = 'VELTEST-2013-12-28-12-43/'; % like above, initV = 0.2 -> 1 big cluster and a few outsiders
+% simName = 'VELTEST-2013-12-28-12-43/'; % like above, initV = 0.2 -> 1 big cluster and a few outsiders
 % simName = 'VELTEST-2013-12-28-12-45/'; % like above, initV = 0.1 -> 1 big cluster
 % simName = 'VELTEST-2013-12-28-12-47/'; % like above, initV = 1.5 -> many small clusters, some bouncing
-% simName = 'VELTEST-2013-12-28-12-49/'; % like above, initV = 2 -> more bouncing, many more spread out clusters
+simName = 'VELTEST-2013-12-28-12-49/'; % like above, initV = 2 -> more bouncing, many more spread out clusters
 % simName = 'VELTEST-2013-12-28-12-50/'; % like above, initV = 2.5 -> maybe less clustering ?
-% simName = 'VELTEST-2013-12-28-12-53/'; % like above, initV = 5 -> even here they cluster! A lot of bouncing, but then it's ok
+%simName = 'VELTEST-2013-12-28-12-53/'; % like above, initV = 5 -> even here they cluster! A lot of bouncing, but then it's ok
 % simName = 'VELTEST-2013-12-28-12-55/'; % like above, initV = 10 -> also here!
 % simName = 'VELTEST-2013-12-28-12-57/'; % like above with R = 0.2 and initV = 10 -> they have one big cluster, but far away form truth
 % simName = 'VELTEST-2013-12-28-13-0/'; % like above with R = 0.2 and initV = 20 -> still one big cluster far away from truth
 % simName = 'VELTEST-2013-12-28-13-2/'; % like above with R = 0.2 and initV = 100!! -> 3 big clusters split up, one in the middle and two at the sides
 % % simName = 'VELTEST-2013-12-28-13-4/'; % like above with R = 0.2 and initV = 1000!! -> 3 big clusters
-% % simName = 'VELTEST-2013-12-28-13-10/'; % like above with R = 0.2 and initV = 10000!! -> a lot of movements, but coordinated. In the end somehow only cluster forms.
+% simName = 'VELTEST-2013-12-28-13-10/'; % like above with R = 0.2 and initV = 10000!! -> a lot of movements, but coordinated. In the end somehow only cluster forms.
 % % simName = 'VELTEST-2013-12-28-13-17/'; % exactly like above -> one big string of scientists aligned vertically or horizontally. They go up or down so quickly that they stay in the middle.
-% simName = 'VELTEST-2013-12-28-13-26/'; % again velocity 100 -> hit the borders and cluster
-% simName = 'VELTEST-2013-12-28-13-29/'; % again velocity 100, R=0.9 -> one cluster somewhere
-% simName = 'VELTEST-2013-12-28-13-31/'; % again velocity 100, R=0.02 -> lot of chaos at the beginning, but then slowely clusters forms
+%simName = 'VELTEST-2013-12-28-13-26/'; % again velocity 100 -> hit the borders and cluster
+simName = 'VELTEST-2013-12-28-13-29/'; % again velocity 100, R=0.9 -> one cluster somewhere
+simName = 'VELTEST-2013-12-28-13-31/'; % again velocity 100, R=0.02 -> lot of chaos at the beginning, but then slowely clusters forms
+
+% simName = 'SIGMATEST-2014-1-9-14-0/'; % sigma = 0.1, higher than usual. Still cluster forms (R = 0.02, alpha = 0.1)
+% simName = 'SIGMATEST-2014-1-9-14-3/'; % sigma = 0.2, higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-5/'; % sigma = 0.3, higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-7/'; % sigma = 0.4, higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-10/'; % sigma = 0.5, higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-12/'; % sigma = 1, higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-14/'; % sigma = 1, AND v = 10 higher than usual. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-18/'; % sigma = 1, AND epsilon = 0.3. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-19/'; % sigma = 1, AND epsilon = 0.8. Still cluster forms, and they converge to the center very quickly. Velocity at the end is very low.
+% simName = 'SIGMATEST-2014-1-9-14-22/'; % sigma = 1, AND epsilon = 0.8 AND R = 0. Converge to the center very quickly. Velocity constant.
+% simName = 'SIGMATEST-2014-1-9-14-26/'; % sigma = 1, AND epsilon = 0.8 AND R = 0.5. Converge to the center very quickly. Velocity constant.
+
+% Conclusion: increasing sigma is always beneficial for finding the truth.
 
 
-DUMPDIR = '/mnt/tmp/dump/NAVNP_NOISE4/';
-simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s1/';
+% simName = 'INDI-2014-1-9-14-29/'; % (R = 0.02, alpha = 0.1, epsilon = 0.1, sigma = 0.01) clustering forming
+% simName = 'INDI-2014-1-9-14-31/'; % not_indi, but normal, as above. no main differences, it seems.
+% 
+% 
+% DUMPDIR = '/mnt/tmp/dump/NAVNP/';
+% simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
+% simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v_s0/';
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
@@ -158,7 +177,7 @@ if (SINGLE)
     return
 end
 
-myFiles = {
+myFiles = { ...
    '1-1.mat', '3-1.mat', '7-1.mat', '30-1.mat', '2970-1.mat' ...
 };
 
