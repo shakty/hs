@@ -67,7 +67,7 @@ function truthradius_onefile(params)
     nAgents = size(v,2);
     AGENTS_4_CONSENSUS = floor(nAgents * CONSENSUS_THRESHOLD);
     
-    TRUTH_RADIUS_IDX = 1;
+    TRUTH_RADIUS_IDX = 2;
     
     NOT_IN_RADIUS = -1;
     nRadiusesPlusOne = nRadiuses + 1;
