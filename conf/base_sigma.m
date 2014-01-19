@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrHard_navnp_RClean_n100_fv0_s1_epsilon_v';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'attrZero_navnp_RClean_n100_fv0_s1_epsilon_v';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -113,7 +113,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 5;
+attrtype = 0;
 
 % PLOT TYPE
 plot_cross = 0;
