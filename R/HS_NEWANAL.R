@@ -3,7 +3,10 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR 
 DUMPDIR = "/mnt/tmp/dump/NAVNP/"
+
+# Linear
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
+DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")

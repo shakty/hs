@@ -159,14 +159,21 @@ simName = 'VELTEST-2013-12-28-13-31/'; % again velocity 100, R=0.02 -> lot of ch
 % simName = 'INDI-2014-1-9-14-31/'; % not_indi, but normal, as above. no main differences, it seems.
 % 
 % 
-% DUMPDIR = '/mnt/tmp/dump/NAVNP/';
-% simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
-% simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v_s0/';
+DUMPDIR = '/mnt/tmp/dump/NAVNP/';
+
+
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
+simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v_s0/';
+
+
+simName = 'attrMillean_navnp_RClean_n100_fv0_s1_epsilon_v/attrMillean_navnp_RClean_n100_fv0_s1_epsilon_v_s0/';
+
+simName = 'attrZero_navnp_RClean_n100_fv0_s1_epsilon_v/attrZero_navnp_RClean_n100_fv0_s1_epsilon_v_s1/';
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '1-1';
+myFile = '234-1';
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];
