@@ -9,7 +9,7 @@ clc;
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
 simName = 'attrLinear_navnp_RFull_n100_fv0_s1_epsilon';
-dumpDir = '/cluster/work/scr1/balistef/';
+dumpDir = '/cluster/work/scr3/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
