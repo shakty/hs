@@ -8,6 +8,22 @@ DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
+# Zero
+DIR = "attrZero_navnp_RClean_n100_fv0_s1_epsilon/"
+DIR = "attrZero_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+# Hard
+DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon/"
+DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+# Millean
+DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon/"
+#DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+
+
+
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)

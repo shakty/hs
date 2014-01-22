@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrZero_navnp_RClean_n100_fv0_s1_epsilon';
+simName = 'attrLinear_navnp_RFull_n100_fv0_s1_epsilon';
 dumpDir = '/cluster/work/scr1/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -51,8 +51,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01:0.02:0.99]; % weighting of velocity terms
-Rs     = [0.01:0.01:0.1];       	   % cut-off radius
+alphas = [0.5]; % weighting of velocity terms
+Rs     = [0.12:0.02:1,1.4143];       	   % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -181,7 +181,8 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2);
+                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
+                size(sigmas,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           

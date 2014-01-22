@@ -20,7 +20,9 @@ if (!file.exists(IMGPATH)) {
 if (!file.exists(IMGPATH)) {
   dir.create(file.path(PATH, "/img/new/"))
 }
-
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(PATH, "/img/newpdist/"))
+}
 ##############################
 # Explanation of loaded files:
 ##############################
@@ -152,13 +154,52 @@ for (s in unique(cluall$init.vscaling)) {
 title = paste0("Scatterplot max cluster size ~ distance from truth \n by initial velocity and R")
 p <- ggplot(cluall[cluall$t == 2000, ], aes(x = size.max, y = fromtruth.avg))
 p <- p + geom_point(aes(color=as.factor(sigma)), alpha=0.5)
-p <- p + facet_grid(Rbr ~ init.vscaling)
+p <- p + facet_grid(. ~ init.vscaling)
 p <- p + guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
 p <- p + ggtitle(title)
 if (INTERACTIVE) {
   p
 }
 ggsave(filename=paste0(IMGPATH, paste0("new/maxsize_fromtruth_by_v_and_r.jpg")), plot=p)
+
+
+## Testing...
+title = paste0("Scatterplot max cluster size ~ distance from truth \n by initial velocity and R")
+p <- ggplot(cluall[cluall$t == 2000, ], aes(x = count, y = fromtruth.avg))
+p <- p + geom_jitter(aes(group = as.factor(sigma), color=as.factor(sigma)))
+p <- p + facet_grid(sigma ~ init.vscaling)
+#p <- p + guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
+p <- p + ggtitle(title)
+p
+
+
+p <- ggplot(cluall[cluall$t == 2000 & cluall$count < 40, ], aes(x = count, y = fromtruth.avg))
+p <- p + geom_smooth(method="lm")
+p
+
+
+
+p <- ggplot(cluall[cluall$t == 2000,], aes(x = init.vscaling, y = fromtruth.avg))
+p <- p + geom_bar(aes(group = as.factor(sigma), color=as.factor(sigma)))
+p
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # STD PDIST
 
