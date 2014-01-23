@@ -8,6 +8,19 @@ DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
+# Zero
+#DIR = "attrZero_navnp_RClean_n100_fv0_s1_epsilon/"
+#DIR = "attrZero_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+# Hard
+#DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon/"
+#DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+# Millean
+#DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon/"
+#DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon_v/"
+
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
@@ -17,12 +30,13 @@ IMGPATH <- paste0(PATH, "img/");
 if (!file.exists(IMGPATH)) {
   dir.create(file.path(PATH, "/img/"))
 }
-if (!file.exists(IMGPATH)) {
+if (!file.exists(paste0(IMGPATH, "new/"))) {
   dir.create(file.path(PATH, "/img/new/"))
 }
-if (!file.exists(IMGPATH)) {
+if (!file.exists(paste0(IMGPATH, "newpdist/"))) {
   dir.create(file.path(PATH, "/img/newpdist/"))
 }
+
 ##############################
 # Explanation of loaded files:
 ##############################
@@ -163,6 +177,11 @@ if (INTERACTIVE) {
 ggsave(filename=paste0(IMGPATH, paste0("new/maxsize_fromtruth_by_v_and_r.jpg")), plot=p)
 
 
+
+fit <- lm(100*fromtruth.avg ~ size.max, data = cluall[cluall$t == 2000,])
+summary(fit)
+
+
 ## Testing...
 title = paste0("Scatterplot max cluster size ~ distance from truth \n by initial velocity and R")
 p <- ggplot(cluall[cluall$t == 2000, ], aes(x = count, y = fromtruth.avg))
@@ -184,21 +203,90 @@ p <- p + geom_bar(aes(group = as.factor(sigma), color=as.factor(sigma)))
 p
 
 
+p <- ggplot(cluall, aes(x = size.avg, y = fromtruth.avg))
+p <- p + geom_point(aes(color=as.factor(t)))
+p <- p + facet_grid(. ~ init.vscaling)
+p
+
+
+
+title = "Distributions of size of the biggest cluster at the end of simulation by sigma, epsilon (outer), and alpha and R (inner)"
+
+p <- ggplot(cluall[cluall$t == 2000,], aes(x=init.vscaling, y=fromtruth.avg))
+p <- p + geom_density2d(aes(fill = fromtruth.avg), geom="polygon")
+p
+
+p <- p + scale_fill_continuous(low='lightblue',high='red')
+
+
+p <- p + scale_x_discrete(breaks = seq(0, 1, 0.02))
+p <- p + scale_y_discrete(breaks = seq(0, 1, 0.05))
+
+
+p <- p + facet_grid(sigma ~ epsilon)
+p <- p + ggtitle(title) + xlab("Epsilons") + ylab("Sigmas")
 
 
 
 
+# Generate data library(reshape2) # for melt
+volcano3d <- melt(volcano)
+names(volcano3d) <- c("x", "y", "z")
+# Basic plot
+v <- ggplot(volcano3d, aes(x, y, z = z))
+v + stat_contour() 
 
 
 
 
+# Spinning 3d Scatterplot
+library(rgl)
+
+clulast <- cluall[cluall$t == 2000,]
+
+plot3d(clulast$R, clulast$alpha, clulast$fromtruth.avg, type = "p")
 
 
 
+data(volcano)
+z <- 3 * volcano # Exaggerate the relief
+x <- 10 * (1:nrow(z)) # 10 meter spacing (S to N)
+y <- 10 * (1:ncol(z)) # 10 meter spacing (E to W)
+zlim <- range(y)
+zlen <- zlim[2] - zlim[1] + 1
+colorlut <- terrain.colors(zlen) # height color lookup table
+col <- colorlut[ z-zlim[1]+1 ] # assign colors to heights for each point
+open3d()
+
+surface3d(x, y, z, color=col, back="lines")
+
+C <- cluall[cluall$sigma == 0.01 & cluall$t == 2000 & cluall$init.vscaling == 1,]
 
 
+open3d()
+surface3d(cl, y, z, color=col, back="lines")
 
 
+levelplot(fromtruth.avg ~ alpha * R, data=cluall[cluall$t == 1800,],
+          shade = TRUE,
+          # aspect = c(61/87, 0.4),
+          # drape = TRUE, colorkey = TRUE,
+          pretty = TRUE,
+          strip = FALSE,
+          #screen = list(x = 45, y = 90, z = 135)
+          #light.source = c(10,0,10)
+          )
+
+
+p <- wireframe(fromtruth.avg ~ sigma * R, data=cluall[cluall$t == 2000,], shade = TRUE)
+npanel <- c(4, 2)
+rotx <- c(-50, -80)
+rotz <- seq(30, 300, length = npanel[1]+1)
+update(p[rep(1, prod(npanel))], layout = npanel,
+    panel = function(..., screen) {
+        panel.wireframe(..., screen = list(z = rotz[current.column()],
+                                           x = rotx[current.row()]))
+    })
 
 
 # STD PDIST

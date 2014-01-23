@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'attrLinear_navnp_RFull_n100_fv0_s1_epsilon';
+simName = 'attrLinear_navnp_RFull_SpeedTest_epsilon';
 dumpDir = '/cluster/work/scr3/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.5]; % weighting of velocity terms
-Rs     = [0.12:0.02:1,1.4143];       	   % cut-off radius
+Rs     = [0.01:0.01:0.07, 0.3:0.1:0.9];       	   % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -72,7 +72,7 @@ taus   = [1];     		% coupling coefficient (divisor)
 epsilons = [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
 
 % NOISE on APPROACH (INDIVIDUALIZATION) (direction)
-sigmas = [0:0.01:0.05];   % Std. deviation of white noise term
+sigmas = [0.01:0.01:0.05];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1]; % [0.2, 0.5, 1, 2, 10, 100]; % Scaling factor for initial (random) velocities
@@ -113,7 +113,7 @@ attr_hard_to_find = 5;
 attr_wide_funnel = 6;
 attr_gentle_landing = 7;
 
-attrtype = 0;
+attrtype = 2;
 
 % PLOT TYPE
 plot_cross = 0;
@@ -181,8 +181,7 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,2)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
-                size(sigmas,2);
+                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           

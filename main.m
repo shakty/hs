@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'INDI';
+simName = 'SPEEDTEST';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -43,15 +43,15 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 1;
+vScalings = 10;
 n_agents = 100;
 
 % Influence
-alphas = 0.1;
+alphas = 0.01;
 Rs = 0.02;
 
 % Noise
-sigmas = 0.01;
+sigmas = 0.1;
 epsilons = 0.1;
 noisetype = 4;
 

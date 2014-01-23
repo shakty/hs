@@ -14,13 +14,14 @@ DIR = "attrZero_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
 # Hard
 DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon/"
-DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon_v/"
+#DIR = "attrHard_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
 # Millean
-DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon/"
+#DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon/"
 #DIR = "attrMillean_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
-
+# Linear RFULL
+DIR = "attrLinear_navnp_RFull_n100_fv0_s1_epsilon/"
 
 
 
