@@ -48,7 +48,7 @@ n_agents = 100;
 
 % Influence
 alphas = 0.01;
-Rs = 0.02;
+Rs = 0.6;
 
 % Noise
 sigmas = 0.1;
@@ -63,7 +63,7 @@ forces_on_v = 0;
 
 % Seed
 seedtype = 0; % 0 = fixed
-seed = randi(1000000); % 819325;
+seed = 969748; % randi(1000000); % 819325;
 batchSeed = randi(1000000); % 819325; 
 
 % A and B

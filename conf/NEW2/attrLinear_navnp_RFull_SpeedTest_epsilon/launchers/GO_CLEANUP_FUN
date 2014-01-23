@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "cleanup_fun('/cluster/work/scr3/balistef/NEW2/attrLinear_navnp_RFull_SpeedTest_epsilon/')"
+matlab -nodisplay -singleCompThread -r "cleanup_fun('/cluster/work/scr4/balistef/NEW2/attrLinear_navnp_RFull_SpeedTest_epsilon/')"
