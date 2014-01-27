@@ -172,6 +172,9 @@ simName = 'BIGR-2014-1-23-10-47/'; % v = 10
 simName = 'SPEEDTEST-2014-1-23-11-23/'; % R = 1 -> 355
 simName = 'SPEEDTEST-2014-1-23-11-24/'; % R = 0.02 -> 583
 
+
+simName = 'EEH-2014-1-27-18-5/';
+
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
 
 % LINEAR

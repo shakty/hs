@@ -1,8 +1,14 @@
 # SPEED TEST: many vs 1 cluster
 
+source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
+
+
 DUMPDIR <- '/mnt/tmp/dump/SPEEDTEST/'
 
 DIR  <- 'attrLinear_navnp_RFull_SpeedTest_epsilon/'
+
+DUMPDIR <- '/home/stefano/HS/'
+DIR <- 'attrLinear_navnp_SpeedTest_fullscan/'
 
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
@@ -17,4 +23,5 @@ mean(data[data$cluster == 0,]$t)
 summaryData <- summarySE(data, c('t'), c('cluster','sigma'))
 summaryData
 
-p <- ggplot
+
+

@@ -124,6 +124,16 @@ cluall$alphabr <- cut(cluall$alpha, breaks=c(0,0.25,0.5,0.75,1))
 cluall$alphabr <- as.factor(cluall$alphabr)
 
 # FROM TRUTH
+title = "Scatterplot avg cluster count ~ distance from truth by velocity and time"
+p <- ggplot(cluall, aes(x = count, y = fromtruth.avg))
+p <- p + geom_point(aes(color=as.factor(Rbr)), size=1.5, alpha=0.2)                         
+p <- p + facet_grid(init.vscaling ~ tbr)
+p <- p + guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2)))
+p <- p + ggtitle(title)
+if (INTERACTIVE) {
+  p
+}
+ggsave(filename=paste0(IMGPATH, "new/velocity_ccount_fromtruth.jpg"), plot=p)
 
 title = "Scatterplot max cluster size ~ distance from truth by velocity and time"
 p <- ggplot(cluall, aes(x = size.max, y = fromtruth.avg))
@@ -267,7 +277,7 @@ open3d()
 surface3d(cl, y, z, color=col, back="lines")
 
 
-levelplot(fromtruth.avg ~ alpha * R, data=cluall[cluall$t == 1800,],
+levelplot(fromtruth.avg ~ alpha * R, data=cluall[cluall$t == 2000,],
           shade = TRUE,
           # aspect = c(61/87, 0.4),
           # drape = TRUE, colorkey = TRUE,
