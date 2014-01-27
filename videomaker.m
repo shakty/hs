@@ -197,7 +197,13 @@ simName = 'EEH-2014-1-27-22-36/'; %
 simName = 'EEH-2014-1-27-22-38/'; % 
 simName = 'EEH-2014-1-27-22-40/'; % 
 simName = 'EEH-2014-1-27-22-45/'; % 
+
+simName = 'EEH-2014-1-27-23-27/'; % 
+
+
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
+
+
 
 % LINEAR
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';

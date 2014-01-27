@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final_R_alpha';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'final_R';
+dumpDir = '/cluster/work/scr5/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -30,7 +30,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 1;              % Number of simulation-runs with same param set
+nRuns = 10;              % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -51,7 +51,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01:0.01:0.99];  % weighting of velocity terms
+alphas = [0.5];  % weighting of velocity terms
 Rs     = [0.01:0.01:0.99]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
