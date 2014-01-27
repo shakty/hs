@@ -43,16 +43,16 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 100;
+vScalings = 1;
 n_agents = 100;
 
 % Influence
-alphas = 0.2;
+alphas = 0.5;
 Rs = 0.03;
 
 % Noise
-sigmas = 0.1;
-epsilons = 0.05;
+sigmas = 0.05;
+epsilons = 0.1;
 noisetype = 4;
 
 % Truth

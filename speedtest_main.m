@@ -11,4 +11,6 @@ path(path,'lib/'); % Help functions
 
 DUMPDIR = '/home/stefano/HS/attrLinear_navnp_SpeedTest_fullscan/';
 
+DUMPDIR = '/home/stefano/hs/test/EEH-2014-1-27-22-58/';
+
 speedtest_fun(DUMPDIR);

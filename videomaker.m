@@ -189,6 +189,14 @@ simName = 'EEH-2014-1-27-21-25/'; % v = 10 tau = 1, R = 0.6. alpha = 0.2, 1 clus
 simName = 'EEH-2014-1-27-21-26/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
 simName = 'EEH-2014-1-27-21-28/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
 
+simName = 'EEH-2014-1-27-22-13/'; % v = 100 tau = 1, R = 0.03. alpha = 0.2, sigma = 0
+simName = 'EEH-2014-1-27-22-15/'; % v = 1 tau = 1, R = 0.3. alpha = 0.2, sigma = 0
+simName = 'EEH-2014-1-27-22-32/'; % 
+simName = 'EEH-2014-1-27-22-34/'; % 
+simName = 'EEH-2014-1-27-22-36/'; % 
+simName = 'EEH-2014-1-27-22-38/'; % 
+simName = 'EEH-2014-1-27-22-40/'; % 
+simName = 'EEH-2014-1-27-22-45/'; % 
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
 
 % LINEAR
