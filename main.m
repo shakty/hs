@@ -43,12 +43,12 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 1;
+vScalings = 100;
 n_agents = 100;
 
 % Influence
-alphas = 0.5;
-Rs = 0.6;
+alphas = 0.2;
+Rs = 0.03;
 
 % Noise
 sigmas = 0.1;

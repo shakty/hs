@@ -173,7 +173,21 @@ simName = 'SPEEDTEST-2014-1-23-11-23/'; % R = 1 -> 355
 simName = 'SPEEDTEST-2014-1-23-11-24/'; % R = 0.02 -> 583
 
 
-simName = 'EEH-2014-1-27-18-5/';
+simName = 'EEH-2014-1-27-20-41/'; % v = 1, tau = 10, agents go very slowly to Truth, they don't have enough time
+simName = 'EEH-2014-1-27-20-43/'; % v = 1, tau = 1000, agents do not even move...
+% simName = 'EEH-2014-1-27-20-46/'; % v = 1, tau = 0.01, agents immediately on truth
+% simName = 'EEH-2014-1-27-20-49/'; % v = 1, tau = 0.1, agents go quickly on truth
+% simName = 'EEH-2014-1-27-20-57/'; % v = 100, tau = 0.01.
+% simName = 'EEH-2014-1-27-20-59/'; % v = 1000, tau = 0.01.
+% simName = 'EEH-2014-1-27-21-5/'; % v =1 tau = 2, R = 0.03. clusters forming far away, going to truth
+% simName = 'EEH-2014-1-27-21-8/'; % v = 1 tau = 2, R = 0.6. slowly to truth
+% simName = 'EEH-2014-1-27-21-9/'; % v = 3 tau = 2, R = 0.6. 1 cluster forming a bit far away, going into truth
+% simName = 'EEH-2014-1-27-21-11/'; % v = 5 tau = 2, R = 0.6. too slow..
+simName = 'EEH-2014-1-27-21-18/'; % v = 5 tau = 2, R = 0.6. alpha = .99
+simName = 'EEH-2014-1-27-21-23-a/'; % v = 10 tau = 1, R = 0.6. alpha = .99 chaos, when agents slow down, 1 cluster on truth
+simName = 'EEH-2014-1-27-21-25/'; % v = 10 tau = 1, R = 0.6. alpha = 0.2, 1 cluster mid-far away, then it goes closer
+simName = 'EEH-2014-1-27-21-26/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
+simName = 'EEH-2014-1-27-21-28/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
 
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
 
