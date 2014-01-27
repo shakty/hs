@@ -43,15 +43,15 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = 1;
+vScalings = 10;
 n_agents = 100;
 
 % Influence
 alphas = 0.5;
-Rs = 0.03;
+Rs = 0.3;
 
 % Noise
-sigmas = 0.05;
+sigmas = 0.01;
 epsilons = 0.1;
 noisetype = 4;
 
@@ -65,11 +65,6 @@ forces_on_v = 0;
 seedtype = 0; % 0 = fixed
 seed = randi(1000000); % 819325;
 batchSeed = randi(1000000); % 819325; 
-
-% A and B
-
-Bs = 1;
-As = 1;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);

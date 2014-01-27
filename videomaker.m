@@ -198,8 +198,8 @@ simName = 'EEH-2014-1-27-22-38/'; %
 simName = 'EEH-2014-1-27-22-40/'; % 
 simName = 'EEH-2014-1-27-22-45/'; % 
 
-simName = 'EEH-2014-1-27-23-27/'; % 
-
+simName = 'EEH-2014-1-28-0-11/'; % 
+simName = 'EEH-2014-1-28-0-15/'; % 
 
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
 
