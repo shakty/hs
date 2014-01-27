@@ -7,7 +7,7 @@ function wrapperanalysis(paramArgs)
     for i=1:length(paramArgs)
         params = (paramArgs{i});
         
-        truthradius_onefile(params);
+        %truthradius_onefile(params);
         agents_onefile(params);
         clusters_onefile(params);
     end

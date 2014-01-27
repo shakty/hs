@@ -15,7 +15,7 @@ function aggregate_fun(path2conf)
     % simName = 'NEWTEST-2013-12-8-17-49/';
     
     aggrParams = 1;
-    nRadiusesPlusOne = length(RADIUSs) + 1;
+%     nRadiusesPlusOne = length(RADIUSs) + 1;
 
     path2sim = [DUMPDIR simName '/'];
 
@@ -38,17 +38,17 @@ function aggregate_fun(path2conf)
 
     Nagents = 0;
     Nclusters = 0;
-    Ntradius = 0;
+%     Ntradius = 0;
     
     agentsFileName = [outDir 'agents.csv'];
     paramsFileName = [outDir 'params.csv'];
     clustersMacroFileName = [outDir 'clusters_macro.csv'];
-    clustersMicroFileName = [outDir 'clusters_micro.csv'];
-    truthradiusFileName = [outDir 'truthradius.csv'];
+%     clustersMicroFileName = [outDir 'clusters_micro.csv'];
+%     truthradiusFileName = [outDir 'truthradius.csv'];
     
     agentsAvgFileName = [outDir 'agents_avg_all_split.csv'];
     clustersMacroAvgFileName = [outDir 'clusters_macro_avg_all_split.csv'];
-    truthradiusAvgFileName = [outDir 'truthradius_avg_all_split.csv'];
+%     truthradiusAvgFileName = [outDir 'truthradius_avg_all_split.csv'];
 
     validFiles = 0;
 
@@ -79,7 +79,7 @@ function aggregate_fun(path2conf)
             % agents/, clusters/, truthradius/.
             aggregate_agents(path2sim, subDir, dirPath, aggrParams); %params.
             aggregate_clusters(path2sim, subDir, dirPath);        
-            aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
+            % aggregate_truthradius(path2sim, subDir, dirPath, RADIUSs);
         end
 
         % Paths to CSV files.
@@ -88,10 +88,10 @@ function aggregate_fun(path2conf)
         paramsFileCSV = [dirPath 'agents/params.csv'];
         clustersMacroFileCSV = [dirPath 'clusters/clusters_macro.csv'];
         clustersMacroAvgFileCSV = [dirPath 'clusters/clusters_avg_all.csv'];
-        clustersMicroFileCSV = [dirPath 'clusters/clusters_micro.csv'];
+        % clustersMicroFileCSV = [dirPath 'clusters/clusters_micro.csv'];
         % Micro has no AVG file.
-        truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];    
-        truthradiusAvgFileCSV = [dirPath 'truthradius/truthradius_avg_all.csv'];   
+        % truthradiusFileCSV = [dirPath 'truthradius/truthradius.csv'];    
+        % truthradiusAvgFileCSV = [dirPath 'truthradius/truthradius_avg_all.csv'];   
         
         % Aggregate all levels of sigmas.
 
@@ -135,10 +135,10 @@ function aggregate_fun(path2conf)
             cg_global_bigcpdist_sumsquared = zeros(nIter,1);
 
             % TruthRadius.
-            tg_globalRadiusCounts_sum = zeros(nIter,nRadiusesPlusOne);
-            tg_globalRadiusCounts_squared = zeros(nIter,nRadiusesPlusOne);
-            tg_globalConsensusOnTruth_sum = zeros(nIter,1);
-            tg_globalConsensusOnTruth_squared = zeros(nIter,1);
+%             tg_globalRadiusCounts_sum = zeros(nIter,nRadiusesPlusOne);
+%             tg_globalRadiusCounts_squared = zeros(nIter,nRadiusesPlusOne);
+%             tg_globalConsensusOnTruth_sum = zeros(nIter,1);
+%             tg_globalConsensusOnTruth_squared = zeros(nIter,1);
 
             % Merging CSV files.
             mergeCommand = sprintf('cat %s > %s', agentsFileCSV, agentsFileName);
@@ -150,11 +150,11 @@ function aggregate_fun(path2conf)
             mergeCommand = sprintf('cat %s > %s', clustersMacroFileCSV, clustersMacroFileName);
             system(mergeCommand);
 
-            mergeCommand = sprintf('cat %s > %s', clustersMicroFileCSV, clustersMicroFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('cat %s > %s', clustersMicroFileCSV, clustersMicroFileName);
+%             system(mergeCommand);
 
-            mergeCommand = sprintf('cat %s > %s', truthradiusFileCSV, truthradiusFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('cat %s > %s', truthradiusFileCSV, truthradiusFileName);
+%             system(mergeCommand);
             
             % Merging AVG CSV files.
             mergeCommand = sprintf('cat %s > %s', agentsAvgFileCSV, agentsAvgFileName);
@@ -163,8 +163,8 @@ function aggregate_fun(path2conf)
             mergeCommand = sprintf('cat %s > %s', clustersMacroAvgFileCSV, clustersMacroAvgFileName);
             system(mergeCommand);
 
-            mergeCommand = sprintf('cat %s > %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('cat %s > %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
+%             system(mergeCommand);
             
         else
 
@@ -178,11 +178,11 @@ function aggregate_fun(path2conf)
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroFileCSV, clustersMacroFileName);
             system(mergeCommand);
 
-            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMicroFileCSV, clustersMicroFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMicroFileCSV, clustersMicroFileName);
+%             system(mergeCommand);
 
-            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusFileCSV, truthradiusFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusFileCSV, truthradiusFileName);
+%             system(mergeCommand);
             
             % Merging AVG CSV files without headers.
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', agentsAvgFileCSV, agentsAvgFileName);
@@ -191,8 +191,8 @@ function aggregate_fun(path2conf)
             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', clustersMacroAvgFileCSV, clustersMacroAvgFileName);
             system(mergeCommand);
 
-            mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
-            system(mergeCommand);
+%             mergeCommand = sprintf('sed -e ''1d'' %s >> %s', truthradiusAvgFileCSV, truthradiusAvgFileName);
+%             system(mergeCommand);
         end
 
         % Updates stats arrays.
@@ -245,18 +245,18 @@ function aggregate_fun(path2conf)
         clearvars N g_global_*;
 
         % TruthRadius.
-        load([ dirPath 'truthradius/sums_all']);
-
-        tg_globalRadiusCounts_sum = tg_globalRadiusCounts_sum + g_globalRadiusCounts_sum;
-        tg_globalRadiusCounts_squared = tg_globalRadiusCounts_squared + g_globalRadiusCounts_squared;
-        tg_globalConsensusOnTruth_sum = tg_globalConsensusOnTruth_sum + g_globalConsensusOnTruth_sum;
-        tg_globalConsensusOnTruth_squared = tg_globalConsensusOnTruth_squared + g_globalConsensusOnTruth_squared;
-
-        % Update count of files for truthradius (should be the same as
-        % Nclusters, but if a job crashed, might differ).
-        Ntradius = Ntradius + N;
-        
-        clearvars N g_global*;
+%         load([ dirPath 'truthradius/sums_all']);
+% 
+%         tg_globalRadiusCounts_sum = tg_globalRadiusCounts_sum + g_globalRadiusCounts_sum;
+%         tg_globalRadiusCounts_squared = tg_globalRadiusCounts_squared + g_globalRadiusCounts_squared;
+%         tg_globalConsensusOnTruth_sum = tg_globalConsensusOnTruth_sum + g_globalConsensusOnTruth_sum;
+%         tg_globalConsensusOnTruth_squared = tg_globalConsensusOnTruth_squared + g_globalConsensusOnTruth_squared;
+% 
+%         % Update count of files for truthradius (should be the same as
+%         % Nclusters, but if a job crashed, might differ).
+%         Ntradius = Ntradius + N;
+%         
+%         clearvars N g_global*;
 
     end
 
@@ -452,87 +452,87 @@ function aggregate_fun(path2conf)
 
     % Computing g_global stats.
 
-    headers_truthradius_avg = {
-        'simname', ...
-        'N', ...
-        't' ...
-    };
-
-    N = Ntradius;
-    df = N - 1;
-    
-    avgStartFrom = length(headers_truthradius_avg) + 1;
-
-    row_string_data_cell = cell(nRadiusesPlusOne*4, 1);
-
-    % Computing global stats            
-    for i = 1 : nRadiusesPlusOne
-
-        % This part is actually different from aggregate_truthradius, that
-        % has cell array, and r_out is in the radius array.
-        % Not a big deal anyway.
-        if (i < nRadiusesPlusOne)            
-            radiusStr = ['r_' strrep(num2str(RADIUSs(i)), '0.', '')];
-        else
-            radiusStr = 'r_out';
-        end
-
-        hIdx = (i-1)*4 + avgStartFrom;
-        meanName = ['t_' radiusStr '_mean'];      
-        eval([meanName ' = tg_globalRadiusCounts_sum(:,i) / N;']);
-
-        sdName = ['t_' radiusStr '_sd'];        
-        % sdValue = sqrt(((g_globalRadiusCounts_squared(i) - ((g_globalRadiusCounts_sum(i)).^2 / N))) / df);
-        eval([sdName ' = sqrt(((tg_globalRadiusCounts_squared(:,i) - ((tg_globalRadiusCounts_sum(:,i)).^2 / N))) / df);']);
-
-        seName = ['t_' radiusStr '_se'];
-        eval([seName ' = ' sdName ' / sqrt(N);']);
-
-        ciName = genvarname(['t_' radiusStr '_ci']);            
-        eval([ciName ' = ' seName ' * tquant(CI_INT, df);']);    
-
-        headers_truthradius_avg{hIdx} = regexprep(meanName, 't_', '', 'once');
-        headers_truthradius_avg{hIdx + 1} = regexprep(sdName, 't_', '', 'once');
-        headers_truthradius_avg{hIdx + 2} = regexprep(seName, 't_', '', 'once');
-        headers_truthradius_avg{hIdx + 3} = regexprep(ciName, 't_', '', 'once'); 
-
-        hIdx = hIdx - avgStartFrom + 1;
-        row_string_data_cell{hIdx} = [meanName '(z)'];
-        row_string_data_cell{hIdx + 1} = [sdName '(z)'];
-        row_string_data_cell{hIdx + 2} = [seName '(z)'];
-        row_string_data_cell{hIdx + 3} = [ciName '(z)'];                
-    end
-
-    t_consensusOnTruth_avg = tg_globalConsensusOnTruth_sum / N; 
-    t_consensusOnTruth_sd = sqrt(((tg_globalConsensusOnTruth_squared - ((tg_globalConsensusOnTruth_sum).^2 / N))) / df);
-    t_consensusOnTruth_se = t_consensusOnTruth_sd / sqrt(N);  
-    t_consensusOnTruth_ci = t_consensusOnTruth_se * tquant(CI_INT, df);
-
-    hIdx = i*4 + avgStartFrom;
-    headers_truthradius_avg{hIdx} = 'consensus.avg';
-    headers_truthradius_avg{hIdx + 1} = 'consensus.sd';
-    headers_truthradius_avg{hIdx + 2} = 'consensus.se';
-    headers_truthradius_avg{hIdx + 3} = 'consensus.ci';
-
-    truthradiusAvgFileName = [outDir 'truthradius_avg_all.csv'];
-    write_csv_headers(truthradiusAvgFileName, headers_truthradius_avg);
-    fidTruthRadiusAvg = fopen(truthradiusAvgFileName, 'a');
-
-    % Saving all iterations
-    for z = 1:nIter
-        truthradius_avg_string = sprintf('"%s",%u,%u,', simName, N, z);
-        for j = 1 : length(row_string_data_cell)
-            truthradius_avg_string = [truthradius_avg_string sprintf('%.4f',(eval(row_string_data_cell{j}))) ','];
-        end
-        truthradius_avg_string = sprintf('%s%.4f,%.4f,%.4f,%.4f', ...
-            truthradius_avg_string, ...
-            t_consensusOnTruth_avg(z), t_consensusOnTruth_sd(z), ...
-            t_consensusOnTruth_se(z), t_consensusOnTruth_ci(z) ...
-        );
-        fprintf(fidTruthRadiusAvg, '%s\n', truthradius_avg_string);
-    end
-
-    fclose(fidTruthRadiusAvg);    
+%     headers_truthradius_avg = {
+%         'simname', ...
+%         'N', ...
+%         't' ...
+%     };
+% 
+%     N = Ntradius;
+%     df = N - 1;
+%     
+%     avgStartFrom = length(headers_truthradius_avg) + 1;
+% 
+%     row_string_data_cell = cell(nRadiusesPlusOne*4, 1);
+% 
+%     % Computing global stats            
+%     for i = 1 : nRadiusesPlusOne
+% 
+%         % This part is actually different from aggregate_truthradius, that
+%         % has cell array, and r_out is in the radius array.
+%         % Not a big deal anyway.
+%         if (i < nRadiusesPlusOne)            
+%             radiusStr = ['r_' strrep(num2str(RADIUSs(i)), '0.', '')];
+%         else
+%             radiusStr = 'r_out';
+%         end
+% 
+%         hIdx = (i-1)*4 + avgStartFrom;
+%         meanName = ['t_' radiusStr '_mean'];      
+%         eval([meanName ' = tg_globalRadiusCounts_sum(:,i) / N;']);
+% 
+%         sdName = ['t_' radiusStr '_sd'];        
+%         % sdValue = sqrt(((g_globalRadiusCounts_squared(i) - ((g_globalRadiusCounts_sum(i)).^2 / N))) / df);
+%         eval([sdName ' = sqrt(((tg_globalRadiusCounts_squared(:,i) - ((tg_globalRadiusCounts_sum(:,i)).^2 / N))) / df);']);
+% 
+%         seName = ['t_' radiusStr '_se'];
+%         eval([seName ' = ' sdName ' / sqrt(N);']);
+% 
+%         ciName = genvarname(['t_' radiusStr '_ci']);            
+%         eval([ciName ' = ' seName ' * tquant(CI_INT, df);']);    
+% 
+%         headers_truthradius_avg{hIdx} = regexprep(meanName, 't_', '', 'once');
+%         headers_truthradius_avg{hIdx + 1} = regexprep(sdName, 't_', '', 'once');
+%         headers_truthradius_avg{hIdx + 2} = regexprep(seName, 't_', '', 'once');
+%         headers_truthradius_avg{hIdx + 3} = regexprep(ciName, 't_', '', 'once'); 
+% 
+%         hIdx = hIdx - avgStartFrom + 1;
+%         row_string_data_cell{hIdx} = [meanName '(z)'];
+%         row_string_data_cell{hIdx + 1} = [sdName '(z)'];
+%         row_string_data_cell{hIdx + 2} = [seName '(z)'];
+%         row_string_data_cell{hIdx + 3} = [ciName '(z)'];                
+%     end
+% 
+%     t_consensusOnTruth_avg = tg_globalConsensusOnTruth_sum / N; 
+%     t_consensusOnTruth_sd = sqrt(((tg_globalConsensusOnTruth_squared - ((tg_globalConsensusOnTruth_sum).^2 / N))) / df);
+%     t_consensusOnTruth_se = t_consensusOnTruth_sd / sqrt(N);  
+%     t_consensusOnTruth_ci = t_consensusOnTruth_se * tquant(CI_INT, df);
+% 
+%     hIdx = i*4 + avgStartFrom;
+%     headers_truthradius_avg{hIdx} = 'consensus.avg';
+%     headers_truthradius_avg{hIdx + 1} = 'consensus.sd';
+%     headers_truthradius_avg{hIdx + 2} = 'consensus.se';
+%     headers_truthradius_avg{hIdx + 3} = 'consensus.ci';
+% 
+%     truthradiusAvgFileName = [outDir 'truthradius_avg_all.csv'];
+%     write_csv_headers(truthradiusAvgFileName, headers_truthradius_avg);
+%     fidTruthRadiusAvg = fopen(truthradiusAvgFileName, 'a');
+% 
+%     % Saving all iterations
+%     for z = 1:nIter
+%         truthradius_avg_string = sprintf('"%s",%u,%u,', simName, N, z);
+%         for j = 1 : length(row_string_data_cell)
+%             truthradius_avg_string = [truthradius_avg_string sprintf('%.4f',(eval(row_string_data_cell{j}))) ','];
+%         end
+%         truthradius_avg_string = sprintf('%s%.4f,%.4f,%.4f,%.4f', ...
+%             truthradius_avg_string, ...
+%             t_consensusOnTruth_avg(z), t_consensusOnTruth_sd(z), ...
+%             t_consensusOnTruth_se(z), t_consensusOnTruth_ci(z) ...
+%         );
+%         fprintf(fidTruthRadiusAvg, '%s\n', truthradius_avg_string);
+%     end
+% 
+%     fclose(fidTruthRadiusAvg);    
     
     toc;
 end
