@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final';
+simName = 'final_R_alpha';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -51,8 +51,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.1:0.01:0.99]; % weighting of velocity terms
-Rs     = [0.01:0.01:0.99];       	   % cut-off radius
+alphas = [0.01:0.01:0.99];  % weighting of velocity terms
+Rs     = [0.01:0.01:0.99]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -69,13 +69,13 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1];     		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
-epsilons = [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
+epsilons = 0.1; % [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
 
 % NOISE on APPROACH (INDIVIDUALIZATION) (direction)
-sigmas = [0.01:0.01:0.05];   % Std. deviation of white noise term
+sigmas = 0.01; % [0:0.01:0.05];   % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0.2, 0.5, 1, 2, 10, 100]; % Scaling factor for initial (random) velocities
+vScalings = [1]; % [0.2, 0.5, 1, 2, 10, 100]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions

@@ -1,5 +1,0 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final/','final_s1','228958')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final/','final_s2', '81455')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final/','final_s3', '4720')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final/','final_s4', '316762')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final/','final_s5', '816978')"
