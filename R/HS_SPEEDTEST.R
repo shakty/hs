@@ -10,6 +10,8 @@ DIR  <- 'attrLinear_navnp_RFull_SpeedTest_epsilon/'
 DUMPDIR <- '/home/stefano/HS/'
 DIR <- 'attrLinear_navnp_SpeedTest_fullscan/'
 
+DIR <- 'final_R_alpha/'
+
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
 

@@ -1,4 +1,4 @@
-function param_sets_LSF (params)
+function param_sets_LSF(params)
 
 % SEED TYPE
 seed_fixed = 0;
@@ -45,7 +45,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2)* ...
-                size(params.epsilons,2);
+                size(params.epsilons,2)*params.nRuns;
 
 % Init cell array of cell arrays           
 paramObjs = cell(SIMS4TASK,1);            
