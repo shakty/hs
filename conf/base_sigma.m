@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final_vscaling';
-dumpDir = '/cluster/work/scr3/balistef/';
+simName = 'final_noises';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -69,13 +69,13 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 taus   = [1];     		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
-epsilons = 0.1; % [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
+epsilons = [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
 
 % NOISE on APPROACH (INDIVIDUALIZATION) (direction)
-sigmas = 0.01; % [0:0.01:0.05]; % 0.01; % Std. deviation of white noise term
+sigmas = [0:0.01:0.1]; % 0.01; % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0.2:0.2:10]; % Scaling factor for initial (random) velocities
+vScalings = 1; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [0];    	% number of clusters of the initial positions
@@ -206,11 +206,6 @@ fprintf('%+15s = %d\n', 'Noise type', noisetype);
 fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
 fprintf('%+15s = %d\n','Seed', seed);
 fprintf('------------------------------------\n');
-
-
-
-
-
 
 
 
