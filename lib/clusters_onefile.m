@@ -50,8 +50,8 @@ function clusters_onefile(params)
         dataFileName = [outDir 'clusters_macro_' fileName '.csv'];
         fidClustersMacro = fopen(dataFileName, 'w');
         
-        dataFileName = [outDir 'clusters_micro_' fileName '.csv'];
-        fidClustersMicro = fopen(dataFileName, 'w');     
+%         dataFileName = [outDir 'clusters_micro_' fileName '.csv'];
+%         fidClustersMicro = fopen(dataFileName, 'w');     
     end
     
     nSkipped = 0;
@@ -135,11 +135,11 @@ function clusters_onefile(params)
                 pairwise_dist_bigc_mean = 0;
                 pairwise_dist_bigc_sd = 0;
 
-                % micro.
-                clusters_size = 0;
-                clusters_fromtruth = 0;
-                clusters_speed = 0;
-                clusters_move = 0;
+%                 % micro.
+%                 clusters_size = 0;
+%                 clusters_fromtruth = 0;
+%                 clusters_speed = 0;
+%                 clusters_move = 0;
 
             end
         end
@@ -180,11 +180,11 @@ function clusters_onefile(params)
                      'mean_from_truth', mean_cluster_fromtruth, ... % truth
                      'sd_from_truth', sd_cluster_fromtruth, ...
                      'bigc_pairwise_pdist', pairwise_dist_bigc_mean, ... % bigc dist
-                     'bigc_pairwise_pdist_sd', pairwise_dist_bigc_sd, ... % bigc dist
-                     'clusters_speed', clusters_speed, ... %micro
-                     'clusters_move', clusters_move, ... %micro
-                     'clusters_size', clusters_size, ... %micro
-                     'clusters_fromtruth', clusters_fromtruth ... %micro
+                     'bigc_pairwise_pdist_sd', pairwise_dist_bigc_sd ... % bigc dist
+%                      'clusters_speed', clusters_speed, ... %micro
+%                      'clusters_move', clusters_move, ... %micro
+%                      'clusters_size', clusters_size, ... %micro
+%                      'clusters_fromtruth', clusters_fromtruth ... %micro
                 );
 
                 % 1 Line
@@ -193,14 +193,14 @@ function clusters_onefile(params)
                 fprintf(fidClustersMacro,'%s\n', clu_macro_string);
 
                 % SAVING ONLY CLUSTERS of SIZE > CUTOFF
-                idxs = find(stepData.clusters_size > CLU_CUTOFF);
+%                 idxs = find(stepData.clusters_size > CLU_CUTOFF);
 
-                % Multiple Lines
-                for jj = 1 : length(idxs)
-                    clu_micro_string = csv_format_row_clusters_micro( ...
-                        stepData, simName, i, idxs(jj));
-                    fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
-                end
+%                 % Multiple Lines
+%                 for jj = 1 : length(idxs)
+%                     clu_micro_string = csv_format_row_clusters_micro( ...
+%                         stepData, simName, i, idxs(jj));
+%                     fprintf(fidClustersMicro,'%s\n', clu_micro_string);   
+%                 end
                 
              end
 
@@ -231,7 +231,7 @@ function clusters_onefile(params)
  
     if (DUMP)        
         fclose(fidClustersMacro);
-        fclose(fidClustersMicro);
+%         fclose(fidClustersMicro);
     end
 end
 

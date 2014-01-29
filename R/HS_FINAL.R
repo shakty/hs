@@ -12,6 +12,7 @@ DUMPDIR <- '/home/stefano/HS/'
 DIR = 'aggrLinear_epsilon/'
 DIR = 'aggrLinear_RFull_epsilon_v/'
 
+
 INTERACTIVE = FALSE
 PATH = paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
