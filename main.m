@@ -31,13 +31,13 @@ dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/';
 
 VIDEO = 0;
 DUMP = 1;
-COMPUTATION = 0;
+COMPUTATION = 2;
 plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
 t_ends = 1;
-nRuns = 3;
+nRuns = 10;
 
 % Size
 ideas_space_sizes = [1];

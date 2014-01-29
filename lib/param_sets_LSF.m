@@ -18,9 +18,16 @@ parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
 % How many sequential simulations in one task.
 SIMS4TASK = 10; 
-% How many tasks group in one job. Should be multiple with SIMS4TASK.
-TASKS4JOB = 20;
+% How many tasks group in one job.
+TASKS4JOB = 2;
 
+% Combination = 1 exact combination of parameters (can have multiple runs).
+combCount = 1;
+% Simulation = 1 execution, regardless of the parameters.
+simCount = 1;
+% Task = container of many simulations.
+taskCount = 1;
+% Container = container of many tasks.
 jobCount = 1;
 
 logFolder = ['log/' params.simName];
@@ -30,28 +37,25 @@ dumpFolder = [ params.dumpDir params.simName];
 sched = findResource('scheduler','type','lsf');
 %sched=parcluster('BrutusLSF8h');
 emails = 'sbalietti@ethz.ch';
-%submitArgs = ['-o ' logFolder '/' simName '.log -u ' emails];
-%submitArgs = ['-o ' logFolder '/' simName '.log -B']; -B / -N sends email
 submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);
 
 j = createJob(sched);
-
-jobCount = jobCount + 1;
+% Local debug.
+% j = createJob();
 
 nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_space_sizes,2)*...
                 size(params.ideas_space_dims,2)*size(params.As,2)*size(params.Bs,2)*size(params.ks,2)*...
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2)* ...
-                size(params.epsilons,2)*params.nRuns;
+                size(params.epsilons,2);
+            
+nSimulations = nCombinations * params.nRuns;
 
 % Init cell array of cell arrays           
 paramObjs = cell(SIMS4TASK,1);            
-
-% Counter of all simulations.
-simCount = 1;
 
 % Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
@@ -144,7 +148,7 @@ for i1=1:size(params.dts)
         
             fprintf('\n%s\n',params.simName);
             fprintf('Starting Run: %d/%d of Simulation n. %d/%d:\n', ...
-                     rCount,params.nRuns,simCount,nCombinations)
+                     rCount, params.nRuns, combCount, nCombinations)
             fprintf('------------------------------------\n');
             fprintf('%+15s = %d\n','steps',t_end);
             fprintf('%+15s = %2f\n','dt',dt);
@@ -174,7 +178,7 @@ for i1=1:size(params.dts)
 
             paramsObj = struct( ...
                 'folderName', dumpFolder, ...
-                'simCount', simCount, ...
+                'simCount', combCount, ...
                 'VIDEO', params.VIDEO, ...
                 'DEBUG', params.DEBUG, ...
                 'DUMP', params.DUMP, ...
@@ -216,28 +220,34 @@ for i1=1:size(params.dts)
             if (taskIdx == 0)
                 paramObjs{SIMS4TASK} = paramsObj;
                 createTask(j, @wrappersim, 0, {{paramObjs}});
+                
+                % Submit the job to the scheduler in batches
+                if (mod(taskCount, TASKS4JOB) == 0)
+                    submit(j);
+
+                    if (simCount ~= nSimulations)
+                        j = createJob(sched);
+                        % Local debug.
+                        %j = createJob();
+                        jobCount = jobCount + 1;
+                    end
+
+                end
+                
+                % Update task count after checking to submit job
                 paramObjs = cell(SIMS4TASK, 1);
-            else                
+                taskCount = taskCount + 1;
+                
+            else
                 paramObjs{taskIdx} = paramsObj;
             end
-  
-            % createTask(j, @simulation, 0, {paramsObj});
 
-            % Submit the job to the scheduler in batches
-            if (mod(simCount, TASKS4JOB) == 0)
-                submit(j);
-
-                if (simCount ~= nCombinations)
-                    j = createJob(sched); 
-                    jobCount = jobCount + 1;
-                end
-
-            end
-
+            simCount = simCount + 1;
+            
             fprintf('\n\n');
         end
         % updating the simulations count
-        simCount = simCount + 1;
+        combCount = combCount + 1;
     end
     end
     end
@@ -262,7 +272,7 @@ for i1=1:size(params.dts)
 end  
 
 % Submit the left-over tasks.
-if (mod(simCount, TASKS4JOB) ~= 1) % 1: it has always one last increment.
+if (mod(taskCount, TASKS4JOB) ~= 1) % 1: it has always one last increment.
     if (taskIdx ~= 0)
         createTask(j, @wrappersim, 0, {{paramObjs}});
     end
