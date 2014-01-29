@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "cleanup_fun('/cluster/work/scr2/balistef/NEW2/final_noises/')"
+matlab -nodisplay -singleCompThread -r "cleanup_fun('/cluster/work/scr4/balistef/NEW2/final_alpha/')"

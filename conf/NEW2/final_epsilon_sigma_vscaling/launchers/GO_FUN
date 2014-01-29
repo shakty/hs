@@ -1,6 +1,0 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s0','818203')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s1', '530140')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s2', '62897')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s3', '107853')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s4', '675254')"
-bsub -J hs_chain -w "done(hs_chain)" -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/final_epsilon_sigma_vscaling/','final_epsilon_sigma_vscaling_s5', '980990')"
