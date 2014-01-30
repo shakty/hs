@@ -13,7 +13,8 @@ end
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
-parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
+% Remote.
+% parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
 
 % How many sequential simulations in one task.
@@ -34,16 +35,19 @@ logFolder = ['log/' params.simName];
 mkdir(logFolder); % The name is unique under the dump directory.
 dumpFolder = [ params.dumpDir params.simName];
 
-sched = findResource('scheduler','type','lsf');
-%sched=parcluster('BrutusLSF8h');
-emails = 'sbalietti@ethz.ch';
-submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
-set(sched, 'SubmitArguments',submitArgs);
-set(sched, 'DataLocation', [logFolder '/']);
+% Local
+sched = parcluster();
+% sched = findResource('scheduler', 'type', 'local');
+
+% Cluster
+% sched = findResource('scheduler','type','lsf');
+% %sched=parcluster('BrutusLSF8h');
+% emails = 'sbalietti@ethz.ch';
+% submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
+% set(sched, 'SubmitArguments',submitArgs);
+% set(sched, 'DataLocation', [logFolder '/']);
 
 j = createJob(sched);
-% Local debug.
-% j = createJob();
 
 nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_space_sizes,2)*...
                 size(params.ideas_space_dims,2)*size(params.As,2)*size(params.Bs,2)*size(params.ks,2)*...
@@ -227,8 +231,6 @@ for i1=1:size(params.dts)
 
                     if (simCount ~= nSimulations)
                         j = createJob(sched);
-                        % Local debug.
-                        %j = createJob();
                         jobCount = jobCount + 1;
                     end
 

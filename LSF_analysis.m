@@ -71,6 +71,7 @@ function LSF_analysis(path2conf)
         
         % Number of files.
         nFiles = length(fileIndex);
+        validFiles = 0;
         
         % Load all parameters matrices in one.
         for f = 1:nFiles
@@ -83,6 +84,8 @@ function LSF_analysis(path2conf)
             if (~strcmpi(EXT,'.mat') || ~isempty(strfind(NAME, 'sums_')))  
                 continue;
             end
+            
+            validFiles = validFiles + 1;
             
             % Extracting the part 1-1 from 1-1.mat
             % 6 = length('sums_') + 1; 4 = length('.mat');
@@ -106,7 +109,7 @@ function LSF_analysis(path2conf)
                     'outDirClusters', outDirClusters ...      
             );
             
-            idx = mod(f, FILES4TASK);
+            idx = mod(validFiles, FILES4TASK);
             
             % paramsArgs needs to be enclosed in two cells because
             % otherwise matlab thinks that he needs to pass each cell as a
