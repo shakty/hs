@@ -36,16 +36,16 @@ mkdir(logFolder); % The name is unique under the dump directory.
 dumpFolder = [ params.dumpDir params.simName];
 
 % Local
-sched = parcluster();
+% sched = parcluster();
 % sched = findResource('scheduler', 'type', 'local');
 
 % Cluster
-% sched = findResource('scheduler','type','lsf');
-% %sched=parcluster('BrutusLSF8h');
-% emails = 'sbalietti@ethz.ch';
-% submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
-% set(sched, 'SubmitArguments',submitArgs);
-% set(sched, 'DataLocation', [logFolder '/']);
+sched = findResource('scheduler','type','lsf');
+% sched=parcluster('BrutusLSF8h');
+emails = 'sbalietti@ethz.ch';
+submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
+set(sched, 'SubmitArguments',submitArgs);
+set(sched, 'DataLocation', [logFolder '/']);
 
 j = createJob(sched);
 
