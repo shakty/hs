@@ -14,7 +14,7 @@ path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
 % Remote.
-% parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
+parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 
 
 % How many sequential simulations in one task.
@@ -42,7 +42,6 @@ dumpFolder = [ params.dumpDir params.simName];
 % Cluster
 sched = findResource('scheduler','type','lsf');
 % sched=parcluster('BrutusLSF8h');
-emails = 'sbalietti@ethz.ch';
 submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);

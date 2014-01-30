@@ -180,12 +180,12 @@ function clusters_onefile(params)
                      'mean_from_truth', mean_cluster_fromtruth, ... % truth
                      'sd_from_truth', sd_cluster_fromtruth, ...
                      'bigc_pairwise_pdist', pairwise_dist_bigc_mean, ... % bigc dist
-                     'bigc_pairwise_pdist_sd', pairwise_dist_bigc_sd ... % bigc dist
+                     'bigc_pairwise_pdist_sd', pairwise_dist_bigc_sd); ... % bigc dist
 %                      'clusters_speed', clusters_speed, ... %micro
 %                      'clusters_move', clusters_move, ... %micro
 %                      'clusters_size', clusters_size, ... %micro
 %                      'clusters_fromtruth', clusters_fromtruth ... %micro
-                );
+                %);
 
                 % 1 Line
                 clu_macro_string = csv_format_row_clusters_macro_new(...

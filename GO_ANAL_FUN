@@ -1,2 +1,2 @@
-# SCR: /cluster/work/scr1/balistef/
-bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis('conf/NEW2/final_tau/')"
+# SCR: /tmp/
+bsub  -R "rusage[mem=4000]" -J hs_analysis -N matlab -nodisplay -singleCompThread -r "LSF_analysis('conf/TESTS/AAA/')"

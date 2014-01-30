@@ -1,20 +1,19 @@
 function LSF_analysis(path2conf)
 
-% function LSF_analysis( DUMPDIR, simName, sigmas, DUMP, DUMP_RATE, ...
-%     RADIUSs, STAY_FOR, CONSENSUS_ON_TRUTH_FOR, CONSENSUS_THRESHOLD, ... % Radius
-%     PRECISION, ... % Agents
-%     CLU_CUTOFF ... % Clusters
-% )
-    tic
+    tic;
+
+    FILES4TASK = 10;
     
+    path(path,'util/');
+    path(path,'lib/');
+
     % Loads all variables that are described in the commented method.
     load([path2conf 'params_all']);
     
-    FILES4TASK = 10;
+    % Local Test
+    % sched = parcluster();
     
-    path(path,'util/'); % Help functions
-    path(path,'lib/'); % Help functions
-
+    % Real 
     % Import LSF Profile
     parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings');
     sched = findResource('scheduler','type','lsf');
@@ -41,13 +40,16 @@ function LSF_analysis(path2conf)
         end
         
         % Dump Folder        
-        submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
-        set(sched, 'SubmitArguments', submitArgs);
-        set(sched, 'DataLocation', [logFolder '/']);
+%         submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' simName '.log'];
+%         set(sched, 'SubmitArguments', submitArgs);
+%         set(sched, 'DataLocation', [logFolder '/']);
         
-        % Create a new Job for each sub folder.
+        % Real. Create a new Job for each sub folder.
         j = createJob(sched, 'name', ['analysis_' sigma]);
         
+        % Local test.
+        % j = createJob(sched);
+
         paramsArgs = cell(FILES4TASK, 1);
 
         outDirAgents = [dumpDir '/' 'agents/'];
@@ -108,7 +110,7 @@ function LSF_analysis(path2conf)
                     'outDirAgents', outDirAgents, ...
                     'outDirClusters', outDirClusters ...      
             );
-            
+ 
             idx = mod(validFiles, FILES4TASK);
             
             % paramsArgs needs to be enclosed in two cells because
