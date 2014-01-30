@@ -275,7 +275,7 @@ end
 fclose(fidMain);
 cmdStr = sprintf('# SCR: %s', dumpDir);
 fprintf(fidCl, '%s\n', cmdStr);
-cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -W 24:00 -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
+cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
 fprintf(fidCl, '%s\n', cmdStr);
 fclose(fidCl);
 
