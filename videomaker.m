@@ -204,6 +204,14 @@ simName = 'EEH-2014-1-28-0-15/'; %
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
 
 
+% TAU test
+simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
+simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
+simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
+simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
+simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
+simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
+simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
 
 % LINEAR
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';

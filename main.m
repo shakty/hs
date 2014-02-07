@@ -31,20 +31,20 @@ dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/';
 
 VIDEO = 0;
 DUMP = 1;
-COMPUTATION = 2;
+COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 1;
-nRuns = 10;
+t_ends = 40;
+nRuns = 1;
 
 % Size
 ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = [1,2,3,4,10];
+vScalings = [1];
 n_agents = 100;
 
 % Influence
@@ -57,7 +57,7 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 1;
+taus = 10;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
