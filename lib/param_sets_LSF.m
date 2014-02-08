@@ -60,6 +60,16 @@ nSimulations = nCombinations * params.nRuns;
 % Init cell array of cell arrays           
 paramObjs = cell(SIMS4TASK,1);            
 
+% Check nof_clusters
+if (size(params.nof_clusters, 1) == 1)
+    NC_DIM = 2;
+else
+    NC_DIM = 3;
+end
+
+% Does not change
+clRadius = params.clustersInCircleOfRadius;
+
 % Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
     dt = params.dts(i1);
@@ -105,9 +115,21 @@ for i1=1:size(params.dts)
         
     for i13=1:size(params.v_scalings,2)
         v_scaling = params.v_scalings(i13);
-    
-    for i14=1:size(params.nof_clusters,2)
-        nof_cluster = params.nof_clusters(:,i14);
+        
+    % nof_clusters can be:
+    %
+    %   A - (i) a number, or (ii) 1D array -> indicates the number of clusters
+    %   B - (i) a 2D, or (ii) 3D array -> indicates the positions of the centers
+    %
+    % In (i) we pass it as it is.
+    % In (ii) we loop through the last dimension of the multi-D array
+    % 
+    for i14=1:size(params.nof_clusters, NC_DIM)
+        if (NC_DIM == 3)
+            nof_cluster = params.nof_clusters(:,:,i14);
+        else
+            nof_cluster = params.nof_clusters(:,i14);
+        end   
         
     for i15=1:size(params.clusterTightness,2)
         clusterTightness = params.clusterTightness(i15);    
@@ -169,7 +191,14 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %2.3f\n','sigma',sigma);
             fprintf('%+15s = %2.3f\n','epsilon', epsilon);
             fprintf('%+15s = %2.3f\n','v_scaling',v_scaling);
-            fprintf('%+15s = %1d\n','n cluster',nof_cluster);
+            
+            if (size(nof_cluster, 1) == 1) 
+                fprintf('%+15s = %1d\n','n cluster', nof_cluster);
+            else
+                fprintf('%+15s = %s\n','n cluster', mat2str(nof_cluster));
+            end
+            
+            fprintf('%+15s = %2.3f\n','clusters in circle of radius', clRadius);
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
             fprintf('%+15s = [%2.3f:%2.3f]\n','truth',truth(1,1),truth(2,1));
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
@@ -208,6 +237,7 @@ for i1=1:size(params.dts)
                 'v_scaling', v_scaling, ...
                 'nof_cluster', nof_cluster, ...
                 'clusterTightness', clusterTightness, ...
+                'clustersInCircleOfRadius', clRadius, ...
                 'truth', truth, ...
                 'noisetype', noisetype, ...
                 'attrtype', attrtype, ...
