@@ -53,7 +53,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2)* ...
-                size(params.epsilons,2);
+                size(params.epsilons,2)*size(params.clustersInCircleOfRadius,2);
             
 nSimulations = nCombinations * params.nRuns;
 
@@ -66,9 +66,6 @@ if (size(params.nof_clusters, 1) == 1)
 else
     NC_DIM = 3;
 end
-
-% Does not change
-clRadius = params.clustersInCircleOfRadius;
 
 % Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
@@ -129,7 +126,10 @@ for i1=1:size(params.dts)
             nof_cluster = params.nof_clusters(:,:,i14);
         else
             nof_cluster = params.nof_clusters(:,i14);
-        end   
+        end
+        
+    for i14b=1:size(params.clustersInCircleOfRadius,2)
+        clRadius = params.clustersInCircleOfRadius(i14b);
         
     for i15=1:size(params.clusterTightness,2)
         clusterTightness = params.clusterTightness(i15);    

@@ -17,7 +17,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2)* ...
-                size(params.epsilons,2);
+                size(params.epsilons,2)*size(params.clustersInCircleOfRadius,2);
             
             
 % Counter of all simulations.
@@ -29,9 +29,6 @@ if (size(params.nof_clusters, 1) == 1)
 else
     NC_DIM = 3;
 end
-
-% Does not change
-clRadius = params.clustersInCircleOfRadius;
 
 % Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)
@@ -93,6 +90,9 @@ for i1=1:size(params.dts)
         else
             nof_cluster = params.nof_clusters(:,i14);
         end   
+        
+    for i14b=1:size(params.clustersInCircleOfRadius,2)
+        clRadius = params.clustersInCircleOfRadius(i14b);   
     
     for i15=1:size(params.clusterTightness,2)
         clusterTightness = params.clusterTightness(i15);    
@@ -159,7 +159,7 @@ for i1=1:size(params.dts)
                 fprintf('%+15s = %s\n','n cluster', mat2str(nof_cluster));
             end
             
-            fprintf('%+15s = %2.3f\n','clusters in circle of radius', clRadius);
+            fprintf('%+15s = %2.3f\n','c.circle radius', clRadius);
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
             fprintf('%+15s = [%2.3f:%2.3f]\n','truth',truth(1,1),truth(2,1));
             fprintf('%+15s = %d\n', 'Attr. type', attrtype);
