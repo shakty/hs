@@ -224,6 +224,10 @@ simName = 'CLA-2014-2-8-15-12/'; % 20 and 10 clusters on a circle, R = 0.03
 simName = 'CLA-2014-2-8-15-24/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
 %simName = 'CLA-2014-2-8-15-35/'; % 1 cluster on a circle, R = 0.03
 
+simName = 'CLA-2014-2-8-15-59-a/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
+
+simName = 'CLA-2014-2-8-16-6/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
+
 % LINEAR
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v_s1/';
@@ -246,7 +250,7 @@ simName = 'CLA-2014-2-8-15-24/'; % 20 and 10 clusters on a circle, R = 0.03, TAU
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '1-1'; % 1521
+myFile = '2-1'; % 1521
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];

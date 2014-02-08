@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final_tau';
-dumpDir = '/cluster/work/scr1/balistef/';
+simName = 'clusterVSclusters';
+dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -51,7 +51,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.5];  % weighting of velocity terms
+alphas = [0.5, 0.99];  % weighting of velocity terms
 Rs     = [0.03, 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
@@ -66,7 +66,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [1:1:100];     		% coupling coefficient (divisor)
+taus   = [1];     		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
@@ -75,11 +75,12 @@ epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
 sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
+vScalings = [1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [0];    	% number of clusters of the initial positions
-clusterTightness = [0.25]; % Tightness of clusters
+nClusters = [1:30];    	% number of clusters of the initial positions
+clusterTightness = [0.05]; % Tightness of clusters
+clustersInCircleOfRadius = [-1; 0.4];
 
 % TRUTH POSITION
 % Generate Truth Vector for 2D Truth
@@ -176,12 +177,20 @@ CONSENSUS_ON_TRUTH_FOR = 20;
 
 % Split by Sigma
 
+% Check nof_clusters
+if (size(nClusters, 1) == 1)
+    NC_DIM = 2;
+else
+    NC_DIM = 3;
+end
+
 nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(ideas_space_dims,2)*size(As,2)*size(Bs,2)*size(ks,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
-                size(vScalings,2)*size(nClusters,2)*...
+                size(vScalings,2)*size(nClusters,NC_DIM)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2);
+                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
+                size(clustersInCircleOfRadius,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
@@ -200,16 +209,15 @@ fprintf('%+15s = %s\n','nAgents', mat2str(n_agents));
 fprintf('%+15s = %s\n','IdeasSpace size', mat2str(ideas_space_sizes));
 fprintf('%+15s = %s\n','tau', mat2str(taus));
 fprintf('%+15s = %s\n','v_scaling', mat2str(vScalings));
+fprintf('%+15s = %s\n','n cluster', mat2str(nClusters));
+fprintf('%+15s = %s\n','c.circle radius', mat2str(clustersInCircleOfRadius));
+fprintf('%+15s = %2.3f\n','tight clusters', clusterTightness);
 fprintf('%+15s = [%2.3f:%2.3f]\n','truth', truths(1,1), truths(2,1));
 fprintf('%+15s = %d\n', 'Attr. type', attrtype);
 fprintf('%+15s = %d\n', 'Noise type', noisetype);
 fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
 fprintf('%+15s = %d\n','Seed', seed);
 fprintf('------------------------------------\n');
-
-
-
-
 
 
 % CREATING FOLDERS
@@ -231,6 +239,9 @@ fidMerge = fopen(launcherMerge, 'w');
 
 launcherCleanup = '../GO_CLEANUP_FUN';
 fidClean = fopen(launcherCleanup, 'w');
+
+launcherSpeedTest = '../GO_SPEEDTEST_FUN';
+fidSpeedTest = fopen(launcherSpeedTest, 'w');
 
 % Random seed must be initialized for each batch (level of sigma)
 if (seedtype ~= seed_fixed)
@@ -273,6 +284,7 @@ for i=1:size(sigmas,2)
 end
 
 fclose(fidMain);
+
 cmdStr = sprintf('# SCR: %s', dumpDir);
 fprintf(fidCl, '%s\n', cmdStr);
 cmdStr = sprintf('bsub  -R "rusage[mem=4000]" -J hs_analysis -N matlab -nodisplay -singleCompThread -r "LSF_analysis(''conf/%s'')"', DIR);
@@ -287,6 +299,9 @@ cmdStr = sprintf('matlab -nodisplay -singleCompThread -r "cleanup_fun(''%s%s'')"
 fprintf(fidClean, '%s\n', cmdStr);
 fclose(fidClean);
 
+cmdStr = sprintf('matlab -nodisplay -singleCompThread -r "speedtest_fun(''%s'')"', [DUMPDIR, simName '/']);
+fprintf(fidSpeedTest, '%s\n', cmdStr);
+fclose(fidSpeedTest);
 
 % Saving a copy of all files in the conf dir
 COPYDIR = [DIR 'launchers/']; 

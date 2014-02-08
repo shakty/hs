@@ -30,13 +30,13 @@ simName = 'CLA';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
-DUMP = 1;
+DUMP = 0;
 COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 5;
+t_ends = 2;
 nRuns = 1;
 
 % Size
@@ -65,9 +65,9 @@ forces_on_v = 0;
 % Clustered initial positions
 nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
 % nClusters = [0.1 ; 0.1 ];
-nClusters = [1];
+nClusters = [10];
 clusterTightness = [0.05];
-clustersInCircleOfRadius = 0.4;
+clustersInCircleOfRadius = [-1 0.4];
 
 % Seed
 seedtype = 0; % 0 = fixed
