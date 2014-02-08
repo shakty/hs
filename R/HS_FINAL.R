@@ -185,7 +185,8 @@ p <- p + geom_errorbar(limits)
 p <- p + facet_grid(~ R, labeller = myLabeller)
 p <- p + ylim(0,28)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-p <- p + xlab('Strength of social influence') + ylab('Cluster counts')
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab(xlabText) + ylab('Cluster counts')
 p <- p + ggtitle(title) + myThemeMod
 p
 
