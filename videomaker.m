@@ -213,6 +213,17 @@ simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stop
 simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
 simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
 
+
+% CLUSTERs vs CLUSTER
+simName = 'CLA-2014-2-8-13-43/'; % just checking if 4 clusters are faster than 1 cluster
+simName = 'CLA-2014-2-8-13-46/'; % just checking if 4 clusters are faster than 1 cluster
+simName = 'CLA-2014-2-8-13-58/'; % 10 random clusters
+simName = 'CLA-2014-2-8-14-31-a/'; % 10 and 11 random clusters
+simName = 'CLA-2014-2-8-15-7/'; % 20 and 10 clusters on a circle
+simName = 'CLA-2014-2-8-15-12/'; % 20 and 10 clusters on a circle, R = 0.03
+simName = 'CLA-2014-2-8-15-24/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
+%simName = 'CLA-2014-2-8-15-35/'; % 1 cluster on a circle, R = 0.03
+
 % LINEAR
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v_s1/';

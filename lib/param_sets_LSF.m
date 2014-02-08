@@ -107,7 +107,7 @@ for i1=1:size(params.dts)
         v_scaling = params.v_scalings(i13);
     
     for i14=1:size(params.nof_clusters,2)
-        nof_cluster = params.nof_clusters(i14);
+        nof_cluster = params.nof_clusters(:,i14);
         
     for i15=1:size(params.clusterTightness,2)
         clusterTightness = params.clusterTightness(i15);    

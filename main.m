@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'AAA';
+simName = 'CLA';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -36,7 +36,7 @@ plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 40;
+t_ends = 5;
 nRuns = 1;
 
 % Size
@@ -49,7 +49,7 @@ n_agents = 100;
 
 % Influence
 alphas = 0.5;
-Rs = 0.3;
+Rs = 0.03;
 
 % Noise
 sigmas = 0.01;
@@ -57,15 +57,22 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 10;
+taus = 1;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
 
+% Clustered initial positions
+nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
+% nClusters = [0.1 ; 0.1 ];
+nClusters = [1];
+clusterTightness = [0.05];
+clustersInCircleOfRadius = 0.4;
+
 % Seed
 seedtype = 0; % 0 = fixed
 seed = randi(1000000); % 819325;
-batchSeed = randi(1000000); % 819325; 
+batchSeed = randi(1000000); % 819325;
 
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
@@ -95,7 +102,8 @@ simParamsStruct = struct( ...
                 'epsilons', epsilons, ...
                 'v_scalings', vScalings, ...
                 'nof_clusters', nClusters, ...
-                'clusterTightness', clusterTightness, ...
+                'clusterTightness', clusterTightness, ...                
+                'clustersInCircleOfRadius', clustersInCircleOfRadius, ...
                 'truths', truths, ...
                 'attrtype', attrtype, ...
                 'noisetype', noisetype, ...
