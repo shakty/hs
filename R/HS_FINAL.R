@@ -203,8 +203,10 @@ p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.0
 p <- p + geom_errorbar(limits)
 # p <- p + facet_grid(~ R, labeller = myLabeller)
 # p <- p + ylim(0,28)
-p <- p + xlab('Strength of social influence') + ylab('Cluster counts')
-p <- p + annotate("text", x = 0.74, y = 13.5, label = "Results after 20.000 iterations", size = 8)
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab(xlabText) + ylab('Cluster counts')
+labelText <- "Results after 20.000 iterations\nInteraction Radius = 0.03"
+p <- p + annotate("text", x = 0.74, y = 13.5, label = labelText, size = 8)
 p <- p + ggtitle(title) + myThemeMod
 p
 

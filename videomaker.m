@@ -223,10 +223,12 @@ simName = 'CLA-2014-2-8-15-7/'; % 20 and 10 clusters on a circle
 simName = 'CLA-2014-2-8-15-12/'; % 20 and 10 clusters on a circle, R = 0.03
 simName = 'CLA-2014-2-8-15-24/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
 %simName = 'CLA-2014-2-8-15-35/'; % 1 cluster on a circle, R = 0.03
-
 simName = 'CLA-2014-2-8-15-59-a/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
-
 simName = 'CLA-2014-2-8-16-6/'; % 20 and 10 clusters on a circle, R = 0.03, TAU = 1
+
+simName = 'LOWALPHA-2014-2-8-18-41/'; % R = 0.03, alpha = 0.01
+simName = 'LOWALPHA-2014-2-8-18-46/'; % R = 0.03, alpha = 0.99
+
 
 % LINEAR
 %simName = 'attrLinear_navnp_RClean_n100_fv0_s1_epsilon/attrLinear_navnp_RClean_n100_fv0_s1_epsilon_s0/';
@@ -244,13 +246,19 @@ simName = 'CLA-2014-2-8-16-6/'; % 20 and 10 clusters on a circle, R = 0.03, TAU 
 %simName = 'attrHard_navnp_RClean_n100_fv0_s1_epsilon/attrHard_navnp_RClean_n100_fv0_s1_epsilon_s5/';
 
 
+simName = 'AAA-2014-2-7-9-39/';
+
+
+simName = 'SCENARIO-2014-2-9-16-52/'; % few clusters converge in one
+simName = 'SCENARIO-2014-2-9-17-21/'; % alpha = .98 R = 0.03, sigma = 0.02, epsilon = 0.25. Few clusters in a noisy landscape
+simName = 'SCENARIO-2014-2-9-17-27/'; % alpha = .99 R = 0.03, sigma = 0.01, epsilon = 0.1. Many singles and many small clusters
 
 
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '2-1'; % 1521
+myFile = '1-1'; % 1521
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];

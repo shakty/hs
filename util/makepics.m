@@ -54,8 +54,8 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         
     % not used for now
     % Creating a string with the description of the parameters
-    paramString = {};
-    paramString{2} = create_params_string_small(dump.parameters);
+    % paramString = {};
+    % paramString{2} = create_params_string_small(dump.parameters);
     
     
     %% Video Plotting
@@ -164,8 +164,13 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         
             case plot_cross
             % PLOT red crosses
-            plot(agents(1,:),agents(2,:),'rx');     
-        
+            % plot(agents(1,:),agents(2,:),'rx');     
+            plot(agents(1,:), agents(2,:),'ok', ...
+                'MarkerEdgeColor','k',...
+                'MarkerFaceColor','r',...
+                'MarkerSize', 8, ...
+                'LineWidth', 2);
+            
             case plot_number
             % PLOT BLACK NUMBERS
             cla
@@ -195,7 +200,11 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         end        
         
         if (attrtype > 1)
-            plot(truth(1),truth(2),'go');
+            plot(truth(1),truth(2), 'gs', ...
+            'MarkerEdgeColor','k',...
+            'MarkerFaceColor','g',...
+            'MarkerSize', 8, ...
+            'LineWidth', 2);        
         end
         
         hold off;
@@ -203,13 +212,15 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         xlim([0 ideas_space_size])
         ylim([0 ideas_space_size]);
         % TODO move the title in the first frame
-        paramString{1} = [attrName ' - T: ' int2str(frame)];
-        title(paramString);
-
+        % paramString{1} = ['T: ' int2str(frame)];
+        %title(paramString);
+        title(['T: ' int2str(frame)], 'FontSize', 40);
+        
         pause(0.01);
         [fileInPath,fileInName, fileInExt] = fileparts(fileIn);
-        saveas(gcf, [dirOut subDirIn '_' fileInName '_T' int2str(frame) '.jpeg']);
-        
+        % saveas(gcf, [dirOut subDirIn '_' fileInName '_T' int2str(frame) '.jpeg']);
+        % Save the file as PNG
+        print([dirOut subDirIn '_' fileInName '_T' int2str(frame)],'-dpng','-r300');
     end      
 
 end

@@ -168,7 +168,7 @@ cl <- loadData(DUMPDIR, 'final_alpha/')
 
 cl$tbr <- cut(cl$t,  breaks=seq(0,20000,1000))
 
-summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "tbr"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$alpha > 0.8,], c("fromtruth.avg"), c("alpha", "R", "tbr"), na.rm=TRUE)
 
 title <- 'Distance from truth by social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
@@ -195,8 +195,10 @@ p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
 p <- p + geom_errorbar(limits)
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + xlab('Strength of social influence') + ylab('Distance from truth')
-p <- p + annotate("text", x = 0.74, y = 0.155, label = "Results after 20.000 iterations", size = 8)
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab(xlabText) + ylab('Distance from truth')
+labelText <- "Results after 20.000 iterations\nInteraction Radius = 0.03"
+p <- p + annotate("text", x = 0.74, y = 0.155, label = labelText, size = 8)
 p <- p + ggtitle(title) + myThemeMod
 p
 
