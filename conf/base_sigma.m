@@ -8,8 +8,8 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusterVSclusters';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'final_tau_20000';
+dumpDir = '/cluster/work/scr1/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -33,7 +33,7 @@ SHOW_POTENTIAL = 0;
 nRuns = 10;              % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [20];          % running time
+t_ends = [200];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -51,7 +51,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.5, 0.99];  % weighting of velocity terms
+alphas = [0.5, 0.99, 0.01];  % weighting of velocity terms
 Rs     = [0.03, 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
@@ -66,7 +66,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus   = [1];     		% coupling coefficient (divisor)
+taus   = [1:100];     		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
@@ -78,9 +78,9 @@ sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 vScalings = [1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [1:30];    	% number of clusters of the initial positions
+nClusters = [0];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = [-1; 0.4];
+clustersInCircleOfRadius = [-1];
 
 % TRUTH POSITION
 % Generate Truth Vector for 2D Truth

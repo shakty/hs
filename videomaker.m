@@ -253,6 +253,8 @@ simName = 'SCENARIO-2014-2-9-16-52/'; % few clusters converge in one
 simName = 'SCENARIO-2014-2-9-17-21/'; % alpha = .98 R = 0.03, sigma = 0.02, epsilon = 0.25. Few clusters in a noisy landscape
 simName = 'SCENARIO-2014-2-9-17-27/'; % alpha = .99 R = 0.03, sigma = 0.01, epsilon = 0.1. Many singles and many small clusters
 
+simName = '/LOW_TRUTH-2014-2-10-14-53/';
+simName = '/LOW_TRUTH-2014-2-10-14-54/';
 
 
 dumpDir = [DUMPDIR simName];

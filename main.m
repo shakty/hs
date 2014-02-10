@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'SCENARIO';
+simName = 'LOW_TRUTH';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -48,7 +48,7 @@ vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.99;
+alphas = 0.5;
 Rs = 0.03;
 
 % Noise
@@ -57,7 +57,7 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 1;
+taus = 100;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
