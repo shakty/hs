@@ -298,9 +298,12 @@ p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
 p <- p + xlab('Individualization noise') + ylab('Cluster counts')
-p <- p + ggtitle(title) + theme(legend.position = "none")
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
+p
 
-ggsave(filename = paste0(IMGPATH, "scan_noises.jpg"), plot = p)
+ggsave(filename = paste0(IMGPATH, "scan_noises.jpg"),
+       plot = p, width=10, height=10, dpi=600)
 
 
 ## TAU ##
@@ -334,11 +337,11 @@ summaryCl3 <- merge(summaryCl, summaryCl2, by=c("tau","R","t","init.vscaling"))
 
 
 title <- 'Cluster counts and distance from truth'
-p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(count, fromtruth.avg))
+p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$init.vscaling == 1,], aes(fromtruth.avg, count))
 p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + xlab('Distance from truth') + ylab('Number of clusters')
 p <- p + ggtitle(title)
-p <- p + facet_grid(init.vscaling ~ .)
+#p <- p + facet_grid(init.vscaling ~ .)
 p <- p + scale_color_hue(name="Influence\nradius size")
 p <- p + scale_size_continuous(name="Truth\nstrength")
 p

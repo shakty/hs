@@ -239,11 +239,14 @@ p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
 p <- p + xlab('Individualization noise') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-# p <- p + scale_y_continuous(breaks=c(0,0.1,0.15))
-p <- p + ggtitle(title) + myThemeMod
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#p <- p + scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15))
+p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
+#p <- p + theme(axis.text.y = element_text(size=18))
+p
 
-ggsave(filename = paste0(IMGPATH, "progress_scan_noises.jpg"), plot = p)
-
+ggsave(filename = paste0(IMGPATH, "progress_scan_noises.jpg"),
+       plot = p, width=10, height=10, dpi=600)
 
 ## TAU ##
 
