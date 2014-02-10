@@ -59,3 +59,34 @@ p
 
 ### Cluster vs Clusters
 
+DIR <- 'clusterVSclusters/'
+
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+data$cluster <- as.numeric(data$R < 0.1)
+# If consensus is not reached it has value -1. Replace with NA
+data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+
+fit <- lm(consensus50 ~ ccount30, data = data)
+summary(fit)
+
+
+
+p <- ggplot(data, aes(init.ccount, consensus75))
+p <- p + geom_jitter(aes(color=init.ccount))
+p
+
+p <- ggplot(data, aes(init.ccount, consensus75))
+p <- p + geom_jitter()
+p <- p + geom_smooth(alpha=0.5, method="lm")
+p
+
+p <- p + facet_grid(. ~ cluster )
+p
+
+p <- ggplot(data, aes(ccount50, consensus75))
+p <- p + geom_jitter()
+p <- p + geom_smooth(alpha=0.5, method="lm", na.rm=TRUE)
+p

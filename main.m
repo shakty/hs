@@ -67,7 +67,7 @@ nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
 % nClusters = [0.1 ; 0.1 ];
 nClusters = [0];
 clusterTightness = [0.05];
-clustersInCircleOfRadius = [-1];
+clustersInCircleOfRadius = [-1 0.4];
 
 % Seed
 seedtype = 0; % 0 = fixed
