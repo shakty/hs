@@ -5,6 +5,15 @@ sigma = 0.5;
 
 colnorm = @(X,P) sum(abs(X).^P,1).^(1/P);
 
+sigma = 2;
+for i=1:N
+    test(i) = normrnd(0, sigma);
+    v = v + test(i);
+    if (i>1)
+        test2(i) = normrnd(test2(i-1), sigma);
+    end
+    v2 = v2 + test2(i);
+ end
 
 % test = zeros(N,1);
 % test2 = zeros(N,1);

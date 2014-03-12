@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'LOW_TRUTH';
+simName = 'TTAU';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -36,7 +36,7 @@ plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 20;
+t_ends = 200;
 nRuns = 1;
 
 % Size
@@ -48,8 +48,8 @@ vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.5;
-Rs = 0.03;
+alphas = 0.01;
+Rs = 0.3;
 
 % Noise
 sigmas = 0.01;
@@ -57,7 +57,7 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 100;
+taus = 10;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
@@ -67,7 +67,7 @@ nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
 % nClusters = [0.1 ; 0.1 ];
 nClusters = [0];
 clusterTightness = [0.05];
-clustersInCircleOfRadius = [-1 0.4];
+clustersInCircleOfRadius = -1; % [-1 0.4];
 
 % Seed
 seedtype = 0; % 0 = fixed

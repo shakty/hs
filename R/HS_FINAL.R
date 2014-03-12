@@ -8,7 +8,7 @@ DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
-DUMPDIR <- '/home/stefano/HS/'
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 
 ##############################
 # Explanation of loaded files:
@@ -64,10 +64,9 @@ loadData <- function(DUMPDIR, DIR) {
 
 
   macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
-  
+     
   clu <- merge(params, macro, by=c("simname","simcount", "run"))
-  
-
+ 
 
   clu$simname <- as.character(clu$simname)
   clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
@@ -249,7 +248,7 @@ ggsave(filename = paste0(IMGPATH, "scan_vscaling_fromtruth.jpg"), plot = p)
 
 # Scatter fromtruth count
 
-summaryCl2 <- rename(summaryCl2, c("se" = "se.fromtruth.avg"))
+gsummaryCl2 <- rename(summaryCl2, c("se" = "se.fromtruth.avg"))
 summaryCl2$sd <- NULL
 summaryCl2$ci <- NULL
 summaryCl2$N <- NULL
@@ -402,7 +401,7 @@ p <- p + ggtitle(title)
 p <- p + scale_size_continuous(name="Truth\nstrength")
 p
 
-
+9
 p <- p + myThemeMod
 p
 
@@ -426,3 +425,41 @@ for (t in sort(unique(summaryCl3$t))) {
 }
 
 system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg ', SCATTERPATH, 'scatter_count_fromtruth_tau.avi'))
+
+
+## TAU 20000
+
+cl <- loadData(DUMPDIR, 'final_tau_20000/')
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_tau_20000.jpg"),
+       plot = p, width=10, height=5, dpi=600)
+
+
+## TAU 20000 NO BOUND
+
+cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/')
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_tau_20000_nobound.jpg"),
+       plot = p, width=10, height=5, dpi=600)

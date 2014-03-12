@@ -239,8 +239,10 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         pause(0.01);
         
         % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
-        
-        mean(colnorm(dump.agentsv(:,:,j),2))
+        if (j == 2000) 
+            mov = mean(colnorm(dump.agentsv(:,:,j),2))        
+            dis = mean(colnorm(agents-(repmat(truth,1, 100)),2))
+        end
     end      
  
 %%    

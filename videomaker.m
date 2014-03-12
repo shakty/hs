@@ -172,46 +172,7 @@ simName = 'BIGR-2014-1-23-10-47/'; % v = 10
 simName = 'SPEEDTEST-2014-1-23-11-23/'; % R = 1 -> 355
 simName = 'SPEEDTEST-2014-1-23-11-24/'; % R = 0.02 -> 583
 
-
-simName = 'EEH-2014-1-27-20-41/'; % v = 1, tau = 10, agents go very slowly to Truth, they don't have enough time
-simName = 'EEH-2014-1-27-20-43/'; % v = 1, tau = 1000, agents do not even move...
-% simName = 'EEH-2014-1-27-20-46/'; % v = 1, tau = 0.01, agents immediately on truth
-% simName = 'EEH-2014-1-27-20-49/'; % v = 1, tau = 0.1, agents go quickly on truth
-% simName = 'EEH-2014-1-27-20-57/'; % v = 100, tau = 0.01.
-% simName = 'EEH-2014-1-27-20-59/'; % v = 1000, tau = 0.01.
-% simName = 'EEH-2014-1-27-21-5/'; % v =1 tau = 2, R = 0.03. clusters forming far away, going to truth
-% simName = 'EEH-2014-1-27-21-8/'; % v = 1 tau = 2, R = 0.6. slowly to truth
-% simName = 'EEH-2014-1-27-21-9/'; % v = 3 tau = 2, R = 0.6. 1 cluster forming a bit far away, going into truth
-% simName = 'EEH-2014-1-27-21-11/'; % v = 5 tau = 2, R = 0.6. too slow..
-simName = 'EEH-2014-1-27-21-18/'; % v = 5 tau = 2, R = 0.6. alpha = .99
-simName = 'EEH-2014-1-27-21-23-a/'; % v = 10 tau = 1, R = 0.6. alpha = .99 chaos, when agents slow down, 1 cluster on truth
-simName = 'EEH-2014-1-27-21-25/'; % v = 10 tau = 1, R = 0.6. alpha = 0.2, 1 cluster mid-far away, then it goes closer
-simName = 'EEH-2014-1-27-21-26/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
-simName = 'EEH-2014-1-27-21-28/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
-
-simName = 'EEH-2014-1-27-22-13/'; % v = 100 tau = 1, R = 0.03. alpha = 0.2, sigma = 0
-simName = 'EEH-2014-1-27-22-15/'; % v = 1 tau = 1, R = 0.3. alpha = 0.2, sigma = 0
-simName = 'EEH-2014-1-27-22-32/'; % 
-simName = 'EEH-2014-1-27-22-34/'; % 
-simName = 'EEH-2014-1-27-22-36/'; % 
-simName = 'EEH-2014-1-27-22-38/'; % 
-simName = 'EEH-2014-1-27-22-40/'; % 
-simName = 'EEH-2014-1-27-22-45/'; % 
-
-simName = 'EEH-2014-1-28-0-11/'; % 
-simName = 'EEH-2014-1-28-0-15/'; % 
-
 %DUMPDIR = '/mnt/tmp/dump/NAVNP/';
-
-
-% TAU test
-simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
-simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
-simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
-simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
-simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
-simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
-simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
 
 
 % CLUSTERs vs CLUSTER
@@ -256,6 +217,76 @@ simName = 'SCENARIO-2014-2-9-17-27/'; % alpha = .99 R = 0.03, sigma = 0.01, epsi
 simName = '/LOW_TRUTH-2014-2-10-14-53/';
 simName = '/LOW_TRUTH-2014-2-10-14-54/';
 
+simName = '/NEWSIMA/';
+
+% TAU test
+simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
+simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
+simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
+simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
+simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
+simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
+simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
+
+simName = 'TTAU-2014-2-20-9-3/'; % t = 13
+simName = 'TTAU-2014-2-20-14-15/'; 
+
+% DUMPDIR = '/home/stefano/HS/';
+% simName = 'final_tau_20000/final_tau_20000_s1/';
+
+
+simName = 'EEH-2014-1-27-20-41/'; % v = 1, tau = 10, agents go very slowly to Truth, they don't have enough time
+simName = 'EEH-2014-1-27-20-43/'; % v = 1, tau = 1000, agents do not even move...
+% simName = 'EEH-2014-1-27-20-46/'; % v = 1, tau = 0.01, agents immediately on truth
+% simName = 'EEH-2014-1-27-20-49/'; % v = 1, tau = 0.1, agents go quickly on truth
+% simName = 'EEH-2014-1-27-20-57/'; % v = 100, tau = 0.01.
+% simName = 'EEH-2014-1-27-20-59/'; % v = 1000, tau = 0.01.
+% simName = 'EEH-2014-1-27-21-5/'; % v =1 tau = 2, R = 0.03. clusters forming far away, going to truth
+% simName = 'EEH-2014-1-27-21-8/'; % v = 1 tau = 2, R = 0.6. slowly to truth
+% simName = 'EEH-2014-1-27-21-9/'; % v = 3 tau = 2, R = 0.6. 1 cluster forming a bit far away, going into truth
+% simName = 'EEH-2014-1-27-21-11/'; % v = 5 tau = 2, R = 0.6. too slow..
+simName = 'EEH-2014-1-27-21-18/'; % v = 5 tau = 2, R = 0.6. alpha = .99
+simName = 'EEH-2014-1-27-21-23-a/'; % v = 10 tau = 1, R = 0.6. alpha = .99 chaos, when agents slow down, 1 cluster on truth
+simName = 'EEH-2014-1-27-21-25/'; % v = 10 tau = 1, R = 0.6. alpha = 0.2, 1 cluster mid-far away, then it goes closer
+simName = 'EEH-2014-1-27-21-26/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
+simName = 'EEH-2014-1-27-21-28/'; % v = 100 tau = 1, R = 0.6. alpha = 0.2
+
+simName = 'EEH-2014-1-27-22-13/'; % v = 100 tau = 1, R = 0.03. alpha = 0.2, sigma = 0
+simName = 'EEH-2014-1-27-22-15/'; % v = 1 tau = 1, R = 0.3. alpha = 0.2, sigma = 0
+simName = 'EEH-2014-1-27-22-32/'; % 
+simName = 'EEH-2014-1-27-22-34/'; % 
+simName = 'EEH-2014-1-27-22-36/'; % 
+simName = 'EEH-2014-1-27-22-38/'; % 
+simName = 'EEH-2014-1-27-22-40/'; % 
+simName = 'EEH-2014-1-27-22-45/'; % 
+
+simName = 'EEH-2014-1-28-0-11/'; % 
+simName = 'EEH-2014-1-28-0-15/'; % 
+
+
+% TAU test
+simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
+simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
+simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
+simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
+simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
+simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
+simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
+
+simName = 'TTAU-2014-2-20-9-3/'; % t = 13
+
+simName = 'TTAU-2014-2-20-14-15/'; % t=10, but small R (0.03)
+
+simName = 'TTAU-2014-3-12-11-15/' % t=10, but small R (0.03)
+
+simName = 'TTAU-2014-3-12-11-30/' % t=50, but small R (0.03)
+
+simName = 'TTAU-2014-3-12-12-5/' % t=50, big R (0.3)
+
+simName = 'TTAU-2014-3-12-14-19/' % t=10, big R (0.3), time2complete 150!
+
+
+simName = 'TTAU-2014-3-12-13-3/' % t=50, big R (0.3), time2complete 150!
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';

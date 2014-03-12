@@ -10,7 +10,7 @@ DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
 DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
 
-DUMPDIR <- '/home/stefano/HS/'
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 
 ##############################
 # Explanation of loaded files:
@@ -63,9 +63,15 @@ loadData <- function(DUMPDIR, DIR) {
                                      nagents, t.end, dt, timestamp))
 
 
-  macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
-  macro$fromtruth.avg <- NULL
-  macro$fromtruth.sd <- NULL
+  macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")  
+  macro <- subset(macro, select=-c(move.avg,
+                                   speed.avg,
+                                   move.sd,
+                                   speed.sd,
+                                   fromtruth.avg,
+                                   fromtruth.sd))
+ 
+
   agents <- read.table('agents.csv', head=TRUE, sep=",")
   
   clu <- merge(params, macro, by=c("simname","simcount", "run"))
@@ -288,3 +294,81 @@ for (t in sort(unique(summaryFt$t))) {
 }
 
 system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg ', SCATTERPATH, 'tau_fromtruth.avi'))
+
+
+## TAU 20000
+
+cl <- loadData(DUMPDIR, 'final_tau_20000/')
+
+summaryFt <- summarySE(cl[cl$t == 20000,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
+
+#options(warn = 2, error = recover)
+
+title <- 'Distance from truth by strength of the truth'
+p <- ggplot(summaryFt, aes((100 - tau), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "progress_scan_tau_20000.jpg"),
+       plot = p, width=10, height=5, dpi=600)
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("coverage.cum"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cohesiveness biggest cluster by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), coverage.cum))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=coverage.cum, width=1))
+p <- p + geom_errorbar(aes(ymax = coverage.cum + se, ymin = coverage.cum - se))
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("pdist.sd"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cohesiveness biggest cluster by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), pdist.sd))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=pdist.sd, width=1))
+p <- p + geom_errorbar(aes(ymax = pdist.sd + se, ymin = pdist.sd - se))
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("pdist.mean"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cohesiveness biggest cluster by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), pdist.mean))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=pdist.mean, width=1))
+p <- p + geom_errorbar(aes(ymax = pdist.mean + se, ymin = pdist.mean - se))
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+
+## TAU 20000 NO BOUND
+
+
+cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/')
+
+summaryFt <- summarySE(cl[cl$t == 20000,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
+
+#options(warn = 2, error = recover)
+
+title <- 'Distance from truth by strength of the truth'
+p <- ggplot(summaryFt, aes((100 - tau), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "progress_scan_tau_20000_nobound.jpg"),
+       plot = p, width=10, height=5, dpi=600)
