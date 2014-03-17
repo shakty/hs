@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final_tau_vs_speed';
+simName = 'final_tau_vs_speed_largeR';
 dumpDir = '/cluster/work/scr1/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.5];  % weighting of velocity terms
-Rs     = [0.03; 0.3]; % cut-off radius
+Rs     = [0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
