@@ -1,4 +1,4 @@
-# SPEED TEST: many vs 1 cluster
+# TAU SPEED
 
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
@@ -35,6 +35,7 @@ myThemeMod <- theme(legend.position = "none",
 
 DUMPDIR <- '/home/stefano/HS/'
 DIR <- 'final_tau_vs_speed/'
+DIR <- 'final_tau_vs_speed_largeR/'
 
 PATH <- paste0(DUMPDIR, DIR)
 setwd(PATH)
@@ -71,3 +72,41 @@ clu$simname <- as.character(clu$simname)
 clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
 clu$simname <- as.factor(clu$simname)
 clu$simcount <- as.factor(clu$simcount)
+
+
+names(clu)
+clu$tau10 <- cut(clu$tau, breaks=seq(0,1,0.02))
+clu$v10 <- cut(clu$init.vscaling, breaks=seq(0,1,0.02))
+mydata <- clu[clu$t == 2000,]
+
+
+p <- ggplot(mydata, aes(tau, init.vscaling, fill=fromtruth.avg))
+p <- p + geom_tile()
+p
+
+clu$invtau <- 1 - clu$tau
+
+library(lattice)
+title <- "Truth's signal strength vs Velocity multiplier"
+theseCol=heat.colors(150)
+wireframe(fromtruth.avg ~ tau * init.vscaling, data = mydata,
+          shade = TRUE,
+          scales = list(arrows = FALSE),
+          pretty = TRUE,
+          main=title,
+          #colorkey=FALSE, 
+          #col.regions=theseCol,
+          zlab="DIST", xlab="Signal's\n strength", ylab="Velocity\n multiplier")
+
+npanel <- c(4, 2)
+rotx <- c(-50, -80)
+rotz <- seq(30, 300, length = npanel[1]+1)
+update(p[rep(1, prod(npanel))], layout = npanel,
+    panel = function(..., screen) {
+        panel.wireframe(..., screen = list(z = rotz[current.column()],
+                                           x = rotx[current.row()]))
+    })
+
+
+library(rgl)
+plot3d(mydata$invtau, mydata$init.vscaling, mydata$fromtruth.avg, type = "p")

@@ -8,7 +8,7 @@ clc;
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'final_tau_vs_speed_largeR';
+simName = 'final_tau_vs_speed_largeR_n10';
 dumpDir = '/cluster/work/scr1/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -23,14 +23,14 @@ DUMPDIR = [dumpDir SIM_SUBDIR];
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 1; % Dump every x steps
+DUMP_RATE = 100; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 SHOW_POTENTIAL = 0;
 %%%%%%%%%%%%%
 
 % MODEL Conf
 
-nRuns = 1;              % Number of simulation-runs with same param set
+nRuns = 10;              % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -152,7 +152,7 @@ seed = randi(1000000);
 % PARAMS 4 ANALYSIS
 
 DUMP_ANALYSIS = 1;
-DUMP_RATE_ANALYSIS = 100; % Dump every x steps
+DUMP_RATE_ANALYSIS = 1; % Dump every x steps
 
 % Only clusters of size above the cutoff are included in the analysis
 CLU_CUTOFF = 2;

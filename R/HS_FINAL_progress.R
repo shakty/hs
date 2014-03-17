@@ -1,8 +1,6 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
-library(scales)
-
 # DUMPDIR 
 DUMPDIR = "/mnt/tmp/dump/NAVNP/"
 
@@ -262,18 +260,24 @@ summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("tau", "R","init
 
 #options(warn = 2, error = recover)
 
-title <- 'Distance from truth by strength of the truth'
+vline_frame <- data.frame(intercept=89, R = 0.3)
+ann_text <- data.frame(tau = 60, fromtruth.avg = 0.5, R = 0.3)
+
+
+title <- 'Distance from truth vs Strength of the truth\'s signal'
 p <- ggplot(summaryFt[summaryFt$init.vscaling == 1,], aes((100 - tau), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
+#p <- p + geom_vline(data = vline_frame, aes(xintercept = intercept), colour="red", linetype = "longdash", size = 1)
+#p <- p + geom_text(data = ann_text, label = "Very weak signal", size=8)
 p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_tau.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
 
 summaryFt <- summarySE(cl, c("fromtruth.avg"), c("tau", "R", "t"), na.rm=TRUE)
 SCATTERPATH <- paste0(IMGPATH, 'tau_fromtruth/')
