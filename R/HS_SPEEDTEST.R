@@ -49,6 +49,7 @@ setwd(PATH)
 data <- read.table('speedtest.csv', head = T, sep = ",")
 
 data$smallR <- as.numeric(data$R <= 0.1)
+data$bigR <- as.numeric(data$R > 0.1)
 
 # If consensus is not reached it has value -1. Replace with NA
 data[] <- lapply(data, function(x){replace(x, x == -1, NA)}) 
@@ -64,6 +65,9 @@ mydata <- data[complete.cases(data[,c("consensus75","ccount50")]) & data$alpha =
 
 fit1a <- lm(consensus75 ~ smallR, data = mydata)
 summary(fit1a)
+
+fit1aa <- lm(consensus75 ~ ccount50, data = mydata)
+summary(fit1aa)
 
 
 # Step2 Regress INDEPENDENT on MEDIATOR: R and alpha on consensus75
@@ -114,6 +118,9 @@ data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
 data$R <- as.factor(data$R)
 data$alpha <- as.factor(data$alpha)
 
+
+# Log data
+# data$consensus75 <- log(data$consensus75)
 
 # Good fit - 3
 mydata <- data[data$alpha == 0.01 & data$init.placement == 0.4 & data$R == 0.03,]

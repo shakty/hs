@@ -1,7 +1,7 @@
 # TAU SPEED
 
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
-
+library(lattice)
 
 
 myLabeller <- function(var, value){
@@ -33,12 +33,23 @@ myThemeMod <- theme(legend.position = "none",
 
 ## Data
 
-DUMPDIR <- '/home/stefano/HS/'
-DIR <- 'final_tau_vs_speed/'
-DIR <- 'final_tau_vs_speed_largeR/'
+SMALLRADIUS <- 1
+
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
+
+if (SMALLRADIUS) {
+  DIR <- 'final_tau_vs_speed/'
+} else {
+  DIR <- 'final_tau_vs_speed_largeR/'
+}
 
 PATH <- paste0(DUMPDIR, DIR)
+IMGPATH <- paste0(DUMPDIR, "imgs/");
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(PATH, "/imgs/"))
+}
 setwd(PATH)
+
 
 params <- read.table('params.csv', head=TRUE, sep=",")
 
@@ -74,39 +85,53 @@ clu$simname <- as.factor(clu$simname)
 clu$simcount <- as.factor(clu$simcount)
 
 
-names(clu)
 clu$tau10 <- cut(clu$tau, breaks=seq(0,1,0.02))
 clu$v10 <- cut(clu$init.vscaling, breaks=seq(0,1,0.02))
+clu$invtau <- 1 - clu$tau
+
 mydata <- clu[clu$t == 2000,]
 
 
-p <- ggplot(mydata, aes(tau, init.vscaling, fill=fromtruth.avg))
-p <- p + geom_tile()
-p
+if (SMALLRADIUS) {
+  title <- "Truth's signal strength vs Velocity multiplier - Small Radius (R = 0.03)"
+  file <- "wireframe_tau_v_r003.jpeg"
+} else {
+  title <- "Truth's signal strength vs Velocity multiplier - Large Radius (R = 0.3)"
+  file <- "wireframe_tau_v_r03.jpeg"
+}
 
-clu$invtau <- 1 - clu$tau
-
-library(lattice)
-title <- "Truth's signal strength vs Velocity multiplier"
 theseCol=heat.colors(150)
-wireframe(fromtruth.avg ~ tau * init.vscaling, data = mydata,
-          shade = TRUE,
-          scales = list(arrows = FALSE),
-          pretty = TRUE,
-          main=title,
-          #colorkey=FALSE, 
-          #col.regions=theseCol,
-          zlab="DIST", xlab="Signal's\n strength", ylab="Velocity\n multiplier")
 
-npanel <- c(4, 2)
-rotx <- c(-50, -80)
-rotz <- seq(30, 300, length = npanel[1]+1)
-update(p[rep(1, prod(npanel))], layout = npanel,
-    panel = function(..., screen) {
-        panel.wireframe(..., screen = list(z = rotz[current.column()],
-                                           x = rotx[current.row()]))
-    })
+xlabstr <- list(expression(tau))
+xlabstr <- "Signal's\n strength"
+
+jpeg(filename=paste0(IMGPATH, file),
+     res=300, quality=100, width=2000, height=2000)
+print(      
+      #oldpar <- par(mgp=c(10,10,10))
+      wireframe(fromtruth.avg ~ invtau * init.vscaling, data = mydata,
+                shade = TRUE,
+                scales = list(arrows = FALSE),
+                pretty = TRUE,
+                main=title,
+                zlim=c(0,0.25),
+                zlab=list(cex=1.3, label="DIST"), xlab=list(cex=1.3, label=xlabstr),
+                ylab=list(cex=1.3, label="Velocity\n multiplier", distance=3, at=10)
+                )
+      )
+dev.off()
 
 
-library(rgl)
-plot3d(mydata$invtau, mydata$init.vscaling, mydata$fromtruth.avg, type = "p")
+
+# npanel <- c(4, 2)
+# rotx <- c(-50, -80)
+# rotz <- seq(30, 300, length = npanel[1]+1)
+# update(p[rep(1, prod(npanel))], layout = npanel,
+#     panel = function(..., screen) {
+#         panel.wireframe(..., screen = list(z = rotz[current.column()],
+#                                            x = rotx[current.row()]))
+#     })
+# 
+# 
+# library(rgl)
+# plot3d(mydata$invtau, mydata$init.vscaling, mydata$fromtruth.avg, type = "p")

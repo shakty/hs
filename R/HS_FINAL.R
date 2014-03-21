@@ -177,7 +177,7 @@ cl$tbr <- cut(cl$t,  breaks=seq(0,20000,1000))
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R", "tbr"), na.rm=TRUE)
 
-title <- 'Cluster counts by social influence'
+title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
@@ -190,13 +190,13 @@ p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "scan_alpha2.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
 
 
 # t = 20000
 summaryCl <- summarySE(cl[cl$t == 20000 & cl$R == 0.03,], c("count"), c("alpha", "R"), na.rm=TRUE)
 
-title <- 'Cluster counts by social influence'
+title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
@@ -210,7 +210,7 @@ p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "scan_alpha_20000.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
        
 ## VSCALING ##
 
@@ -291,13 +291,13 @@ cl <- loadData(DUMPDIR, 'final_noises/')
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
-title <- 'Cluster counts by individualization and \nmeasurament noise'
+title <- 'Cluster counts vs Angular noise and \nPosition noise'
 p <- ggplot(summaryCl, aes(sigma, count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Individualization noise') + ylab('Cluster counts')
-p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + xlab('Angular noise') + ylab('Cluster counts')
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
 p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
 p
 

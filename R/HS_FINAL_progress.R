@@ -1,14 +1,8 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
-# DUMPDIR 
-DUMPDIR = "/mnt/tmp/dump/NAVNP/"
-
-# Linear
-DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
-DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
-
 DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
+#DUMPDIR <- '/home/stefano/HS/'
 
 ##############################
 # Explanation of loaded files:
@@ -172,9 +166,10 @@ cl <- loadData(DUMPDIR, 'final_alpha/')
 
 cl$tbr <- cut(cl$t,  breaks=seq(0,20000,1000))
 
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$alpha > 0.8,], c("fromtruth.avg"), c("alpha", "R", "tbr"), na.rm=TRUE)
+# & cl$alpha > 0.8
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "tbr"), na.rm=TRUE)
 
-title <- 'Distance from truth by social influence'
+title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
 p <- p + geom_errorbar(limits)
@@ -188,13 +183,13 @@ p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_alpha3.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
 
 # t = 20000
 
 summaryFt <- summarySE(cl[cl$t == 20000 & cl$R == 0.03,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
 
-title <- 'Distance from truth by social influence'
+title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
 p <- p + geom_errorbar(limits)
@@ -207,7 +202,7 @@ p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_alpha_20000.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
 
 
 ## VSCALING ##
@@ -236,21 +231,21 @@ cl <- loadData(DUMPDIR, 'final_noises/')
 
 summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
-title <- 'Distance from truth by individualization and \nmeasurament noise'
+title <- 'Distance from truth vs Angular noise and \nPosition noise'
 p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Individualization noise') + ylab('Distance from truth')
+p <- p + xlab('Angular noise') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
 #p <- p + scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15))
 p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
 #p <- p + theme(axis.text.y = element_text(size=18))
 p
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_noises.jpg"),
-       plot = p, width=10, height=10, dpi=600)
+       plot = p, width=10, height=10, dpi=300)
 
 ## TAU ##
 
@@ -261,8 +256,9 @@ summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("tau", "R","init
 #options(warn = 2, error = recover)
 
 vline_frame <- data.frame(intercept=89, R = 0.3)
-ann_text <- data.frame(tau = 60, fromtruth.avg = 0.5, R = 0.3)
-
+ann_text <- data.frame(tau = 75, fromtruth.avg = 0.5, R = 0.3)
+ann_rect <- data.frame(tau = 75, fromtruth.avg = 0.2, R = 0.3)
+ann_arrow <- data.frame(x = 48, y = 0.48, R = 0.3)
 
 title <- 'Distance from truth vs Strength of the truth\'s signal'
 p <- ggplot(summaryFt[summaryFt$init.vscaling == 1,], aes((100 - tau), fromtruth.avg))
@@ -270,7 +266,11 @@ p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, w
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
 #p <- p + geom_vline(data = vline_frame, aes(xintercept = intercept), colour="red", linetype = "longdash", size = 1)
-#p <- p + geom_text(data = ann_text, label = "Very weak signal", size=8)
+#p <- p + geom_text(data = ann_text, label = "Convergence far away\n from ground-truth", size=8)
+#p <- p + geom_rect(data=ann_rect, aes(xmin = tau,
+#                     xmax = tau + 20, ymin = fromtruth.avg,
+#                     ymax = fromtruth.avg + 0.15), alpha = .2)
+#p <- p + geom_segment(data=ann_arrow, aes(x = x, y = y, xend = x + 34, yend = y - 0.14), arrow = arrow())
 p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + ggtitle(title) + myThemeMod
