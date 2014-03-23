@@ -21,16 +21,18 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
     % centers is just a number instead of an array of centers
     if (sizeNC(1,1) == 1 && nof_clusters(1,1) == 0)
         
-        if (bandArea == -1)
-            % Agents are positioned randomly across the whole idea space
+        % Agents are positioned randomly across the whole idea space
+        if (bandArea == -1)        
             agents_pos = ideas_space_size.*rand(ideas_space_dim,n_agents);
+            
+        % Agents are positioned randomly in circular bands around the truth
         else
             theta = rand(1, n_agents)*(2*pi);            
             r = rand(1,n_agents)*(bandArea(2,1) - bandArea(1,1)) + bandArea(1,1);
             agents_pos = truth(1,1) + r.*cos(theta);
-            agents_pos(2,:) = truth(2,1) + r.*sin(theta);            
+            agents_pos(2,:) = truth(2,1) + r.*sin(theta);
             plot(agents_pos(1,:), agents_pos(2,:),'.');
-        end
+        end        
     
     else
         
@@ -82,17 +84,22 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
             agents_pos = [agents_pos, cluster_pos];                   
         end
         
-        % in case agents are positioned outside of feasible area: 
-        % position them on the border
-        dimHa = agents_pos(1,:) < 0;
-        dimHb = agents_pos(1,:) > ideas_space_size;
-        dimH = bitor(dimHa, dimHb);
-        agents_pos(1,dimH) = round(agents_pos(1,dimH));
-        dimVa = agents_pos(2,:) > ideas_space_size;
-        dimVb = agents_pos(2,:) < 0;
-        dimV = bitor(dimVa, dimVb);
-        agents_pos(2,dimV) = round(agents_pos(2,dimV));
     end
+    
+    
+    % For all settings:
+    
+    % in case agents are positioned outside of feasible area: 
+    % position them on the border
+    dimHa = agents_pos(1,:) < 0;
+    dimHb = agents_pos(1,:) > ideas_space_size;
+    dimH = bitor(dimHa, dimHb);
+    agents_pos(1,dimH) = round(agents_pos(1,dimH));
+    dimVa = agents_pos(2,:) > ideas_space_size;
+    dimVb = agents_pos(2,:) < 0;
+    dimV = bitor(dimVa, dimVb);
+    agents_pos(2,dimV) = round(agents_pos(2,dimV));
+    
 end
 
 

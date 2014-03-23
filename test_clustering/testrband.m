@@ -1,6 +1,8 @@
 clc
 cla
 
+path(path,'../util/'); % Help functions
+
 BAND = 0.1; %0.09819;
 vi = [0.1:0.05:0.5];
 NELEM = length(vi);
@@ -24,6 +26,18 @@ vy = zeros(NELEM,1);
 %     pause(1)
 % end
 
+limit = 0.5;
+band = [0;0];
+i = 1;
+
+while (band(1,i) < limit)
+    band(2,i) = rband(band(1,i), BAND, 0);        
+    i = i + 1;        
+    band(1,i) = band(2,i-1);
+end
+band = band(:,1:end-1)
+
+return
 vi = 0;
 vy = 0;
 

@@ -36,7 +36,7 @@ plottype = 0;
 SHOW_POTENTIAL = 0;
 
 % Duration
-t_ends = 200;
+t_ends = 1;
 nRuns = 1;
 
 % Size
@@ -88,7 +88,7 @@ clustersInCircleOfRadius = [0.1:0.05:0.5]; %-1; % [-1 0.4];
 % Agents are placed randomly within a circular area (band) of area equal to
 % bandArea. Inner circles will have a larger section, to make all circles
 % of equal area.
-bandAreas = [0.1;0.2]; % last band is slighlty smaller (0.09819; is right)
+bandAreas = computeRBands(0.1, 0.1, 0.5) % last band is slighlty smaller (0.09819; is right)
 
 % Seed
 seedtype = 0; % 0 = fixed
