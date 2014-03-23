@@ -2,13 +2,14 @@
 
 clc;
 
+path(path,'.../util/'); % Help functions
 %%%%%%%%%%%%%
 
 % GLOBAL Conf
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress';
+simName = 'clusters_vs_progress_rbands01';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -78,9 +79,11 @@ sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 vScalings =  [1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [1:30];    	% number of clusters of the initial positions
+nClusters = 0;[1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
 clustersInCircleOfRadius = [0.1:0.05:0.5];
+
+bandAreas = computeRBands(0.1, 0.1, 0.5); % last band is slighlty smaller (0.09819; is right)
 
 % TRUTH POSITION
 % Generate Truth Vector for 2D Truth
@@ -190,7 +193,7 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(vScalings,2)*size(nClusters,NC_DIM)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
                 size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
-                size(clustersInCircleOfRadius,2);
+                size(clustersInCircleOfRadius,2)*size(bandAreas,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
@@ -212,6 +215,7 @@ fprintf('%+15s = %s\n','v_scaling', mat2str(vScalings));
 fprintf('%+15s = %s\n','n cluster', mat2str(nClusters));
 fprintf('%+15s = %s\n','c.circle radius', mat2str(clustersInCircleOfRadius));
 fprintf('%+15s = %2.3f\n','tight clusters', clusterTightness);
+fprintf('%+15s = %s\n','band areas', mat2str(bandAreas));
 fprintf('%+15s = [%2.3f:%2.3f]\n','truth', truths(1,1), truths(2,1));
 fprintf('%+15s = %d\n', 'Attr. type', attrtype);
 fprintf('%+15s = %d\n', 'Noise type', noisetype);
