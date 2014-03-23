@@ -1,6 +1,6 @@
 function [agents_pos] = initial_pos_clustered(nof_clusters, ...
     clusterTightness, n_agents, ideas_space_size, ideas_space_dim, ...
-    clustersInCircleOfRadius, truth)
+    clustersInCircleOfRadius, bandArea, truth)
 
     % nof_clusters can be:
     %
@@ -13,13 +13,24 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
     %  any value > 0 -> all clusters will be placed on the radius
     
     
+    
+    
     % To be backward compatible we need to do a bit more checking.
     sizeNC = size(nof_clusters);
     
     % centers is just a number instead of an array of centers
     if (sizeNC(1,1) == 1 && nof_clusters(1,1) == 0)
-        % Agents are positioned randomly across the whole idea space
-        agents_pos = ideas_space_size.*rand(ideas_space_dim,n_agents);    
+        
+        if (bandArea == -1)
+            % Agents are positioned randomly across the whole idea space
+            agents_pos = ideas_space_size.*rand(ideas_space_dim,n_agents);
+        else
+            theta = rand(1, n_agents)*(2*pi);            
+            r = rand(1,n_agents)*(bandArea(2,1) - bandArea(1,1)) + bandArea(1,1);
+            agents_pos = truth(1,1) + r.*cos(theta);
+            agents_pos(2,:) = truth(2,1) + r.*sin(theta);            
+            plot(agents_pos(1,:), agents_pos(2,:),'.');
+        end
     
     else
         
@@ -90,4 +101,12 @@ function h = circle(x, y, radius, howmany)
     xunit = radius * cos(th) + x;
     yunit = radius * sin(th) + y;
     h = [xunit ; yunit];
+end
+
+function ry = rband(ri, band, inner)
+    if (inner)
+        ry = sqrt((ri^2*pi - band)/pi);
+    else
+        ry = sqrt((ri^2*pi + band)/pi);
+    end
 end

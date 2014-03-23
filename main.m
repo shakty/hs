@@ -30,7 +30,7 @@ simName = 'TTAU';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
-DUMP = 1;
+DUMP = 0;
 COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
@@ -62,12 +62,33 @@ truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
 
-% Clustered initial positions
-nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
+
+% Initial positions
+
+
+% nClusters = [0.1 0.9 0.1 0.9 ; 0.1 0.9 0.9 0.1];
 % nClusters = [0.1 ; 0.1 ];
-nClusters = [0];
+
+% Can contain:
+%  - the coordinates of the centers of the clusters
+%  - the number of clusters (1..n), centers placed randomly
+%  - be equal to 0, no clusters, either init options considered
+nClusters = [0]; 
+
+% Clustered
+
 clusterTightness = [0.05];
-clustersInCircleOfRadius = -1; % [-1 0.4];
+
+% Can be:
+%  - equal to -1, centers are placed randomly
+%  - equal to (0..n) centers are placed on a radius equal to that.
+clustersInCircleOfRadius = [0.1:0.05:0.5]; %-1; % [-1 0.4];
+
+% Bands
+% Agents are placed randomly within a circular area (band) of area equal to
+% bandArea. Inner circles will have a larger section, to make all circles
+% of equal area.
+bandAreas = [0.1;0.2]; % last band is slighlty smaller (0.09819; is right)
 
 % Seed
 seedtype = 0; % 0 = fixed
@@ -104,6 +125,7 @@ simParamsStruct = struct( ...
                 'nof_clusters', nClusters, ...
                 'clusterTightness', clusterTightness, ...                
                 'clustersInCircleOfRadius', clustersInCircleOfRadius, ...
+                'bandAreas', bandAreas, ...
                 'truths', truths, ...
                 'attrtype', attrtype, ...
                 'noisetype', noisetype, ...

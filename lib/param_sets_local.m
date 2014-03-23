@@ -92,10 +92,14 @@ for i1=1:size(params.dts)
         end   
         
     for i14b=1:size(params.clustersInCircleOfRadius,2)
-        clRadius = params.clustersInCircleOfRadius(i14b);   
+        clRadius = params.clustersInCircleOfRadius(i14b);
     
     for i15=1:size(params.clusterTightness,2)
-        clusterTightness = params.clusterTightness(i15);    
+        clusterTightness = params.clusterTightness(i15);
+        
+        
+    for i15A=1:size(params.bandAreas,2)
+        bandArea = params.bandAreas(:,i15A);
         
     for i16=1:size(params.truths,2)
         truth = params.truths(:,i16);
@@ -158,7 +162,7 @@ for i1=1:size(params.dts)
             else
                 fprintf('%+15s = %s\n','n cluster', mat2str(nof_cluster));
             end
-            
+            fprintf('%+15s = %s\n','areaBand', mat2str(bandArea));
             fprintf('%+15s = %2.3f\n','c.circle radius', clRadius);
             fprintf('%+15s = %2.3f\n','tight clusters',clusterTightness);
             fprintf('%+15s = [%2.3f:%2.3f]\n','truth',truth(1,1),truth(2,1));
@@ -199,6 +203,7 @@ for i1=1:size(params.dts)
                 'nof_cluster', nof_cluster, ...
                 'clusterTightness', clusterTightness, ...
                 'clustersInCircleOfRadius', clRadius, ...
+                'bandArea', bandArea, ...
                 'truth', truth, ...
                 'noisetype', noisetype, ...
                 'attrtype', attrtype, ...
@@ -213,6 +218,7 @@ for i1=1:size(params.dts)
         end % End n runs with identical param set
              
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end

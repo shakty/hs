@@ -265,3 +265,155 @@ ggsave(filename = paste0(IMGPATH, "race_distribution_init-cc.jpg"),
        width=10, height=5, dpi=600)
 
 
+#########################
+### Clusters vs Progress
+#########################
+
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
+
+DIR <- 'clusters_vs_progress/'
+
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+
+IMGPATH <- paste0(DUMPDIR, "imgs/")
+# Create IMG dir if not existing
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(IMGPATH))
+}
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+data$init.placement <- as.factor(data$init.placement)
+# If consensus is not reached it has value -1. Replace with NA
+data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)
+
+
+# Add this if wanna see by cluster as well.
+data$clbr <- cut(data$init.ccount, breaks=c(0,1,5, 10, 20, 30))
+
+mydata <- data
+title <- "Number of clusters vs progress and time to reach a consensus"
+p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(init.placement  ~ R, labeller = myLabeller)
+p
+
+mydata <- data
+title <- "Number of clusters vs progress and time to reach a consensus"
+p <- ggplot(mydata, aes(init.placement, consensus75, color = R))
+p <- p + geom_jitter(size=2)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Clusters placed at distance") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+mydata <- data[data$init.ccount == 30,]
+title <- "Number of clusters vs initial progress"
+p <- ggplot(mydata, aes(init.placement, ccount50, color = R))
+p <- p + geom_jitter(size=2)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+mydata <- data[data$init.ccount == 30,]
+title <- "Number of clusters vs initial progress"
+p <- ggplot(mydata, aes(init.placement, ccount50, color = R))
+p <- p + geom_jitter(size=2)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+
+mydata <- data
+title <- "Initial progress vs Number of clusters"
+p <- ggplot(mydata, aes(init.placement, ccount50, color = R))
+p <- p + geom_jitter(size=2)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Clusters placed at a distance from") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(clbr  ~ R, labeller = myLabeller)
+p
+
+mydata <- data[data$init.placement == 0.4,]
+title <- "Number of clusters and time to reach a consensus"
+p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Clusters placed at a distance from") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+p
+
+ggsave(filename = paste0(IMGPATH, "race_init-cc.jpg"),
+       width=10, height=10, dpi=600)
+
+pAlpha <- p + facet_grid(alpha ~ R, labeller = myLabeller)
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(pAlpha)
+grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.01"))
+grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
+grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
+
+jpeg(filename = paste0(IMGPATH, "race_init-cc_alpha.jpg"),
+     quality=100, width=6000, height=6000, res=600)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
+
+# Distribution of time to consensus
+
+# Add this if wanna see by cluster as well.
+data$clbr <- cut(data$init.ccount, breaks=c(0,1,5, 10, 20, 30))
+
+if (exists("summaryData")) {
+  rm(summaryData)
+}
+if (exists("summaryNew")) {
+  rm(summaryNew)
+}
+counter <- 1
+for (c in seq(10,100,10)) {
+  myVar <- c(paste0('consensus', c))
+  # Remove clbr if not needed
+  summaryNew <- summarySE(data[data$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
+  names(summaryNew) <- sub(myVar, "time", names(summaryNew))
+  summaryNew$share <- c
+  if (exists("summaryData")) {
+    newRowNums <- c(counter:(nrow(summaryNew)+counter-1)); newRowNums
+    rownames(summaryNew) <- newRowNums
+    summaryData <- rbind(summaryData, summaryNew)
+  } else {
+    summaryData <- summaryNew
+  }
+  counter <- counter + nrow(summaryNew)
+}
+
+
+title <- 'Temporal evolution of consensus building \n by number of initial clusters'
+p <- ggplot(summaryData, aes(x = share, weight=time, group=R, fill=R))
+p <- p + geom_bar(aes(y=time), stat = "identity", position = "dodge")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), position = "dodge")
+p <- p + xlab('Share of Consensus') + ylab('Time Passed')
+# Remove clbr if not needed
+p <- p + facet_grid(.~clbr)
+p + ggtitle(title)  + myThemeMod + theme(legend.position = c(1.1, 0.5),
+                                         plot.margin = unit(c(10,30,10,10),"mm"),
+                                         axis.text.x = element_text(size=15))
+
+ggsave(filename = paste0(IMGPATH, "race_distribution_init-cc.jpg"),
+       width=10, height=5, dpi=600)
