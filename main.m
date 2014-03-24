@@ -31,7 +31,7 @@ dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/';
 
 VIDEO = 0;
 DUMP = 0;
-COMPUTATION = 0;
+COMPUTATION = 2;
 plottype = 0;
 SHOW_POTENTIAL = 0;
 

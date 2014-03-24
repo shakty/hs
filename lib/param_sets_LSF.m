@@ -13,10 +13,6 @@ end
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
-% Remote.
-parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
-
-
 % How many sequential simulations in one task.
 SIMS4TASK = 10; 
 % How many tasks group in one job.
@@ -39,7 +35,8 @@ dumpFolder = [ params.dumpDir params.simName];
 % sched = parcluster();
 % sched = findResource('scheduler', 'type', 'local');
 
-% Remote
+% Remote.
+parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 sched = findResource('scheduler','type','lsf');
 % sched=parcluster('BrutusLSF8h');
 submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
@@ -58,7 +55,7 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
 % Total number of combinations is multiplied by either:
 
 % The number of bands.
-if (size(params.nof_clusters(1,1)) == 1 && params.nof_clusters(1,1) == 0)
+if (size(params.nof_clusters,1) == 1 && params.nof_clusters(1,1) == 0)
     nCombinations = nCombinations * size(params.bandAreas,2);
 % The number of clusters.
 else
