@@ -52,12 +52,22 @@ nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_spa
                 size(params.ideas_space_dims,2)*size(params.As,2)*size(params.Bs,2)*size(params.ks,2)*...
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
-                size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2)* ...
-                size(params.epsilons,2)*size(params.clustersInCircleOfRadius,2);
-            
+                size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2) *...
+                size(params.epsilons,2);
+
+% Total number of combinations is multiplied by either:
+
+% The number of bands.
+if (size(params.nof_clusters(1,1)) == 1 && nof_clusters(1,1) == 0)
+    nCombinations = nCombinations * size(params.bandAreas,2);
+% The number of clusters.
+else
+    nCombinations = nCombinations * size(params.clustersInCircleOfRadius,2);
+end
+
 nSimulations = nCombinations * params.nRuns;
 
-% Init cell array of cell arrays           
+% Init cell array of cell arrays
 paramObjs = cell(SIMS4TASK,1);            
 
 % Check nof_clusters
