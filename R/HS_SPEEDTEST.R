@@ -3,7 +3,7 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 library(texreg)
 library(mediation)
-
+library(grid)
 
 myLabeller <- function(var, value){
   value <- as.character(value)
@@ -417,3 +417,27 @@ p + ggtitle(title)  + myThemeMod + theme(legend.position = c(1.1, 0.5),
 
 ggsave(filename = paste0(IMGPATH, "race_distribution_init-cc.jpg"),
        width=10, height=5, dpi=600)
+
+
+#########################
+### Clusters vs Progress: RBANDS
+#########################
+
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
+
+DIR <- 'clusters_vs_progress_rbands01/'
+
+IMGPATH <- paste0(DUMPDIR, "imgs/")
+# Create IMG dir if not existing
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(IMGPATH))
+}
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+data$init.placement <- as.factor(data$init.placement)
+# If consensus is not reached it has value -1. Replace with NA
+data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)

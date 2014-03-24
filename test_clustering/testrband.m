@@ -37,6 +37,7 @@ while (band(1,i) < limit)
 end
 band = band(:,1:end-1)
 
+
 return
 vi = 0;
 vy = 0;
@@ -91,12 +92,12 @@ vi
 
 
 
-% n = 1000;
-% Xc = 0;
-% Yc = 0;
-% 
-% theta = rand(1,n)*(2*pi);
-% r = (rand(1,n)*(10-8)+8);
-% x = Xc + r.*cos(theta);
-% y = Yc + r.*sin(theta);
-% plot(x,y,'.');
+n = 1000;
+Xc = 0;
+Yc = 0;
+
+theta = rand(1,n)*(2*pi);
+r = (rand(1,n)*(10-8)+8);
+x = Xc + r.*cos(theta);
+y = Yc + r.*sin(theta);
+plot(x,y,'.');
