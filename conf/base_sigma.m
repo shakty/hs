@@ -31,7 +31,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 100;             % Number of simulation-runs with same param set
+nRuns = 50;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -199,7 +199,6 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
 fprintf('Total number of simulations = %u x %u: = %u\n', nRuns, nCombinations, nRuns*nCombinations);
 
-
 % Printing parameters (has some assumptions)
 fprintf('\n%s\n', simName);
 fprintf('------------------------------------\n');
@@ -222,7 +221,6 @@ fprintf('%+15s = %d\n', 'Noise type', noisetype);
 fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
 fprintf('%+15s = %d\n','Seed', seed);
 fprintf('------------------------------------\n');
-
 
 % CREATING FOLDERS
 

@@ -306,18 +306,40 @@ p <- p + myThemeMod + ggtitle(title)
 p <- p + facet_grid(init.placement  ~ R, labeller = myLabeller)
 p
 
-mydata <- data
-title <- "Number of clusters vs progress and time to reach a consensus"
-p <- ggplot(mydata, aes(init.placement, consensus75, color = R))
-p <- p + geom_jitter(size=2)
-p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
-p <- p + xlab("Clusters placed at distance") + ylab("Time to Consensus")
-p <- p + myThemeMod + ggtitle(title)
-p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress.jpg"),
+       width=10, height=12, dpi=300)
+
+
+
+mydata <- data[data$R == 0.03,]
+mydata$moreThan9 <- mydata$init.ccount > 9
+
+title <- "Only R = 0.03. Smoothed functions."
+p <- ggplot(mydata, aes(init.ccount, consensus75))
+p <- p + geom_smooth(alpha=0.5, aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
 p
 
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_r003.jpg"),
+       width=10, height=12, dpi=300)
 
+mydata <- data[data$R == 0.03,]
+mydata$moreThan9 <- mydata$init.ccount > 9
 
+title <- "Only R = 0.03. More than 9 clusters?"
+p <- ggplot(mydata, aes(init.ccount, consensus75))
+p <- p + geom_smooth(alpha=0.5, method="lm", aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + facet_grid( ~ moreThan9, labeller = myLabeller)
+p
+
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_r003_more_than9.jpg"),
+       width=10, height=12, dpi=300)
 
 levelplot(consensus75 ~ init.placement * init.ccount, data= data[data$init.placement > 0.2 & data$R == 0.03 & data$alpha == 0.5,],
           shade = TRUE,
@@ -341,6 +363,7 @@ p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
 p <- p + myThemeMod + ggtitle(title)
 p <- p + facet_grid(.  ~ R, labeller = myLabeller)
 p
+
 
 mydata <- data[data$init.ccount == 30,]
 title <- "Number of clusters vs initial progress"
@@ -473,9 +496,13 @@ p <- p + scale_y_discrete(breaks=seq(1,15,1))
 p <- p + facet_grid(.  ~ R, labeller = myLabeller)
 p
 
+
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_exp2.jpg"),
+       width=10, height=10, dpi=300)
+
 mydata <- data
 title <- "Number of clusters vs progress"
-p <- ggplot(mydata, aes(as.factor(init.band.i), ccount75, color = R))
+p <- ggplot(mydata, aes(as.factor(init.band.i), ccount50, color = R))
 p <- p + geom_boxplot(notch=TRUE)
 #p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
 p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
@@ -484,11 +511,13 @@ p <- p + scale_y_discrete(breaks=seq(1,15,1))
 p <- p + facet_grid(.  ~ R, labeller = myLabeller)
 p
 
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_exp2_boxplot.jpg"),
+       width=10, height=10, dpi=300)
 
 
 mydata <- data
 title <- "Number of clusters vs progress"
-p <- ggplot(mydata, aes(init.band.i, ccount10, color = R))
+p <- ggplot(mydata, aes(init.band.i, ccount50, color = R))
 p <- p + geom_jitter(size=2)
 p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
 p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
@@ -496,6 +525,8 @@ p <- p + myThemeMod + ggtitle(title)
 p <- p + facet_grid(alpha  ~ R, labeller = myLabeller)
 p
 
+ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_exp2_by_alpha.jpg"),
+       width=10, height=10, dpi=300)
 
 
 

@@ -1,1 +1,1 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/clusters_vs_progress_hidef/','clusters_vs_progress_hidef_s1','577889')"
+bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/clusters_vs_progress_hidef/','clusters_vs_progress_hidef_s1','23468')"
