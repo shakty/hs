@@ -4,6 +4,7 @@ source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 library(texreg)
 library(mediation)
 library(grid)
+library(lattice)
 
 myLabeller <- function(var, value){
   value <- as.character(value)
@@ -285,7 +286,7 @@ if (!file.exists(IMGPATH)) {
 data <- read.table('speedtest.csv', head = T, sep = ",")
 # Replace -1 in init.placement with 0
 data$init.placement[data$init.placement == -1] <- 0
-data$init.placement <- as.factor(data$init.placement)
+#data$init.placement <- as.factor(data$init.placement)
 # If consensus is not reached it has value -1. Replace with NA
 data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
 data$R <- as.factor(data$R)
@@ -309,11 +310,27 @@ mydata <- data
 title <- "Number of clusters vs progress and time to reach a consensus"
 p <- ggplot(mydata, aes(init.placement, consensus75, color = R))
 p <- p + geom_jitter(size=2)
-#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
 p <- p + xlab("Clusters placed at distance") + ylab("Time to Consensus")
 p <- p + myThemeMod + ggtitle(title)
 p <- p + facet_grid(.  ~ R, labeller = myLabeller)
 p
+
+
+
+
+levelplot(consensus75 ~ init.placement * init.ccount, data= data[data$init.placement > 0.2 & data$R == 0.03 & data$alpha == 0.5,],
+          shade = TRUE,
+          scales = list(arrows = FALSE))
+          pretty = TRUE)
+          #main=title,
+          #zlim=c(0,0.25),
+          #zlab=list(cex=1.3, label="DIST"), xlab=list(cex=1.3, label=xlabstr),
+          #ylab=list(cex=1.3, label="Velocity\n multiplier", distance=3, at=10))
+
+library(rgl)
+mydata <- data[data$R == 0.03 & data$alpha == 0.5,]
+plot3d(mydata$init.ccount, mydata$init.placement, mydata$consensus75)
 
 mydata <- data[data$init.ccount == 30,]
 title <- "Number of clusters vs initial progress"
@@ -424,8 +441,10 @@ ggsave(filename = paste0(IMGPATH, "race_distribution_init-cc.jpg"),
 #########################
 
 DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
-
 DIR <- 'clusters_vs_progress_rbands01/'
+
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
 
 IMGPATH <- paste0(DUMPDIR, "imgs/")
 # Create IMG dir if not existing
@@ -441,3 +460,42 @@ data$init.placement <- as.factor(data$init.placement)
 data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
 data$R <- as.factor(data$R)
 data$alpha <- as.factor(data$alpha)
+
+
+mydata <- data
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount75, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + scale_y_discrete(breaks=seq(1,15,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+mydata <- data
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(as.factor(init.band.i), ccount75, color = R))
+p <- p + geom_boxplot(notch=TRUE)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + scale_y_discrete(breaks=seq(1,15,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+
+
+mydata <- data
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount10, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(alpha  ~ R, labeller = myLabeller)
+p
+
+
+
+

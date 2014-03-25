@@ -288,6 +288,14 @@ simName = 'TTAU-2014-3-12-14-19/' % t=10, big R (0.3), time2complete 150!
 
 simName = 'TTAU-2014-3-12-13-3/' % t=50, big R (0.3), time2complete 150!
 
+
+%RBAND
+simName = 'RBAND-2014-3-24-21-58/'; % R = 0.3
+simName = 'RBAND-2014-3-25-10-36/'; % R = 0.03
+
+simName = 'RBAND-2014-3-25-10-45/'; % R = 0.03, alpha = 0.99
+simName = 'RBAND-2014-3-25-10-49/';
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 

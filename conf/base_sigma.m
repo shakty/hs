@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_rbands01';
+simName = 'clusters_vs_progress_hidef';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -31,7 +31,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 100;              % Number of simulation-runs with same param set
+nRuns = 100;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -79,11 +79,11 @@ sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 vScalings =  [1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = 0; %[1:30];    	% number of clusters of the initial positions
+nClusters = [1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = -1; % [0.1:0.05:0.5];
+clustersInCircleOfRadius = [0.1:0.01:0.5];
 
-bandAreas = computeRBands(0.1, 0.1, 0.5); % last band is slighlty smaller (0.09819; is right)
+bandAreas = -1; % computeRBands(0.1, 0.1, 0.5); % last band is slighlty smaller (0.09819; is right)
 
 % TRUTH POSITION
 % Generate Truth Vector for 2D Truth

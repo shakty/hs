@@ -14,7 +14,7 @@ path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
 % How many sequential simulations in one task.
-SIMS4TASK = 10; 
+SIMS4TASK = 30; 
 % How many tasks group in one job.
 TASKS4JOB = 2;
 
@@ -39,7 +39,7 @@ dumpFolder = [ params.dumpDir params.simName];
 parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
 sched = findResource('scheduler','type','lsf');
 % sched=parcluster('BrutusLSF8h');
-submitArgs = [' -W 8:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
+submitArgs = [' -W 36:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
 set(sched, 'SubmitArguments',submitArgs);
 set(sched, 'DataLocation', [logFolder '/']);
 

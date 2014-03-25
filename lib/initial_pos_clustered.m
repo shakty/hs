@@ -30,8 +30,7 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
             theta = rand(1, n_agents)*(2*pi);            
             r = rand(1,n_agents)*(bandArea(2,1) - bandArea(1,1)) + bandArea(1,1);
             agents_pos = truth(1,1) + r.*cos(theta);
-            agents_pos(2,:) = truth(2,1) + r.*sin(theta);
-            plot(agents_pos(1,:), agents_pos(2,:),'.');
+            agents_pos(2,:) = truth(2,1) + r.*sin(theta);            
         end        
     
     else
@@ -99,6 +98,7 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
     dimVb = agents_pos(2,:) < 0;
     dimV = bitor(dimVa, dimVb);
     agents_pos(2,dimV) = round(agents_pos(2,dimV));
+    %plot(agents_pos(1,:), agents_pos(2,:),'.');
     
 end
 

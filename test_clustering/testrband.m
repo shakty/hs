@@ -38,7 +38,7 @@ end
 band = band(:,1:end-1)
 
 
-return
+%return
 vi = 0;
 vy = 0;
 
@@ -62,6 +62,8 @@ while (vi(i) <= 0.5)
     i = i + 1;
     vi(i) = vy(i-1);
 end
+
+return
 
 vi
 % pause(10)

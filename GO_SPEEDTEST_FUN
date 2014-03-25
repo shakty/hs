@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr6/balistef/NEW2/clusters_vs_progress_rbands01/')"
+matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr6/balistef/NEW2/clusters_vs_progress_hidef/')"
