@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_hidef';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'truth_aside_R_alpha';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -79,9 +79,9 @@ sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 vScalings =  [1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [1:30];    	% number of clusters of the initial positions
+nClusters = 0; %[1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = [0.1:0.01:0.5];
+clustersInCircleOfRadius = -1; %[0.1:0.01:0.5];
 
 bandAreas = -1; % computeRBands(0.1, 0.1, 0.5); % last band is slighlty smaller (0.09819; is right)
 
@@ -97,7 +97,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.5; 0.5];
+truths = [0.1; 0.1];
 
 
 % BOUNDARY CONDITIONS (not used yet)

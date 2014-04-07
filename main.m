@@ -88,6 +88,7 @@ clustersInCircleOfRadius = 0.1; % [0.1:0.05:0.5]; %-1; % [-1 0.4];
 % Agents are placed randomly within a circular area (band) of area equal to
 % bandArea. Inner circles will have a larger section, to make all circles
 % of equal area.
+% Set to -1 to avoid bands.
 bandAreas = [0.4;0.5]; %computeRBands(0.1, 0.1, 0.5) % last band is slighlty smaller (0.09819; is right)
 
 % Seed
