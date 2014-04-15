@@ -296,6 +296,12 @@ simName = 'RBAND-2014-3-25-10-36/'; % R = 0.03
 simName = 'RBAND-2014-3-25-10-45/'; % R = 0.03, alpha = 0.99
 simName = 'RBAND-2014-3-25-10-49/';
 
+
+%TRUTH-ASIDE
+
+DUMPDIR = '/home/stefano/Documents/mypapers/swarm_science/data/truth_aside_R_alpha/'
+simName = 'truth_aside_R_alpha_s1/';
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 

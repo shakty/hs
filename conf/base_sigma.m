@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'truth_aside_R_alpha';
+simName = 'truth_aside_alpha';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -24,14 +24,14 @@ DUMPDIR = [dumpDir SIM_SUBDIR];
 VIDEO = 0;
 DEBUG = 0;
 DUMP = 1;
-DUMP_RATE = 100; % Dump every x steps
+DUMP_RATE = 1; % Dump every x steps
 COMPUTATION = 2; % 0-local, 1-parallel, 2-LSF
 SHOW_POTENTIAL = 0;
 %%%%%%%%%%%%%
 
 % MODEL Conf
 
-nRuns = 50;             % Number of simulation-runs with same param set
+nRuns = 10;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01 0.5 0.99];  % weighting of velocity terms
+alphas = [0.01:0.01:0.99];  % weighting of velocity terms
 Rs     = [0.03 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES

@@ -117,12 +117,54 @@ IMGPATH <- paste0(DUMPDIR, "imgs/")
 if (!file.exists(IMGPATH)) {
   dir.create(file.path(IMGPATH))
 }
-
 ## R ##
 
 cl <- loadData(DUMPDIR, 'final_R/')
 
 summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
+
+title <- 'Distance from truth by radius of influence'
+p <- ggplot(summaryFt, aes(R, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+p <- p + annotate("text", x = 0.55, y = 0.22, label = "Convergence Zone", size=8)
+p <- p + xlab('Radius of Influence') + ylab('Distance from truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "progress_scan_R2.jpg"),
+       plot = p, width=10, height=5, dpi=600)
+
+p.mini <- ggplot(summaryFt[summaryFt$R <= 0.1,], aes(R, fromtruth.avg))
+p.mini <- p.mini + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+p.mini <- p.mini + geom_errorbar(limits) + ylab('Distance from truth')
+p.mini <- p.mini + myThemeMod
+p.mini
+
+vp <- viewport(width = 0.4, height = 0.4,
+               x = 0.7, y = 0.7)
+
+full <- function() {
+     print(p)
+     theme_set(theme_bw(base_size = 8))
+     theme_white()
+     print(p.mini, vp = vp)
+     theme_set(theme_bw(base_size = 18))
+     theme_white()
+}
+
+jpeg(filename = paste0(IMGPATH, "progress_scan_R.jpg"))
+full()
+dev.off()
+
+
+## R (truth-aside) ##
+
+cl <- loadData(DUMPDIR, 'truth_aside_R_alpha/')
+
+summaryFt <- summarySE(cl[cl$t == 21,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
 
 title <- 'Distance from truth by radius of influence'
 p <- ggplot(summaryFt, aes(R, fromtruth.avg))
