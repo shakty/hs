@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr4/balistef/NEW2/truth_aside_noises/')"
+matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr5/balistef/NEW2/truth_aside_tau_vs_speed/')"
