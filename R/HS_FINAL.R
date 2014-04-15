@@ -120,6 +120,14 @@ if (!file.exists(IMGPATH)) {
 
 cl <- loadData(DUMPDIR, 'final_R/')
 
+p <- ggplot(cl, aes(R, count))
+# p <- p + geom_rect(aes(xmin = -Inf, xmax = XINTERCEPT, ymin = -Inf, ymax = Inf), fill = "#E8FCFF")
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+#p <- p + annotate("text", x = 0.05, y = 30, label = "Clusters", size=8)
+
+
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
 
 

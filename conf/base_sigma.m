@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'truth_aside_alpha';
-dumpDir = '/cluster/work/scr2/balistef/';
+simName = 'truth_aside_R';
+dumpDir = '/cluster/work/scr3/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -52,8 +52,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01:0.01:0.99];  % weighting of velocity terms
-Rs     = [0.03 0.3]; % cut-off radius
+alphas = [0.01 0.5 0.99];  % weighting of velocity terms
+Rs     = [0.01:0.01:1]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
