@@ -118,16 +118,6 @@ if (!file.exists(IMGPATH)) {
 
 ## R ##
 
-cl <- loadData(DUMPDIR, 'final_R/')
-
-p <- ggplot(cl, aes(R, count))
-# p <- p + geom_rect(aes(xmin = -Inf, xmax = XINTERCEPT, ymin = -Inf, ymax = Inf), fill = "#E8FCFF")
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
-p <- p + geom_errorbar(limits)
-p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
-#p <- p + annotate("text", x = 0.05, y = 30, label = "Clusters", size=8)
-
-
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
 
 
@@ -471,3 +461,54 @@ p
 
 ggsave(filename = paste0(IMGPATH, "scan_tau_20000_nobound.jpg"),
        plot = p, width=10, height=5, dpi=600)
+
+
+
+## ALL in one
+
+
+cl <- loadData(DUMPDIR, 'final_R/')
+clall <- cl[cl$t == 2000,]
+
+cl <- loadData(DUMPDIR, 'final_alpha/')
+clall <- rbind(clall, cl[cl$t == 2000,])
+
+cl <- loadData(DUMPDIR, 'final_tau/')
+clall2 <- rbind(clall, cl[cl$t == 2000,])
+
+cl <- loadData(DUMPDIR, 'final_noises/')
+clall <- rbind(clall, cl[cl$t == 2000,])
+
+
+
+p <- ggplot(clall2[clall2$tau == 1,])
+p <- p + geom_jitter(aes(fromtruth.avg, count))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="lm") #glm, gam, loess,rlm
+#p <- p + facet_grid(~tau)
+#p <- p + facet_grid(~init.vscaling)
+#p <- p + geom_smooth(data = cl[cl$t == 500,], aes(fromtruth.avg, count, color="red"))
+#p <- p + geom_smooth(data = cl[cl$t == 1000,], aes(fromtruth.avg, count, color="blue"))
+#p <- p + geom_smooth(data = cl[cl$t == 1500,], aes(fromtruth.avg, count, color="green"))
+#p <- p + geom_smooth(data = cl[cl$t == 2000,], aes(fromtruth.avg, count, color="yellow"))
+p
+
+
+p <- ggplot(clall)
+p <- p + geom_jitter(aes(fromtruth.avg, count))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="loess") #glm, gam, loess,rlm
+p <- p + facet_grid(~R)
+#p <- p + facet_grid(~init.vscaling)
+#p <- p + geom_smooth(data = cl[cl$t == 500,], aes(fromtruth.avg, count, color="red"))
+#p <- p + geom_smooth(data = cl[cl$t == 1000,], aes(fromtruth.avg, count, color="blue"))
+#p <- p + geom_smooth(data = cl[cl$t == 1500,], aes(fromtruth.avg, count, color="green"))
+#p <- p + geom_smooth(data = cl[cl$t == 2000,], aes(fromtruth.avg, count, color="yellow"))
+p
+
+
+
+
+p <- ggplot(cl[cl$t == 2000,])
+p <- p + geom_jitter(aes(fromtruth.avg, count, color = tau))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="loess") #glm, gam, loess,rlm
+p <- p + facet_grid(R~init.vscaling)
+p
