@@ -1,0 +1,509 @@
+# HS analysis
+
+source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
+
+# DUMPDIR 
+DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
+
+##############################
+# Explanation of loaded files:
+##############################
+#
+# - *_avg_all_split.csv contains the averages for each time step of all
+#   the simulations split by each sigma level (~2000 * every sigma level).
+#
+# - *_avg_all.csv contains the averages for each time step (~2000) 
+#
+# - *.csv contains each ~20 snapshots of all simulations (every ~100 time step)
+#   (20 * nCombinations of parameter sweep * levels of sigma)
+#
+#############################
+
+
+loadData <- function(DUMPDIR, DIR) {
+
+  INTERACTIVE = FALSE
+  PATH = paste0(DUMPDIR, DIR, "aggr/")
+  setwd(PATH)
+  IMGPATH <- paste0(PATH, "img/");
+
+  # Create IMG dir if not existing
+  if (!file.exists(IMGPATH)) {
+    dir.create(file.path(PATH, "/img/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth_tau/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth_tau/"))
+  }
+
+
+  ##########
+  # PARAMS #
+  ##########
+  params <- read.table('params.csv', head=TRUE, sep=",")
+
+  params$simname <- as.factor(params$simname)
+  params$simcount <- as.factor(params$simcount)
+  params$run <- as.factor(params$run)
+  
+
+  params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
+                                     truth.x, truth.y, init.clusterradio,
+                                     init.nclusters,
+                                     d1, B, d0, A, k, spacesize, spacedim,
+                                     nagents, t.end, dt, timestamp))
+
+
+
+
+  macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+     
+  clu <- merge(params, macro, by=c("simname","simcount", "run"))
+ 
+
+  clu$simname <- as.character(clu$simname)
+  clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
+  clu$simname <- as.factor(clu$simname)
+  clu$simcount <- as.factor(clu$simcount)
+  #clu$t <- as.factor(clu$t)
+
+  cl <- clu[clu$t == 2000,]
+
+  return(clu)
+}
+
+theme_white <- function() {
+  theme_update(panel.background = element_blank())
+}
+
+myLabeller <- function(var, value){
+  value <- as.character(value)
+  if (var == "R") {
+    value[value== 0.03] <- "Small radius (R = 0.03)"
+    value[value== 0.3] <- "Large Radius (R = 0.3)"
+  } 
+  return(value)
+}
+
+myThemeMod <- theme(legend.position = "none",
+                    axis.title.x = element_text(vjust=-1, size=24),
+                    axis.title.y = element_text(vjust=-0.1, size=24),
+                    plot.margin=unit(c(10,10,10,10),"mm"),                    
+                    plot.title = element_text(vjust=3, size=24,face="bold")
+                    )
+
+limits <- aes(ymax = count + se, ymin = count - se)
+
+theme_set(theme_bw(base_size = 30))
+theme_white()
+
+XINTERCEPT <- 0.15
+
+## IMG DIR
+
+IMGPATH <- paste0(DUMPDIR, "imgs/")
+# Create IMG dir if not existing
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(IMGPATH))
+}
+
+## R ##
+
+cl <- loadData(DUMPDIR, 'truth_aside_R/')
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
+
+
+# Breaks for background rectangles
+# rects <- data.frame(xstart = c(-Inf, XINTERCEPT), xend = c(XINTERCEPT, Inf), col = letters[1:2])
+
+# color <- "#FFEDD1"
+
+title <- 'Cluster counts by radius of influence'
+p <- ggplot(summaryCl, aes(R, count))
+# p <- p + geom_rect(aes(xmin = -Inf, xmax = XINTERCEPT, ymin = -Inf, ymax = Inf), fill = "#E8FCFF")
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+#p <- p + annotate("text", x = 0.05, y = 30, label = "Clusters", size=8)
+p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
+#p <- p + geom_segment(aes(x = 0, xend = 0.1, y = 29.4, yend = 29.4))
+#p <- p + geom_segment(aes(x = 0.475, xend = 0.625, y = 29.4, yend = 29.4))
+p <- p + xlab('Radius of Influence') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "truth_aside_scan_R.jpg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+p.mini <- ggplot(summaryCl[summaryCl$R <= 0.1,], aes(R, count))
+p.mini <- p.mini + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p.mini <- p.mini + geom_errorbar(limits)
+p.mini <- p.mini + theme(legend.position = "none") 
+p.mini
+
+
+vp <- viewport(width = 0.4, height = 0.4,
+               x = 0.75, y = 0.7)
+
+full <- function() {
+     print(p)
+     theme_set(theme_bw(base_size = 8))
+     theme_white()
+     print(p.mini, vp = vp)
+     theme_set(theme_bw(base_size = 18))
+     theme_white()
+}
+
+jpeg(filename = paste0(IMGPATH, "scan_R.jpg"))
+full()
+dev.off()
+
+## ALPHA ##
+
+cl <- loadData(DUMPDIR, 'truth_aside_alpha/')
+
+cl$tbr <- cut(cl$t,  breaks=seq(0,20000,1000))
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R", "tbr"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl, aes((1 - alpha), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(~ R, labeller = myLabeller)
+p <- p + ylim(0,28)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab(xlabText) + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "truth_aside_alpha.jpg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+# t = 20000
+summaryCl <- summarySE(cl[cl$t == 20000 & cl$R == 0.03,], c("count"), c("alpha", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl, aes((1 - alpha), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+# p <- p + facet_grid(~ R, labeller = myLabeller)
+# p <- p + ylim(0,28)
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab(xlabText) + ylab('Cluster counts')
+labelText <- "Results after 20.000 iterations\nInteraction Radius = 0.03"
+p <- p + annotate("text", x = 0.74, y = 13.5, label = labelText, size = 8)
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_alpha_20000.jpg"),
+       plot = p, width=10, height=5, dpi=300)
+       
+## VSCALING ##
+
+cl <- loadData(DUMPDIR, 'final_vscaling/')
+cl$vbr <- cut(cl$init.vscaling,  breaks=c(0,0.5,1, 1.5,2,10))
+cl$vbr <- as.factor(cl$vbr)
+
+summaryCl <- summarySE(cl, c("count"), c("init.vscaling", "R", "t"), na.rm=TRUE)
+
+title <- 'Cluster counts by initial velocity'
+p <- ggplot(summaryCl[summaryCl$t == 2000,], aes(init.vscaling, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(~ R, labeller = myLabeller)
+p <- p + xlab('Initial Velocity') + ylab('Cluster counts')
+p <- p + ggtitle(title) + theme(legend.position = "none")
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_vscaling.jpg"), plot = p)
+
+# From truth
+summaryCl2 <- summarySE(cl, c("fromtruth.avg"), c("init.vscaling", "R", "t"), na.rm=TRUE)
+
+title <- 'Distance from truth by initial velocity'
+p <- ggplot(summaryCl2[summaryCl2$t == 2000,], aes(init.vscaling, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+p <- p + geom_errorbar(aes(ymax = fromtruth.avg + se, ymin = fromtruth.avg - se))
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + facet_grid(~ R, labeller = myLabeller)
+p <- p + xlab('Initial Velocity') + ylab('Distance from truth')
+p <- p + ggtitle(title) + theme(legend.position = "none")
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_vscaling_fromtruth.jpg"), plot = p)
+
+# Scatter fromtruth count
+
+gsummaryCl2 <- rename(summaryCl2, c("se" = "se.fromtruth.avg"))
+summaryCl2$sd <- NULL
+summaryCl2$ci <- NULL
+summaryCl2$N <- NULL
+
+summaryCl3 <- merge(summaryCl, summaryCl2, by=c("init.vscaling","R","t"))
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(size=init.vscaling, color=as.factor(R)), alpha=0.5)
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Initial velocity\nintervals")
+p
+
+ggsave(filename = paste0(IMGPATH, "scatter_count_fromtruth.jpg"), plot = p)
+
+SCATTERPATH <- paste0(IMGPATH, 'scatter_count_fromtruth/')
+idx = 1;
+for (t in sort(unique(summaryCl3$t))) {
+  data <- summaryCl3[summaryCl3$t == t,]
+  title <- paste0('Cluster counts and distance from truth - T', t) 
+  p <- ggplot(data, aes(count, fromtruth.avg))
+  p <- p + geom_jitter(aes(size=init.vscaling, color=as.factor(R)), alpha=0.5)
+  p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+  p <- p + xlim(0,20) + ylim(0,0.5)
+  p <- p + ggtitle(title)
+  p <- p + scale_color_hue(name="Influence\nradius size")
+  p <- p + scale_size_continuous(name="Initial velocity\nintervals")
+  ggsave(filename = paste0(SCATTERPATH, "img_",sprintf("%04d",idx),".jpg"), plot = p)
+  idx = idx + 1
+}
+
+system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg ', SCATTERPATH, 'scatter_count_fromtruth.avi'))
+
+## NOISES ##
+
+cl <- loadData(DUMPDIR, 'truth_aside_noises/')
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Angular noise and \nPosition noise'
+p <- ggplot(summaryCl, aes(sigma, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
+p <- p + xlab('Angular noise') + ylab('Cluster counts')
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
+p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
+p
+
+ggsave(filename = paste0(IMGPATH, "truth_aside_noises.jpg"),
+       plot = p, width=10, height=10, dpi=300)
+
+
+## TAU ##
+
+cl <- loadData(DUMPDIR, 'truth_aside_tau/')
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "init.vscaling"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl[summaryCl$init.vscaling == 1,], aes((100 - tau), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "truth_aside_tau.jpg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+# Scatter fromtruth count by tau
+
+summaryCl <- summarySE(cl, c("count"), c("tau", "R", "t", "init.vscaling"), na.rm=TRUE)
+summaryCl2 <- summarySE(cl, c("fromtruth.avg"), c("tau", "R", "t", "init.vscaling"), na.rm=TRUE)
+summaryCl2 <- rename(summaryCl2, c("se" = "se.fromtruth.avg"))
+summaryCl2$sd <- NULL
+summaryCl2$ci <- NULL
+summaryCl2$N <- NULL
+summaryCl3 <- merge(summaryCl, summaryCl2, by=c("tau","R","t","init.vscaling"))
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$init.vscaling == 1,], aes(fromtruth.avg, count))
+p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
+p <- p + xlab('Distance from truth') + ylab('Number of clusters')
+p <- p + ggtitle(title)
+#p <- p + facet_grid(init.vscaling ~ .)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+# 2 POINTS, AVG
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$tau == 1 & summaryCl3$init.vscaling == 1,], aes(count, fromtruth.avg))
+p <- p + geom_point(aes(color=as.factor(R)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+# POINTS ALL TAU = 1 INITV = 1
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1 & cl$tau == 1,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(size=tau, color=as.factor(R))))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+# ALL POINTS. VINIT = 1
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(size=tau, color=as.factor(R)))
+#p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+#p <- p + facet_grid(init.vscaling ~ .)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(color=(tau)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + facet_grid( R ~ init.vscaling, margins=T)
+#p <- p + scale_color_hue(name="Influence\nradius size")
+#p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(init.vscaling, tau))
+p <- p + geom_jitter(aes(color=fromtruth.avg))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+
+3p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+9
+p <- p + myThemeMod
+p
+
+
+ggsave(filename = paste0(IMGPATH, "scatter_count_fromtruth_tau.jpg"), plot = p)
+
+SCATTERPATH <- paste0(IMGPATH, 'scatter_count_fromtruth_tau/')
+idx = 1;
+for (t in sort(unique(summaryCl3$t))) {
+  data <- summaryCl3[summaryCl3$t == t,]
+  title <- paste0('Cluster counts and distance from truth - T', t) 
+  p <- ggplot(data, aes(count, fromtruth.avg))
+  p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)), alpha=0.8)
+  p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+  p <- p + xlim(0,40) + ylim(0,0.55)
+  p <- p + ggtitle(title)
+  p <- p + scale_color_hue(name="Influence\nradius size")
+  p <- p + scale_size_continuous(name="Truth\nstrength")
+  ggsave(filename = paste0(SCATTERPATH, "img_",sprintf("%04d",idx),".jpg"), plot = p)
+  idx = idx + 1
+}
+
+system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg ', SCATTERPATH, 'scatter_count_fromtruth_tau.avi'))
+
+
+## TAU 20000
+
+cl <- loadData(DUMPDIR, 'final_tau_20000/')
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_tau_20000.jpg"),
+       plot = p, width=10, height=5, dpi=600)
+
+
+## TAU 20000 NO BOUND
+
+cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/')
+
+summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl, aes((100 - tau), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_tau_20000_nobound.jpg"),
+       plot = p, width=10, height=5, dpi=600)
+
+
+
+## ALL in one
+
+
+cl <- loadData(DUMPDIR, 'final_R/')
+clall <- cl[cl$t == 2000,]
+
+cl <- loadData(DUMPDIR, 'final_alpha/')
+clall <- rbind(clall, cl[cl$t == 2000,])
+
+cl <- loadData(DUMPDIR, 'final_tau/')
+clall2 <- rbind(clall, cl[cl$t == 2000,])
+
+cl <- loadData(DUMPDIR, 'final_noises/')
+clall <- rbind(clall, cl[cl$t == 2000,])
+
+
+
+p <- ggplot(clall2[clall2$tau == 1,])
+p <- p + geom_jitter(aes(fromtruth.avg, count))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="lm") #glm, gam, loess,rlm
+#p <- p + facet_grid(~tau)
+#p <- p + facet_grid(~init.vscaling)
+#p <- p + geom_smooth(data = cl[cl$t == 500,], aes(fromtruth.avg, count, color="red"))
+#p <- p + geom_smooth(data = cl[cl$t == 1000,], aes(fromtruth.avg, count, color="blue"))
+#p <- p + geom_smooth(data = cl[cl$t == 1500,], aes(fromtruth.avg, count, color="green"))
+#p <- p + geom_smooth(data = cl[cl$t == 2000,], aes(fromtruth.avg, count, color="yellow"))
+p
+
+
+p <- ggplot(clall)
+p <- p + geom_jitter(aes(fromtruth.avg, count))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="loess") #glm, gam, loess,rlm
+p <- p + facet_grid(~R)
+#p <- p + facet_grid(~init.vscaling)
+#p <- p + geom_smooth(data = cl[cl$t == 500,], aes(fromtruth.avg, count, color="red"))
+#p <- p + geom_smooth(data = cl[cl$t == 1000,], aes(fromtruth.avg, count, color="blue"))
+#p <- p + geom_smooth(data = cl[cl$t == 1500,], aes(fromtruth.avg, count, color="green"))
+#p <- p + geom_smooth(data = cl[cl$t == 2000,], aes(fromtruth.avg, count, color="yellow"))
+p
+
+
+
+
+p <- ggplot(cl[cl$t == 2000,])
+p <- p + geom_jitter(aes(fromtruth.avg, count, color = tau))
+p <- p + geom_smooth(aes(fromtruth.avg, count), method="loess") #glm, gam, loess,rlm
+p <- p + facet_grid(R~init.vscaling)
+p

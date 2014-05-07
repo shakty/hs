@@ -1,4 +1,4 @@
-function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_POTENTIAL)
+function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS)
     close all;
     
     path2file = [ dumpDirIn subDirIn '/' fileIn ];
@@ -36,6 +36,7 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
     fprintf('%+15s = %2.3f\n','alpha',p.alpha);
     fprintf('%+15s = %2.3f\n','R',p.R);
     fprintf('%+15s = %2.3f\n','sigma',p.sigma);
+    fprintf('%+15s = %2.3f\n','epsilon',p.epsilon);
     fprintf('%+15s = %d\n','steps',p.t_end);
     fprintf('%+15s = %d\n','nAgents',p.n_agents);  
     fprintf('%+15s = %1d\n','IdeasSpace size',p.ideas_space_size);
@@ -203,7 +204,7 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
             plot(truth(1),truth(2), 'gs', ...
             'MarkerEdgeColor','k',...
             'MarkerFaceColor','g',...
-            'MarkerSize', 8, ...
+            'MarkerSize', 16, ...
             'LineWidth', 2);        
         end
         
@@ -214,7 +215,13 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         % TODO move the title in the first frame
         % paramString{1} = ['T: ' int2str(frame)];
         %title(paramString);
-        title(['T: ' int2str(frame)], 'FontSize', 40);
+        if (SHOW_TITLE)
+            title(['T: ' int2str(frame)], 'FontSize', 40);
+        end
+        
+        if (~SHOW_AXIS)
+            set(gca,'XtickLabel',[],'YtickLabel',[]);
+        end
         
         pause(0.01);
         [fileInPath,fileInName, fileInExt] = fileparts(fileIn);

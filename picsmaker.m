@@ -45,6 +45,8 @@ SIGMA = '_s1';
 % plot_number_color = 2;
 % plot_arrow = 3;
 
+SHOW_TITLE = 0;
+SHOW_AXIS = 0;
 SHOW_POTENTIAL = 0;
 plottype = 0;
 
@@ -89,30 +91,44 @@ DUMP_DIR = '/home/stefano/hs/';
 myDumpDirs{1} = 'test/';
 myFiles{1} = {'1-1.mat'};
 myDirs{1} = {'AAA-2014-2-7-9-39'};
-
-% CLUSTERS 
-DUMP_DIR = '/home/stefano/hs/';
-myDumpDirs{1} = 'test/';
-myFiles{1} = {'1-1.mat'};
-myDirs{1} = {'NAVPEPSILON-2013-12-21-13-19/'};
-
-% CONV ON TRUTH
-DUMP_DIR = '/home/stefano/hs/';
-myDumpDirs{1} = 'test/';
-myFiles{1} = {'1-1.mat'};
-myDirs{1} = {'BIGR-2014-1-23-10-5/'};
-
-% A FEW BIG CLUSTERS THAT CONVERGE IN ONE
-DUMP_DIR = '/home/stefano/hs/';
-myDumpDirs{1} = 'test/';
-myFiles{1} = {'1-1.mat'};
-myDirs{1} = {'SCENARIO-2014-2-9-16-52/'};
-
+% 
+% % CLUSTERS 
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'NAVPEPSILON-2013-12-21-13-19/'};
+% 
+% % CONV ON TRUTH
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'SNAP-2014-5-5-10-39/'}; % BIGR-2014-1-23-10-5 (just 7 steps)
+% 
+% % A FEW BIG CLUSTERS THAT CONVERGE IN ONE
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'SCENARIO-2014-2-9-16-52/'};
+ 
 % NON CONVERGENCE, NO CLUSTERS
-DUMP_DIR = '/home/stefano/hs/';
-myDumpDirs{1} = 'test/';
-myFiles{1} = {'1-1.mat'};
-myDirs{1} = {'SCENARIO-2014-2-9-17-27/'};
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'SCENARIO-2014-2-9-17-27/'};
+
+% A few big medium clusters NO!
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'SNAP-2014-5-5-9-38/'};
+
+
+% A few big medium clusters
+% DUMP_DIR = '/home/stefano/hs/';
+% myDumpDirs{1} = 'test/';
+% myFiles{1} = {'1-1.mat'};
+% myDirs{1} = {'SNAP-2014-5-4-23-22/'};
+
 
 WITH_SIGMA = 0;
 
@@ -140,7 +156,8 @@ for j=1:length(myDirs)
                 mkdir(outSubDir);
             end
             file = myFiles{j}{i};
-            makepics(dumpDir, subDir, file, outSubDir, myFrames, plottype, SHOW_POTENTIAL);            
+            makepics(dumpDir, subDir, file, outSubDir, myFrames, plottype, ...
+                        SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS);
         end
     end
 end

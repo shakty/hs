@@ -37,14 +37,15 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     
     fprintf('\n%s\n', path2file);
     fprintf('------------------------------------\n');
-    fprintf('%+15s = %2.3f\n','alpha',p.alpha);
     fprintf('%+15s = %2.3f\n','R',p.R);
-    fprintf('%+15s = %2.3f\n','sigma',p.sigma);
-    fprintf('%+15s = %d\n','steps',p.t_end);
-    fprintf('%+15s = %d\n','nAgents',p.n_agents);  
-    fprintf('%+15s = %1d\n','IdeasSpace size',p.ideas_space_size);
+    fprintf('%+15s = %2.3f\n','alpha',p.alpha);    
     fprintf('%+15s = %2.3f\n','tau',p.tau)
+    fprintf('%+15s = %2.3f\n','sigma',p.sigma);
+    fprintf('%+15s = %2.3f\n','epsilon',p.epsilon);    
     fprintf('%+15s = %2.3f\n','v_scaling',p.v_scaling);
+    fprintf('%+15s = %d\n','steps',p.t_end);
+    fprintf('%+15s = %d\n','nAgents',p.n_agents);
+    fprintf('%+15s = %1d\n','IdeasSpace size',p.ideas_space_size);    
     fprintf('%+15s = [%2.3f:%2.3f]\n','truth',p.truth(1,1), p.truth(2,1));
     fprintf('%+15s = %d\n', 'Attr. type', p.attrtype);
     fprintf('%+15s = %d\n', 'Noise type', p.noisetype);

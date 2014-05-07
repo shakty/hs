@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'truth_aside_tau';
+simName = 'alpha_tau';
 dumpDir = '/cluster/work/scr5/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.5];  % weighting of velocity terms
+alphas = [0.01:0.01:0.99];  % weighting of velocity terms
 Rs     = [0.03 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [1:100]; 		% coupling coefficient (divisor)
+taus = [2:100]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
@@ -76,7 +76,7 @@ epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
 sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
-vScalings = [0.2, 1, 2, 5, 10]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
+vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = 0; %[1:30];    	% number of clusters of the initial positions
@@ -97,7 +97,7 @@ for i=2:numel(hGrid)
 end
 truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
-truths = [0.1; 0.1];
+truths = [0.5; 0.5];
 
 
 % BOUNDARY CONDITIONS (not used yet)
@@ -155,7 +155,7 @@ seed = randi(1000000);
 % PARAMS 4 ANALYSIS
 
 DUMP_ANALYSIS = 1;
-DUMP_RATE_ANALYSIS = 1; % Dump every x steps
+DUMP_RATE_ANALYSIS = 100; % Dump every x steps
 
 % Only clusters of size above the cutoff are included in the analysis
 CLU_CUTOFF = 2;

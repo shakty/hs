@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'RBAND';
+simName = 'USHAPE';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -48,8 +48,8 @@ vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.99;
-Rs = 0.3;
+alphas = 0.5;
+Rs = 0.03;
 
 % Noise
 sigmas = 0.01;
@@ -57,7 +57,7 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 10;
+taus = 1;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
@@ -73,7 +73,7 @@ forces_on_v = 0;
 %  - the coordinates of the centers of the clusters
 %  - the number of clusters (1..n), centers placed randomly
 %  - be equal to 0, no clusters, either init options considered
-nClusters = [30]; 
+nClusters = 0; % [30]; 
 
 % Clustered
 
@@ -82,18 +82,18 @@ clusterTightness = [0.05];
 % Can be:
 %  - equal to -1, centers are placed randomly
 %  - equal to (0..n) centers are placed on a radius equal to that.
-clustersInCircleOfRadius = 0.1; % [0.1:0.05:0.5]; %-1; % [-1 0.4];
+clustersInCircleOfRadius = -1; % [0.1:0.05:0.5]; %-1; % [-1 0.4];
 
 % Bands
 % Agents are placed randomly within a circular area (band) of area equal to
 % bandArea. Inner circles will have a larger section, to make all circles
 % of equal area.
 % Set to -1 to avoid bands.
-bandAreas = [0.4;0.5]; %computeRBands(0.1, 0.1, 0.5) % last band is slighlty smaller (0.09819; is right)
+bandAreas = -1; % [0.4;0.5]; %computeRBands(0.1, 0.1, 0.5) % last band is slighlty smaller (0.09819; is right)
 
 % Seed
 seedtype = 0; % 0 = fixed
-seed = randi(1000000); % 819325;
+seed = 814724; %randi(1000000); % 819325;
 batchSeed = randi(1000000); % 819325;
 
 %% Creating simName and Struct

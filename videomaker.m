@@ -70,7 +70,7 @@ videoSubDir = [ MYDIR '/' ];
 VIDEODIR = '/home/stefano/hs/videos/LAST/';
 SAVE_VIDEO = 0;
 SHOW_POTENTIAL = 0;
-plottype = 0;
+plottype = 3;
 SINGLE = 1;
 
 % PLOT TYPE
@@ -299,8 +299,30 @@ simName = 'RBAND-2014-3-25-10-49/';
 
 %TRUTH-ASIDE
 
-DUMPDIR = '/home/stefano/Documents/mypapers/swarm_science/data/truth_aside_R_alpha/'
+%DUMPDIR = '/home/stefano/Documents/mypapers/swarm_science/data/truth_aside_R_alpha/'
 simName = 'truth_aside_R_alpha_s1/';
+
+% Other
+
+simName = 'AAA-2014-2-7-9-39/';
+
+simName = 'NAVPEPSILON-2013-12-21-13-19/';
+
+simName = 'SNAP-2014-5-4-23-12/'; % many clusters far away from truth, boundary effects
+simName = 'SNAP-2014-5-4-23-22/'; % many clusters, not so beautiful though
+simName = 'SNAP-2014-5-4-23-28/'; % as before
+
+simName = 'SNAP-2014-5-5-9-38/'; % 
+
+simName = 'BIGR-2014-1-23-10-5/';
+
+% USHAPE
+
+simName = 'USHAPE-2014-5-7-15-29/'; % alpha = 0.01
+simName = 'USHAPE-2014-5-7-15-39/'; % alpha = 0.5
+
+
+simName = 'USHAPE-2014-5-7-15-33/'; % alpha = 0.000001
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
