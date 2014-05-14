@@ -1,1 +1,1 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/R_tau/','R_tau_s1','67109')"
+bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/R_tau/','R_tau_s1','693395')"

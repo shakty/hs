@@ -53,7 +53,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.5];  % weighting of velocity terms
-Rs     = [0.03 0.3]; % cut-off radius
+Rs     = [0.01:0.01:1]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
