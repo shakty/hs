@@ -197,8 +197,8 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
             % PLOT VELOCITY ARROWS
             v = dump.agentsv;
             % no rescaling
-            %quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j), 0);
-            quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j));
+            quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j), 0);
+            %quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j));
             mean(abs(colnorm(v(:,:,j),2)))
         end
         

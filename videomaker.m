@@ -264,29 +264,7 @@ simName = 'EEH-2014-1-28-0-11/'; %
 simName = 'EEH-2014-1-28-0-15/'; % 
 
 
-% TAU test
-simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
-simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
-simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
-simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
-simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
-simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
-simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
 
-simName = 'TTAU-2014-2-20-9-3/'; % t = 13
-
-simName = 'TTAU-2014-2-20-14-15/'; % t=10, but small R (0.03)
-
-simName = 'TTAU-2014-3-12-11-15/' % t=10, but small R (0.03)
-
-simName = 'TTAU-2014-3-12-11-30/' % t=50, but small R (0.03)
-
-simName = 'TTAU-2014-3-12-12-5/' % t=50, big R (0.3)
-
-simName = 'TTAU-2014-3-12-14-19/' % t=10, big R (0.3), time2complete 150!
-
-
-simName = 'TTAU-2014-3-12-13-3/' % t=50, big R (0.3), time2complete 150!
 
 
 %RBAND
@@ -323,6 +301,62 @@ simName = 'USHAPE-2014-5-7-15-39/'; % alpha = 0.5
 
 
 simName = 'USHAPE-2014-5-7-15-33/'; % alpha = 0.000001
+
+simName = 'EEH-2014-1-27-20-43/'; % v = 1, tau = 1000, agents do not even move...
+
+simName = 'EEH-2014-1-27-20-41/'; % v = 1, tau = 10, agents go very slowly to Truth, they don't have enough time
+
+% TAU test
+
+simName = 'AAA-2014-2-7-9-26/'; % t = 4 slower convergence, do not see how far it goes
+
+simName = 'AAA-2014-2-7-9-39/'; % (t_end = 40) t = 10 really far away
+
+
+
+simName = 'TTAU-2014-3-12-11-15/' % t=10, but small R (0.03)
+
+simName = 'TTAU-2014-3-12-11-30/' % t=50, but small R (0.03)
+
+
+simName = 'TTAU-2014-3-12-14-19/' % t=10, big R (0.3), time2complete 150!
+
+
+simName = 'TTAU-2014-3-12-13-3/' % t=50, big R (0.3), time2complete 150!
+
+
+simName = 'AAA-2014-2-7-9-20/'; % t = 1 cluster near truth
+
+simName = 'AAA-2014-2-7-9-23/'; % t = 2 cluster near truth (a bit further)
+
+
+simName = 'AAA-2014-2-7-9-24/'; % t = 3 slower convergence, going a bit further
+
+simName = 'AAA-2014-2-7-9-28/'; % (t_end = 20) t = 4 slower convergence, it stops quite far away
+simName = 'AAA-2014-2-7-9-34/'; % (t_end = 20) t = 10 really far away
+
+
+
+simName = 'TTAU-2014-2-20-14-15/'; % t=10, but small R (0.03)
+
+simName = 'TTAU-2014-2-20-9-3/'; % t = 13
+
+simName = 'TTAU-2014-3-12-12-5/' % t=50, big R (0.3)
+
+
+
+
+simName = 'TAUEFFECT-2014-5-15-16-4/' % t = 50, small 5, big alpha
+
+
+simName = 'TAUEFFECT-2014-5-15-16-0/' % t = 50, small 5, small alpha
+
+
+simName = 'TAUEFFECT-2014-5-15-17-6/'; % with no noise, no boundaries
+
+simName = 'TAUEFFECT-2014-5-16-9-20/'; % t = 100, big R small alpha, no boundaries
+
+simName = 'TAUEFFECT-2014-5-15-16-44/'; % t = 100, big R small alpha
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';

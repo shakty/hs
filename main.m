@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'USHAPE';
+simName = 'TAUEFFECT';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -48,8 +48,8 @@ vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.5;
-Rs = 0.03;
+alphas = 0.01;
+Rs = 0.3;
 
 % Noise
 sigmas = 0.01;
@@ -57,11 +57,12 @@ epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 1;
+taus = 100;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
 
+plottype = 3;
 
 % Initial positions
 

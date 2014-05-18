@@ -25,7 +25,7 @@ DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 #############################
 
 
-loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS) {
+loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
 
   INTERACTIVE = FALSE
   PATH = paste0(DUMPDIR, DIR, "aggr/")
@@ -124,6 +124,8 @@ if (!file.exists(IMGPATH)) {
 
 ## R ##
 
+cl <- loadData(DUMPDIR, 'final_R/')
+
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
 
 
@@ -136,18 +138,20 @@ title <- 'Cluster counts by radius of influence'
 p <- ggplot(summaryCl, aes(R, count))
 # p <- p + geom_rect(aes(xmin = -Inf, xmax = XINTERCEPT, ymin = -Inf, ymax = Inf), fill = "#E8FCFF")
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+#p <- p + geom_point()
+#p <- p + geom_line()
 p <- p + geom_errorbar(limits)
 p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
 #p <- p + annotate("text", x = 0.05, y = 30, label = "Clusters", size=8)
 p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
 #p <- p + geom_segment(aes(x = 0, xend = 0.1, y = 29.4, yend = 29.4))
 #p <- p + geom_segment(aes(x = 0.475, xend = 0.625, y = 29.4, yend = 29.4))
-p <- p + xlab('Radius of Influence') + ylab('Cluster counts')
-p <- p + ggtitle(title) + myThemeMod
+p <- p + xlab('Radius of Influence') + ylab('Number of Clusters')
+p <- p  + myThemeMod # + ggtitle(title)
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_R3.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+ggsave(filename = paste0(IMGPATH, "scan_R3.svg"),
+       plot = p, width=10, height=5, dpi=300)
 
 
 p.mini <- ggplot(summaryCl[summaryCl$R <= 0.1,], aes(R, count))
@@ -186,14 +190,14 @@ p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(~ R, labeller = myLabeller)
-p <- p + ylim(0,28)
+p <- p + ylim(0,29)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab(xlabText) + ylab('Cluster counts')
-p <- p + ggtitle(title) + myThemeMod
+#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_alpha2.jpg"),
+ggsave(filename = paste0(IMGPATH, "scan_alpha.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 
@@ -302,11 +306,11 @@ p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
 p <- p + xlab('Angular noise') + ylab('Cluster counts')
 p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
-p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_noises.jpg"),
-       plot = p, width=10, height=10, dpi=600)
+ggsave(filename = paste0(IMGPATH, "scan_noises.svg"),
+       plot = p, width=10, height=10, dpi=300)
 
 
 ## TAU ##
@@ -321,11 +325,12 @@ p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
 p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
-p <- p + ggtitle(title) + myThemeMod
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_tau.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+# To be taken from TAU 20000
+ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
+       plot = p, width=10, height=5, dpi=300)
 
 
 # Scatter fromtruth count by tau
@@ -435,19 +440,25 @@ system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg
 
 cl <- loadData(DUMPDIR, 'final_tau_20000/')
 
-summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau <= 10,], c("count"), c("tau", "R"), na.rm=TRUE)
 
 title <- 'Cluster counts by strength of the truth'
-p <- ggplot(summaryCl, aes((100 - tau), count))
+p <- ggplot(summaryCl, aes((11 - tau), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
-p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
-p <- p + ggtitle(title) + myThemeMod
+xlabText <- expression(paste('Strength ', tau, ' of attraction by ground-truth'))
+p <- p + xlab(xlabText) + ylab('Number of Clusters')
+p <- p + scale_x_continuous(breaks=c(2,4,6,8,10))
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_tau_20000.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+# To be taken from TAU 20000
+ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+#ggsave(filename = paste0(IMGPATH, "scan_tau_20000.jpg"),
+#       plot = p, width=10, height=5, dpi=600)
 
 
 ## TAU 20000 NO BOUND
@@ -471,15 +482,39 @@ ggsave(filename = paste0(IMGPATH, "scan_tau_20000_nobound.jpg"),
 
 ## ALPHA TAU
 
+## get also tau = 1
+clTau1 <- loadData(DUMPDIR, 'final_alpha/', 0)
+clTau1 <- clTau1[clTau1$t == 2000,]
+
 # might take long...
 cl <- loadData(DUMPDIR, 'alpha_tau/', 1)
+
+cl <- rbind(cl,clTau1)
+
+mycl <- cl[cl$tau <= 20,]
+
+
+summaryCl <- summarySE(mycl[mycl$R == 0.3,], c("count"), c("alpha"), na.rm=TRUE)
+
+# Create plot
+title <- paste0('Ccount: tau vs alpha - Big R')
+p <- ggplot(summaryCl, aes((1 - alpha), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + ylim(0,40)
+p <- p + xlab(xlabText) + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
 
 title <- "Tau vs Alpha vs Clusters Count"
 p <- ggplot(cl, aes(alpha, tau, fill = count))
 p <- p + geom_tile()
 p <- p + ggtitle(title) + myThemeMod + theme(legend.position = "right")
 p <- p + facet_grid(~R, labeller = myLabeller)
-p <- p + scale_y_continuous(breaks=c(2,25,50,75,100))
+p <- p + scale_y_continuous(breaks=c(1,25,50,75,100))
 p
 
 ggsave(filename = paste0(IMGPATH, "heatmap_tau_alpha_ccount.jpg"),
@@ -492,7 +527,7 @@ p <- p + geom_tile()
 p <- p + ggtitle(title) + myThemeMod + theme(legend.position = "right")
 p <- p + scale_fill_continuous(name="Dist.\nfrom\nTruth")
 p <- p + facet_grid(~R, labeller = myLabeller)
-p <- p + scale_y_continuous(breaks=c(2,25,50,75,100))
+p <- p + scale_y_continuous(breaks=c(1,25,50,75,100))
 p
 
 ggsave(filename = paste0(IMGPATH, "heatmap_tau_alpha_dist.jpg"),
@@ -500,13 +535,13 @@ ggsave(filename = paste0(IMGPATH, "heatmap_tau_alpha_dist.jpg"),
 
 
 
-cl$taubr <- cut(cl$tau,  breaks=c(0,5,10,15,20,25,50,100))
-summaryCl <- summarySE(cl, c("count"), c("alpha", "R", "taubr"), na.rm=TRUE)
+mycl$taubr <- cut(mycl$tau,  breaks=c(0,5,10,15,20,25,50,100))
+summaryCl <- summarySE(mycl, c("count"), c("alpha", "R", "taubr"), na.rm=TRUE)
 
 title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(aes(ymin = count -se, ymax = count + se))
 p <- p + facet_grid(taubr ~ R, labeller = myLabeller)
 #p <- p + ylim(0,28)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
@@ -515,43 +550,96 @@ p <- p + xlab(xlabText) + ylab('Cluster counts')
 p <- p + ggtitle(title) + myThemeMod
 p
 
-ggsave(filename = paste0(IMGPATH, "tau_alpha_brk_count.jpg"),
+
+ggsave(filename = paste0(IMGPATH, "MYCL_tau_alpha_brk_count.jpg"),
        plot = p, width = 14, height = 14)
 
 
-tau = 100
-summaryCl <- summarySE(cl[cl$tau == tau & cl$R == 0.3,], c("count"), c("alpha"), na.rm=TRUE)
+#ggsave(filename = paste0(IMGPATH, "tau_alpha_brk_count.jpg"),
+#       plot = p, width = 14, height = 14)
 
-title <- 'Cluster counts vs Strength of social influence'
-p <- ggplot(summaryCl, aes((1 - alpha), count))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
-#p <- p + geom_point()
-#p <- p + geom_line()
-p <- p + geom_errorbar(limits)
-#p <- p + ylim(0,28)
-p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab(xlabText) + ylab('Cluster counts')
-p <- p + ggtitle(title) + myThemeMod
-p
+mycl2 <- mycl[mycl$tau == 1 | mycl$tau == 10 | mycl$tau == 20,]  
 
-cl$taubr <- cut(cl$tau,  breaks=c(0,5,10,15,20,25,50,100))
-summaryFt <- summarySE(cl, c("fromtruth.avg"), c("alpha", "R", "taubr"), na.rm=TRUE)
+summaryFt <- summarySE(mycl2, c("fromtruth.avg"), c("alpha", "R", "tau"), na.rm=TRUE)
 
 title <- 'Distance from Truth vs Strength of social influence'
-p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg, group = tau, color=as.factor(tau)))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line()
 p <- p + geom_errorbar(aes(ymin=fromtruth.avg - se, ymax = fromtruth.avg + se))
-p <- p + facet_grid(taubr ~ R, labeller = myLabeller)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
 #p <- p + ylim(0,28)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab(xlabText) + ylab('Cluster counts')
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
 p <- p + ggtitle(title) + myThemeMod
 p
 
-ggsave(filename = paste0(IMGPATH, "tau_alpha_brk_dist.jpg"),
+ggsave(filename = paste0(IMGPATH, "MYCL_tau_alpha_brk_dist.jpg"),
        plot = p, width = 14, height = 14)
+
+# ggsave(filename = paste0(IMGPATH, "tau_alpha_brk_dist.jpg"),
+#       plot = p, width = 14, height = 14)
+
+
+taus <- 1:100
+for (tau in taus) {
+# Get data
+summaryCl <- summarySE(cl[cl$tau == tau & cl$R == 0.3,], c("count"), c("alpha"), na.rm=TRUE)
+# Create plot
+title <- paste0(tau, ' - Ccount: tau vs alpha - Big R')
+p <- ggplot(summaryCl, aes((1 - alpha), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+                                        #p <- p + geom_point()
+                                        #p <- p + geom_line()
+p <- p + geom_errorbar(limits)
+                                        #p <- p + ylim(0,28)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + ylim(0,40)
+p <- p + xlab(xlabText) + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+#p
+ggsave(filename = paste0(IMGPATH, "tau_alpha_ccount/tau_alpha_brk_count_", tau, ".jpg"))
+}
+
+
+taus <- 1:100
+for (tau in taus) {
+# Get data
+summaryFt <- summarySE(cl[cl$tau == tau & cl$R == 0.3,], c("fromtruth.avg"), c("alpha"), na.rm=TRUE)
+# Create plot
+title <- paste0(tau, ' - Dist: tau vs alpha - Big R')
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(aes(ymin = fromtruth.avg - se, ymax = fromtruth.avg + se))
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + ylim(0,0.5)
+p <- p + xlab(xlabText) + ylab('Avg. Dist from Truth')
+p <- p + ggtitle(title) + myThemeMod
+#p
+ggsave(filename = paste0(IMGPATH, "tau_alpha_dist/big_r/tau_alpha_dist_", tau, ".jpg"))
+}
+
+taus <- 1:100
+for (tau in taus) {
+# Get data
+summaryFt <- summarySE(cl[cl$tau == tau & cl$R == 0.03,], c("fromtruth.avg"), c("alpha"), na.rm=TRUE)
+# Create plot
+title <- paste0(tau, ' - Dist: tau vs alpha - Small R')
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(aes(ymin = fromtruth.avg - se, ymax = fromtruth.avg + se))
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + ylim(0,0.55)
+p <- p + xlab(xlabText) + ylab('Avg. Dist from Truth')
+p <- p + ggtitle(title) + myThemeMod
+#p
+ggsave(filename = paste0(IMGPATH, "tau_alpha_dist/small_r/tau_alpha_dist_", tau, ".jpg"))
+}
 
 
 tau = 100
@@ -581,6 +669,99 @@ p <- p + geom_errorbar(aes(ymin=fromtruth.avg - se, ymax = fromtruth.avg + se))
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
 p <- p + xlab(xlabText) + ylab('Distance from Truth')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+
+# R TAU
+
+## get also tau = 1
+clTau1 <- loadData(DUMPDIR, 'final_R/', 0)
+clTau1 <- clTau1[clTau1$t == 2000,]
+
+# might take long...
+cl <- loadData(DUMPDIR, 'R_tau/', 1)
+
+cl <- rbind(cl,clTau1)
+
+summaryCl <- summarySE(cl, c("count"), c("R"), na.rm=TRUE)
+
+# Create plot
+title <- paste0('Ccount: tau vs R')
+p <- ggplot(summaryCl, aes(R, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ylim(0,40)
+p <- p + xlab("R") + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+p
+
+
+
+
+taus <- 1:100
+for (tau in taus) {
+# Get data
+summaryCl <- summarySE(cl[cl$tau == tau,], c("count"), c("R"), na.rm=TRUE)
+# Create plot
+title <- paste0(tau, ' - Ccount: tau vs R')
+p <- ggplot(summaryCl, aes(R, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ylim(0,40)
+p <- p + xlab("R") + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod
+#p
+ggsave(filename = paste0(IMGPATH, "tau_R/count/tau_R_count_", tau, ".jpg"))
+}
+
+
+taus <- 1:100
+for (tau in taus) {
+# Get data
+summaryFt <- summarySE(cl[cl$tau == tau,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
+# Create plot
+title <- paste0(tau, ' - Dist: tau vs R')
+p <- ggplot(summaryFt, aes(R, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(aes(ymin = fromtruth.avg - se, ymax = fromtruth.avg + se))
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ylim(0,0.5)
+p <- p + xlab("R") + ylab('Avg. Dist from Truth')
+p <- p + ggtitle(title) + myThemeMod
+p
+ggsave(filename = paste0(IMGPATH, "tau_R/dist/tau_R_dist_", tau, ".jpg"))
+}
+
+
+cl$rbr <- cut(cl$R, c(0,0.05,0.1,0.15,0.2,0.3,1))
+
+cl$taubr <- cut(cl$tau,  breaks=c(0,5,10,15,20,25,50,100))
+summaryCl <- summarySE(cl, c("count"), c("R", "taubr"), na.rm=TRUE)
+
+title <- paste0('Ccount: tau vs R')
+p <- ggplot(summaryCl, aes(R, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ylim(0,40)
+p <- p + xlab("R") + ylab('Cluster counts')
+p <- p + facet_grid(taubr ~ .)
+p <- p + ggtitle(title) + myThemeMod
+p
+
+summaryFt <- summarySE(cl, c("fromtruth.avg"), c("R", "taubr"), na.rm=TRUE)
+
+title <- paste0('Dist: tau vs R')
+p <- ggplot(summaryFt, aes(R, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(aes(ymin = fromtruth.avg - se, ymax = fromtruth.avg + se))
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + ylim(0,0.5)
+p <- p + xlab("R") + ylab('Dist')
+p <- p + facet_grid(taubr ~ .)
 p <- p + ggtitle(title) + myThemeMod
 p
 

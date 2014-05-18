@@ -106,6 +106,7 @@ myThemeMod <- theme(legend.position = "none",
 
 limits <- aes(ymax = count + se, ymin = count - se)
 limits <- aes(ymax = fromtruth.avg + se, ymin = fromtruth.avg - se)
+limitsFt <- aes(ymax = fromtruth.avg + se, ymin = fromtruth.avg - se)
 
 theme_set(theme_bw(base_size = 30))
 theme_white()
@@ -126,16 +127,16 @@ summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R"), na.rm=TRUE
 title <- 'Distance from truth by radius of influence'
 p <- ggplot(summaryFt, aes(R, fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
 p <- p + annotate("text", x = 0.55, y = 0.22, label = "Convergence Zone", size=8)
-p <- p + xlab('Radius of Influence') + ylab('Distance from truth')
+p <- p + xlab('Radius of Influence') + ylab('Avg. Distance from Truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + ggtitle(title) + myThemeMod
+p <- p + myThemeMod # + ggtitle(title)
 p
 
-ggsave(filename = paste0(IMGPATH, "progress_scan_R2.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+ggsave(filename = paste0(IMGPATH, "progress_scan_R2b.svg"),
+       plot = p, width=10, height=5, dpi=300)
 
 p.mini <- ggplot(summaryFt[summaryFt$R <= 0.1,], aes(R, fromtruth.avg))
 p.mini <- p.mini + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
@@ -214,17 +215,17 @@ summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "t
 title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(~ R, labeller = myLabeller)
-xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab(xlabText) + ylab('Distance from truth')
+#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
 p <- p + ylim(0,0.3)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + ggtitle(title) + myThemeMod
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "progress_scan_alpha3.jpg"),
+ggsave(filename = paste0(IMGPATH, "scan_alpha_dist.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # t = 20000
@@ -293,7 +294,7 @@ ggsave(filename = paste0(IMGPATH, "progress_scan_noises.jpg"),
 
 cl <- loadData(DUMPDIR, 'final_tau/')
 
-summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("tau", "R","init.vscaling"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau <= 10,], c("fromtruth.avg"), c("tau", "R","init.vscaling"), na.rm=TRUE)
 
 #options(warn = 2, error = recover)
 
@@ -305,7 +306,7 @@ ann_arrow <- data.frame(x = 48, y = 0.48, R = 0.3)
 title <- 'Distance from truth vs Strength of the truth\'s signal'
 p <- ggplot(summaryFt[summaryFt$init.vscaling == 1,], aes((100 - tau), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
 #p <- p + geom_vline(data = vline_frame, aes(xintercept = intercept), colour="red", linetype = "longdash", size = 1)
 #p <- p + geom_text(data = ann_text, label = "Convergence far away\n from ground-truth", size=8)
@@ -317,6 +318,9 @@ p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + ggtitle(title) + myThemeMod
 p
+
+ggsave(filename = paste0(IMGPATH, "progress_scan_tau_upto_10.jpg"),
+       plot = p, width=10, height=5, dpi=300)
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_tau.jpg"),
        plot = p, width=10, height=5, dpi=300)
@@ -346,22 +350,26 @@ system(paste0('ffmpeg -qscale 1 -r 1 -b 9600 -y -i ', SCATTERPATH, 'img_%04d.jpg
 
 cl <- loadData(DUMPDIR, 'final_tau_20000/')
 
-summaryFt <- summarySE(cl[cl$t == 20000,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau <= 10,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
 
 #options(warn = 2, error = recover)
 
 title <- 'Distance from truth by strength of the truth'
-p <- ggplot(summaryFt, aes((100 - tau), fromtruth.avg))
+p <- ggplot(summaryFt, aes((11 - tau), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
-p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
-p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + ggtitle(title) + myThemeMod
+xlabText <- expression(paste('Strength ', tau, ' of Attraction by Ground-Truth'))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_x_continuous(breaks=c(2,4,6,8,10))
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "progress_scan_tau_20000.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+ggsave(filename = paste0(IMGPATH, "progress_scan_tau_upto_10.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+#ggsave(filename = paste0(IMGPATH, "progress_scan_tau_20000.jpg"),
+#       plot = p, width=10, height=5, dpi=600)
 
 summaryCl <- summarySE(cl[cl$t == 20000,], c("coverage.cum"), c("tau", "R"), na.rm=TRUE)
 
@@ -409,7 +417,7 @@ summaryFt <- summarySE(cl[cl$t == 20000,], c("fromtruth.avg"), c("tau", "R"), na
 title <- 'Distance from truth by strength of the truth'
 p <- ggplot(summaryFt, aes((100 - tau), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
 p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
@@ -417,4 +425,4 @@ p <- p + ggtitle(title) + myThemeMod
 p
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_tau_20000_nobound.jpg"),
-       plot = p, width=10, height=5, dpi=600)
+       plot = p, width=10, height=5, dpi=300)
