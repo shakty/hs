@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'noises_tau';
-dumpDir = '/cluster/work/scr4/balistef/';
+simName = 'noises_tau1';
+dumpDir = '/cluster/work/scr3/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [2:100]; 		% coupling coefficient (divisor)
+taus = [1]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term

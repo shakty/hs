@@ -2,12 +2,6 @@
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
 
 # DUMPDIR 
-DUMPDIR = "/mnt/tmp/dump/NAVNP/"
-
-# Linear
-DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon/"
-DIR = "attrLinear_navnp_RClean_n100_fv0_s1_epsilon_v/"
-
 DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 
 ##############################
@@ -117,7 +111,7 @@ XINTERCEPT <- 0.15
 
 ## IMG DIR
 
-IMGPATH <- paste0(DUMPDIR, "imgs/")
+IMGPATH <- paste0(DUMPDIR, "imgs/NOBOUND/")
 # Create IMG dir if not existing
 if (!file.exists(IMGPATH)) {
   dir.create(file.path(IMGPATH))
@@ -125,58 +119,24 @@ if (!file.exists(IMGPATH)) {
 
 ## R ##
 
-cl <- loadData(DUMPDIR, 'final_R/')
+cl <- loadData(DUMPDIR, 'nobound_R_tau/', 1)
 
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 2,], c("count"), c("R"), na.rm=TRUE)
 
-
-# Breaks for background rectangles
-# rects <- data.frame(xstart = c(-Inf, XINTERCEPT), xend = c(XINTERCEPT, Inf), col = letters[1:2])
-
-# color <- "#FFEDD1"
 
 title <- 'Cluster counts by radius of influence'
 p <- ggplot(summaryCl, aes(R, count))
-# p <- p + geom_rect(aes(xmin = -Inf, xmax = XINTERCEPT, ymin = -Inf, ymax = Inf), fill = "#E8FCFF")
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
-#p <- p + geom_point()
-#p <- p + geom_line()
 p <- p + geom_errorbar(limits)
 p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
-#p <- p + annotate("text", x = 0.05, y = 30, label = "Clusters", size=8)
 p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
-#p <- p + geom_segment(aes(x = 0, xend = 0.1, y = 29.4, yend = 29.4))
-#p <- p + geom_segment(aes(x = 0.475, xend = 0.625, y = 29.4, yend = 29.4))
-p <- p + xlab('Radius of Influence') + ylab('Number of Clusters')
-p <- p  + myThemeMod # + ggtitle(title)
+p <- p + xlab('Radius of Influence') + ylab('Avg. Number of Clusters')
+p <- p  + myThemeMod
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_R3.svg"),
+ggsave(filename = paste0(IMGPATH, ".svg"),
        plot = p, width=10, height=5, dpi=300)
 
-
-p.mini <- ggplot(summaryCl[summaryCl$R <= 0.1,], aes(R, count))
-p.mini <- p.mini + geom_bar(stat = "identity", position="dodge", aes(fill=count))
-p.mini <- p.mini + geom_errorbar(limits)
-p.mini <- p.mini + theme(legend.position = "none") 
-p.mini
-
-
-vp <- viewport(width = 0.4, height = 0.4,
-               x = 0.75, y = 0.7)
-
-full <- function() {
-     print(p)
-     theme_set(theme_bw(base_size = 8))
-     theme_white()
-     print(p.mini, vp = vp)
-     theme_set(theme_bw(base_size = 18))
-     theme_white()
-}
-
-jpeg(filename = paste0(IMGPATH, "scan_R.jpg"))
-full()
-dev.off()
 
 ## ALPHA ##
 

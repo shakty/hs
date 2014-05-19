@@ -277,15 +277,34 @@ summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilo
 title <- 'Distance from truth vs Angular noise and \nPosition noise'
 p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
-p <- p + geom_errorbar(limits)
+p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Angular noise') + ylab('Distance from truth')
+p <- p + xlab('Angular Noise') + ylab('Avg. Distance from Truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 #p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
 #p <- p + scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15))
-p <- p + ggtitle(title) + myThemeMod + theme(panel.margin = unit(c(5),"mm"))
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+p <- p + myThemeMod +  theme(strip.background = element_blank())
 #p <- p + theme(axis.text.y = element_text(size=18))
 p
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[22]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0"))
+grob[["grobs"]][[23]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.1"))
+grob[["grobs"]][[24]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.2"))
+grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.3"))
+grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
+grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
+
+svg(filename = paste0(IMGPATH, "scan_noises_progress.svg"),
+     width=10, height=10)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
 
 ggsave(filename = paste0(IMGPATH, "progress_scan_noises.jpg"),
        plot = p, width=10, height=10, dpi=300)
