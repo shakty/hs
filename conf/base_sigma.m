@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'nobound_R_tau1';
-dumpDir = '/cluster/work/scr5/balistef/';
+simName = 'nobound_R_alpha';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -52,8 +52,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01 0.5 0.99];  % weighting of velocity terms
-Rs     = [0.01:0.01:1]; % cut-off radius
+alphas = [0.01:0.01:0.99];  % weighting of velocity terms
+Rs     = [0.03 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [1]; 		% coupling coefficient (divisor)
+taus = [2:100]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
