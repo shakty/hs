@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr2/balistef/NEW2/nobound_R_alpha/')"
+matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr2/balistef/NEW2/nobound_alpha_tau1/')"

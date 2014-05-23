@@ -18,7 +18,6 @@ DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 #
 #############################
 
-
 loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
 
   INTERACTIVE = FALSE
@@ -159,19 +158,19 @@ ggsave(filename = paste0(IMGPATH, "nobound_R_dist.svg"),
 ## ALPHA ##
 ###########
 
-cl <- loadData(DUMPDIR, 'final_alpha/')
+cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
 
-cl$tbr <- cut(cl$t,  breaks=seq(0,20000,1000))
+
 
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R", "tbr"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 2,], c("count"), c("alpha", "R"), na.rm=TRUE)
 
 title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(~ R, labeller = myLabeller)
-p <- p + ylim(0,29)
+#p <- p + ylim(0,29)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 #xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
 p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
@@ -182,7 +181,7 @@ ggsave(filename = paste0(IMGPATH, "scan_alpha.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "tbr"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 100,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
 
 title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
@@ -191,7 +190,7 @@ p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(~ R, labeller = myLabeller)
 #xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
 p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
-p <- p + ylim(0,0.3)
+#p <- p + ylim(0,0.3)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod + theme(strip.background = element_blank())
@@ -200,10 +199,60 @@ p
 ggsave(filename = paste0(IMGPATH, "scan_alpha_dist.svg"),
        plot = p, width=10, height=5, dpi=300)
 
+# Save all Taus Cl
+taus <- 2:100
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$tau == t,], c("count"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryCl, aes((1 - alpha), count))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+  p <- p + geom_errorbar(limits)
+  p <- p + facet_grid(~ R, labeller = myLabeller)
+  p <- p + ylim(0,100)
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha/alpha_tau_cc_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'alpha/alpha_tau_cc_%04d.jpg ',
+              IMGPATH, 'alpha/movie_alpha_tau_cc.avi'))
+
+## NOISES ##
+  
+
+# Save all Taus Ft
+taus <- 2:100
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$tau == t,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+  p <- p + geom_errorbar(limitsFt)
+  p <- p + facet_grid(~ R, labeller = myLabeller)                                        
+  p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+  p <- p + ylim(0, 6.3) + ggtitle(title)
+  p <- p + myThemeMod + theme(strip.background = element_blank()) 
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha/alpha_tau_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'alpha/alpha_tau_%04d.jpg ',
+              IMGPATH, 'alpha/movie_alpha_tau_ft.avi'))
+
 ## NOISES ##
 ############
 
-cl <- loadData(DUMPDIR, 'final_noises/')
+cl <- loadData(DUMPDIR, 'nobound_noises_tau1/')
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
