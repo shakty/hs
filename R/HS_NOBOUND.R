@@ -120,8 +120,13 @@ if (!file.exists(IMGPATH)) {
 #######
 cl <- loadData(DUMPDIR, 'nobound_R_tau/', 1)
 
+clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
+
+cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+
+
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 2,], c("count"), c("R"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
 
 
 title <- 'Cluster counts by radius of influence'
@@ -134,12 +139,12 @@ p <- p + xlab('Radius of Influence') + ylab('Avg. Number of Clusters')
 p <- p  + myThemeMod
 p
 
-ggsave(filename = paste0(IMGPATH, "nobound_R_count.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 100,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
 
 title <- 'Distance from truth by radius of influence'
 p <- ggplot(summaryFt, aes(R, fromtruth.avg))
@@ -152,18 +157,64 @@ p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod 
 p
 
-ggsave(filename = paste0(IMGPATH, "nobound_R_dist.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_ft.svg"),
        plot = p, width=10, height=5, dpi=300)
+
+
+
+# Save all Taus Cl
+taus <- 1:100
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$tau == t,], c("count"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryCl, aes(R, count))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+  p <- p + geom_errorbar(limits)
+  p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+  p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
+  p <- p + xlab('Radius of Influence') + ylab('Avg. Number of Clusters')
+  p <- p  + myThemeMod + ggtitle(title) + ylim(0,100)
+  p
+  ggsave(filename=paste0(IMGPATH, "R/R_tau_cc_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'R/R_tau_cc_%04d.jpg ',
+              IMGPATH, 'R/movie_R_tau_cc.avi'))
+# Save all Taus Ft
+taus <- 1:100
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$tau == t,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryFt, aes(R, fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+  p <- p + geom_errorbar(limitsFt)
+  p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+  p <- p + annotate("text", x = 0.55, y = 0.22, label = "Convergence Zone", size=8)
+  p <- p + xlab('Radius of Influence') + ylab('Avg. Distance from Truth')
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+  p <- p + myThemeMod + ggtitle(title) + ylim(0,6.3)
+  #
+  ggsave(filename=paste0(IMGPATH, "R/R_tau_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'R/R_tau_%04d.jpg ',
+              IMGPATH, 'R/movie_R_tau_ft.avi'))
+
 
 ## ALPHA ##
 ###########
 
 cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
 
-
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+cl <- rbind(cl, clTau1)
 
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 2,], c("count"), c("alpha", "R"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R"), na.rm=TRUE)
 
 title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
@@ -177,11 +228,11 @@ p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_alpha.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 100,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
 
 title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
@@ -196,11 +247,11 @@ p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "scan_alpha_dist.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_ft.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # Save all Taus Cl
-taus <- 2:100
+taus <- 1:100
 for (t in taus) {
   summaryCl <- summarySE(cl[cl$tau == t,], c("count"), c("alpha", "R"), na.rm=TRUE)
   #
@@ -212,21 +263,17 @@ for (t in taus) {
   p <- p + ylim(0,100)
   p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
   p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
-  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + myThemeMod + theme(strip.background = element_blank()) + ggtitle(title)
   #
   ggsave(filename=paste0(IMGPATH, "alpha/alpha_tau_cc_", sprintf("%04d", t), ".jpg"),
          plot = p)
 }
-
+# Movie
 system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
               IMGPATH, 'alpha/alpha_tau_cc_%04d.jpg ',
               IMGPATH, 'alpha/movie_alpha_tau_cc.avi'))
-
-## NOISES ##
-  
-
 # Save all Taus Ft
-taus <- 2:100
+taus <- 1:100
 for (t in taus) {
   summaryFt <- summarySE(cl[cl$tau == t,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
   #
@@ -239,22 +286,54 @@ for (t in taus) {
   p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
   p <- p + scale_fill_continuous(name="Distance\nfrom truth")
   p <- p + ylim(0, 6.3) + ggtitle(title)
-  p <- p + myThemeMod + theme(strip.background = element_blank()) 
+  p <- p + myThemeMod + theme(strip.background = element_blank()) + ggtitle(title)
   #
   ggsave(filename=paste0(IMGPATH, "alpha/alpha_tau_", sprintf("%04d", t), ".jpg"),
          plot = p)
 }
-
+# Movie
 system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
               IMGPATH, 'alpha/alpha_tau_%04d.jpg ',
               IMGPATH, 'alpha/movie_alpha_tau_ft.avi'))
 
+
+
+
+# Alpha and different Taus
+cl$alphabrk <- cut(cl$alpha, seq(0.01,0.99,0.01))
+
+mycl <- cl[cl$t == 2000 &
+           (cl$tau == 1 | cl$tau == 5 | cl$tau == 10 | cl$tau == 25 |
+            cl$tau == 50 | cl$tau == 100),]
+
+summaryClbrk <- summarySE(mycl, c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryClbrk, aes((1-alpha), count, group = tau, color = as.factor(tau)))
+# p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha = 0.3)
+#p <- p + geom_errorbar(limits, width = 0.2)
+p <- p + facet_grid(~ R, labeller = myLabeller)
+#p <- p + ylim(0,29)
+#p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+
+
 ## NOISES ##
 ############
 
-cl <- loadData(DUMPDIR, 'nobound_noises_tau1/')
+cl <- loadData(DUMPDIR, 'nobound_noises_tau/', 1)
+  
+clTau1 <- loadData(DUMPDIR, 'nobound_noises_tau1/', 1)
 
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+
+summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
 title <- 'Cluster counts vs Angular noise and \nPosition noise'
 p <- ggplot(summaryCl, aes(sigma, count))
@@ -280,7 +359,7 @@ grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon,
 grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
 grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
 
-svg(filename = paste0(IMGPATH, "scan_noises.svg"),
+svg(filename = paste0(IMGPATH, "nobound_noises_cc.svg"),
      width=10, height=10)
 grid.newpage()
 grid.draw(grob)
@@ -288,7 +367,7 @@ dev.off()
 
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
 title <- 'Distance from truth vs Angular noise and \nPosition noise'
 p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
@@ -315,50 +394,122 @@ grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon,
 grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
 grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
 
-svg(filename = paste0(IMGPATH, "scan_noises_progress.svg"),
+svg(filename = paste0(IMGPATH, "nobound_noises_ft.svg"),
      width=10, height=10)
 grid.newpage()
 grid.draw(grob)
 dev.off()
 
+
+
+# Save all Taus Cl
+taus <- 1:100
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$tau == t,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryCl, aes(sigma, count))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+  p <- p + geom_errorbar(limits)
+  p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
+  p <- p + xlab('Angular Noise') + ylab('Number of Clusters')
+  p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title) + ylim(0,95)
+  #
+  ggsave(filename=paste0(IMGPATH, "noises/noises_tau_cc_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'noises/noises_tau_cc_%04d.jpg ',
+              IMGPATH, 'noises/movie_noises_tau_cc.avi'))
+
+# Save all Taus Ft
+taus <- 1:100
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$tau == t,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+  p <- p + geom_errorbar(limitsFt)
+  p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
+  p <- p + xlab('Angular Noise') + ylab('Avg. Distance from Truth')
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+  p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+  p <- p + myThemeMod +  theme(strip.background = element_blank())
+  p <- p + ggtitle(title) + ylim(0,6)
+  #
+  ggsave(filename=paste0(IMGPATH, "noises/noises_tau_ft_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'noises/noises_tau_ft_%04d.jpg ',
+              IMGPATH, 'noises/movie_noises_tau_ft.avi'))
+
 ## TAU ##
 #########
 
-cl <- loadData(DUMPDIR, 'final_tau/')
+# Using Alpha
+cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+cl <- rbind(cl, clTau1)
 
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "init.vscaling"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000 & (cl$alpha == 0.5 | cl$alpha == 0.01 | cl$alpha == 0.99),], c("count"), c("tau", "R", "alpha"), na.rm=TRUE)
 
 title <- 'Cluster counts by strength of the truth'
-p <- ggplot(summaryCl[summaryCl$init.vscaling == 1,], aes((100 - tau), count))
+p <- ggplot(summaryCl, aes((100 - tau), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=1))
 p <- p + geom_errorbar(limits)
-p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + facet_grid(alpha ~  R, labeller = myLabeller)
 p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-# To be taken from TAU 20000
-ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
-       plot = p, width=10, height=5, dpi=300)
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.01"))
+grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
+grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
+
+svg(filename = paste0(IMGPATH, "nobound_tau_cc.svg"),
+    width=9)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
+summaryFt <- summarySE(cl[cl$t == 2000 & (cl$alpha == 0.5 | cl$alpha == 0.01 | cl$alpha == 0.99),], c("fromtruth.avg"), c("tau", "R", "alpha"), na.rm=TRUE)
 
 
 # FT
 title <- 'Distance from truth vs Strength of the truth\'s signal'
-p <- ggplot(summaryFt[summaryFt$init.vscaling == 1,], aes((100 - tau), fromtruth.avg))
+p <- ggplot(summaryFt, aes((100 - tau), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=1))
 p <- p + geom_errorbar(limitsFt)
-p <- p + facet_grid(.~ R, labeller = myLabeller)
-#p <- p + geom_vline(data = vline_frame, aes(xintercept = intercept), colour="red", linetype = "longdash", size = 1)
-#p <- p + geom_text(data = ann_text, label = "Convergence far away\n from ground-truth", size=8)
-#p <- p + geom_rect(data=ann_rect, aes(xmin = tau,
-#                     xmax = tau + 20, ymin = fromtruth.avg,
-#                     ymax = fromtruth.avg + 0.15), alpha = .2)
-#p <- p + geom_segment(data=ann_arrow, aes(x = x, y = y, xend = x + 34, yend = y - 0.14), arrow = arrow())
+p <- p + facet_grid(alpha ~ R, labeller = myLabeller)
 p <- p + xlab('Truth strength in percentage') + ylab('Distance from truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
-p <- p + ggtitle(title) + myThemeMod
+p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "progress_scan_tau_upto_10.jpg"),
-       plot = p, width=10, height=5, dpi=300)
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.01"))
+grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
+grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
+
+svg(filename = paste0(IMGPATH, "nobound_tau_ft.svg"),
+    width=9)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
+

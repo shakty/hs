@@ -156,8 +156,8 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
     end
     
     
-    xlim([0 1]);
-    ylim([0 1]);
+    %xlim([0 1]);
+    %ylim([0 1]);
     
 
     % Get the handle of the figure
@@ -215,8 +215,8 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
         hold off;
         
-        xlim([0 ideas_space_size])
-        ylim([0 ideas_space_size]);
+        %xlim([0 ideas_space_size])
+        %ylim([0 ideas_space_size]);
         % TODO move the title in the first frame
         paramString{1} = [attrName ' - T: ' int2str(j)];
         title(paramString);

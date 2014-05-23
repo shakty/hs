@@ -48,12 +48,12 @@ vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.01;
-Rs = 0.3;
+alphas = 0.99;
+Rs = 0.03;
 
 % Noise
-sigmas = 0.01;
-epsilons = 0.1;
+sigmas = 0;
+epsilons = 0;
 noisetype = 4;
 
 % Truth

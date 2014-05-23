@@ -354,9 +354,21 @@ simName = 'TAUEFFECT-2014-5-15-16-0/' % t = 50, small 5, small alpha
 
 simName = 'TAUEFFECT-2014-5-15-17-6/'; % with no noise, no boundaries
 
+simName = 'TAUEFFECT-2014-5-15-16-44/'; % t = 100, big R small alpha
+
 simName = 'TAUEFFECT-2014-5-16-9-20/'; % t = 100, big R small alpha, no boundaries
 
-simName = 'TAUEFFECT-2014-5-15-16-44/'; % t = 100, big R small alpha
+simName = 'TAUEFFECT-2014-5-23-11-31/'; % t = 100, big R small alpha, no noise no boundaries
+
+simName = 'TAUEFFECT-2014-5-23-11-31/'; % t = 100, big R small alpha, no noise no boundaries
+
+simName = 'TAUEFFECT-2014-5-23-13-21/'; % t = 100, big R alpha = 1, no noise no boundaries. 
+% Agents individually go futher away. They should stop at 50, but there is
+% not enough time. In fact, 
+
+simName = 'TAUEFFECT-2014-5-23-13-34/'; % t = 100, big R alpha = 0.99, no noise no boundaries
+
+simName = 'TAUEFFECT-2014-5-23-13-46/'; % t = 100, small R alpha = 0.99, no noise no boundaries
 
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
