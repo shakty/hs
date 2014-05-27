@@ -44,20 +44,20 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = [1];
+vScalings = [10];
 n_agents = 100;
 
 % Influence
 alphas = 0.99;
-Rs = 0.03;
+Rs = 0.3;
 
 % Noise
-sigmas = 0;
-epsilons = 0;
+sigmas = 0.01;
+epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 100;
+taus = 1;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;

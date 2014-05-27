@@ -370,6 +370,14 @@ simName = 'TAUEFFECT-2014-5-23-13-34/'; % t = 100, big R alpha = 0.99, no noise 
 
 simName = 'TAUEFFECT-2014-5-23-13-46/'; % t = 100, small R alpha = 0.99, no noise no boundaries
 
+simName = 'TAUEFFECT-2014-5-26-21-58/'; % t = 1, vscale  = 3, no noise no boundaries
+
+simName = 'TAUEFFECT-2014-5-26-22-48/'; % t = 1, vscale  = 10, no noise no boundaries
+
+simName = 'TAUEFFECT-2014-5-27-8-54/';  % t = 1, vscale  = 10, no noise no boundaries, alpha = .99
+
+simName = 'TAUEFFECT-2014-5-27-8-59/';  % t = 1, vscale  = 10, no noise no boundaries, alpha = .99
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 

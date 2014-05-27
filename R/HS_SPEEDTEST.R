@@ -332,7 +332,9 @@ ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_r003.jpg"),
 #########
 
 mydata <- data[data$R == 0.03 & data$alpha == 0.5 &
-               (data$init.placement == 0.2 |
+               (data$init.placement == 0.1 |
+                data$init.placement == 0.15 |
+                data$init.placement == 0.2 |
                 data$init.placement == 0.25 |
                 data$init.placement == 0.3 |
                 data$init.placement == 0.35 |
@@ -385,13 +387,11 @@ ggsave(filename = paste0(IMGPATH, "clusters_vs_progress_r003_new.jpg"),
 
 # Interpolate
 
-s2 <- aggregate(consensus75 ~ init.placement + init.ccount, data = mydata, FUN = mean)
+s2 <- aggregate(consensus75 ~ init.placement + init.ccount, data = mydata)
 wireframe(consensus75 ~ init.ccount + init.placement, data = s2,
 shade = TRUE,
 scales = list(arrows = FALSE),
 pretty = TRUE)
-
-
 
 s3 <- aggregate(ccount50 ~ init.placement + init.ccount, data = mydata, FUN = mean)
 wireframe(ccount50 ~ init.ccount + init.placement, data = s3)

@@ -17,7 +17,6 @@ DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
 #   (20 * nCombinations of parameter sweep * levels of sigma)
 #
 #############################
-
 loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
 
   INTERACTIVE = FALSE
@@ -209,7 +208,6 @@ system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
 ###########
 
 cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
-
 clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
 cl <- rbind(cl, clTau1)
 
@@ -306,23 +304,89 @@ mycl <- cl[cl$t == 2000 &
            (cl$tau == 1 | cl$tau == 5 | cl$tau == 10 | cl$tau == 25 |
             cl$tau == 50 | cl$tau == 100),]
 
-summaryClbrk <- summarySE(mycl, c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+mycl <- cl[cl$t == 2000 & cl$tau == 1,]
+summaryCl.tau1 <- summarySE(mycl, c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+
+mycl <- cl[cl$t == 2000 & cl$tau == 50,]
+summaryCl.tau50 <- summarySE(mycl, c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+summaryCl.tau50$count2 <- summaryCl.tau50$count
+
+mycl <- cl[cl$t == 2000 & (cl$tau == 50 | cl$tau == 1),]
+summaryCl <- summarySE(mycl, c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+
+
+
+colours <- c("#FC9272", "#FB6A4A", "#EF3B2C", "#9ECAE1", "#6BAED6", "#4292C6")
+
 
 title <- 'Cluster counts vs Strength of social influence'
-p <- ggplot(summaryClbrk, aes((1-alpha), count, group = tau, color = as.factor(tau)))
-# p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
-p <- p + geom_point()
-p <- p + geom_line(alpha = 0.3)
-#p <- p + geom_errorbar(limits, width = 0.2)
-p <- p + facet_grid(~ R, labeller = myLabeller)
-#p <- p + ylim(0,29)
+p <- ggplot(summaryCl.tau50, aes((1-alpha), count, group = as.factor(tau),
+                                 fill = as.factor(tau)))
+p <- p + geom_bar(stat = "identity", position = "dodge", width=0.01)
+p <- p + geom_bar(data = summaryCl.tau1, stat = "identity",
+                  position = "dodge", width=0.01)
+
+#p <- p + geom_errorbar(limits, position = "dodge")
+#p <- p + geom_errorbar(data = summaryCl.tau1, limits, position = "dodge")
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+p
+
 #p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 #xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
-p <- p + myThemeMod + theme(strip.background = element_blank())
+#p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+#p <- p + myThemeMod + theme(strip.background = element_blank())
+p <- p + scale_fill_manual(breaks = c(1,50),
+                           palette = c(gg_color_hue2,
+                             gg_color_hue3))
 p
 
 
+gg_color_hue <- function(n) {
+  hues = seq(0, 100, length=n+1)
+  hcl(h=hues, l=65, c=100)[1:n]
+}
+
+gg_color_hue2 <- function(n) {
+  hues = rep(260,n+1)
+  luminances = seq(0,100, length=n+1)
+  hcl(h=hues, l=65, c=luminances)[1:n]
+}
+
+
+gg_color_hue3 <- function(n) {
+  hues = rep(0,n+1)
+  luminances = seq(0,100, length=n+1)
+  hcl(h=hues, l=65, c=luminances)[1:n]
+}
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl.tau50, aes((1-alpha), count, fill = count))
+p <- p + geom_bar(stat = "identity", position = "dodge", aes(group = as.factor(tau)))
+p <- p + geom_errorbar(limits, position = "dodge")
+p <- p + facet_grid(tau ~ R, labeller = myLabeller)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p <- p + scale_fill_gradient(low = "red", high = "yellow", space = "Lab", na.value = "grey50", 
+                             guide = "colourbar")
+p
+
+# TEST
+
+set.seed(1234)
+data <-
+expand.grid(month = month.abb,
+            building = c("Building A", "Building B", "Building C"),
+            hc = c("Heating", "Cooling"))
+data$value <- rnorm(nrow(data), 60, 10)
+
+ggplot(data, aes(building,value,group=month)) + 
+  geom_bar(stat = 'identity',
+           position = 'dodge',
+           aes(fill = interaction(building, hc)))
+
+library("RColorBrewer")
+colours <- c(brewer.pal(9,"Reds")[4:6], brewer.pal(9,"Blues")[4:6])
 
 ## NOISES ##
 ############
@@ -513,3 +577,90 @@ grid.draw(grob)
 dev.off()
 
 
+## VSCALING ##
+##############
+
+cl <- loadData(DUMPDIR, 'nobound_vscale_tau/', 1)
+#cl <- loadData(DUMPDIR, 'final_vscaling/')
+
+cl$vbr <- cut(cl$init.vscaling,  breaks=c(0,0.5,1, 1.5,2,10))
+cl$vbr <- as.factor(cl$vbr)
+
+summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("count"),
+                       c("init.vscaling", "R", "alpha"), na.rm=TRUE)
+
+title <- 'Cluster counts by initial velocity'
+p <- ggplot(summaryCl, aes(as.factor(init.vscaling), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(alpha ~ R, labeller = myLabeller)
+p <- p + xlab('Initial Velocity') + ylab('Cluster counts')
+p <- p + ggtitle(title) + myThemeMod + theme(legend.position = "none",
+                                             strip.background = element_blank())
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_vscale_tau1_cc.svg"), plot = p, width = 9)
+
+summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"),
+                       c("init.vscaling", "R", "alpha"), na.rm=TRUE)
+
+title <- 'Distance from truth by initial velocity'
+p <- ggplot(summaryFt, aes(as.factor(init.vscaling), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(alpha ~ R, labeller = myLabeller)
+p <- p + xlab('Initial Velocity') + ylab('Distance from truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth") + theme(legend.position = "none") 
+p <- p + ggtitle(title)
+p
+
+
+ggsave(filename = paste0(IMGPATH, "nobound_vscale_tau1_ft.svg"),
+       plot = p, width=9)
+
+
+
+# Save all Taus Cl
+taus <- 1:100
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$tau == t,], c("count"), c("init.vscaling", "R", "alpha"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryCl, aes(as.factor(init.vscaling), count))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+  p <- p + geom_errorbar(limits)
+  p <- p + facet_grid(alpha ~ R, labeller = myLabeller)
+  p <- p + xlab('Velocity Multiplier') + ylab('Number of Clusters')
+#  p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title) + ylim(0,100)
+  #
+  ggsave(filename=paste0(IMGPATH, "vscale/vscale_tau_cc_", sprintf("%04d", t), ".jpg"),
+         plot = p, width = 9)
+}
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'vscale/vscale_tau_cc_%04d.jpg ',
+              IMGPATH, 'vscale/movie_vscale_tau_cc.avi'))
+
+# Save all Taus Ft
+taus <- 1:100
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$tau == t,], c("fromtruth.avg"), c("init.vscaling", "R", "alpha"), na.rm=TRUE)
+  #
+  title <- paste0("Tau: ", t)
+  p <- ggplot(summaryFt, aes(as.factor(init.vscaling), fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+  p <- p + geom_errorbar(limitsFt)
+  p <- p + facet_grid(alpha ~ R, labeller = myLabeller)
+  p <- p + xlab('Velocity Multiplier') + ylab('Avg. Distance from Truth')
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+#  p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+  p <- p + myThemeMod +  theme(strip.background = element_blank())
+  p <- p + ggtitle(title) + ylim(0,60)
+  #
+  ggsave(filename=paste0(IMGPATH, "vscale/vscale_tau_ft_", sprintf("%04d", t), ".jpg"),
+         plot = p, width = 9)
+}
+system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
+              IMGPATH, 'vscale/vscale_tau_ft_%04d.jpg ',
+              IMGPATH, 'vscale/movie_vscale_tau_ft.avi'))
