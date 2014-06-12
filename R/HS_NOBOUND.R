@@ -664,3 +664,226 @@ for (t in taus) {
 system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
               IMGPATH, 'vscale/vscale_tau_ft_%04d.jpg ',
               IMGPATH, 'vscale/movie_vscale_tau_ft.avi'))
+
+
+
+#### SPEEDTEST
+##############
+
+library(texreg)
+library(mediation)
+library(grid)
+library(lattice)
+library(rgl)
+
+DIR <- 'clusters_vs_progress_nobound/'
+
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+#data$init.placement <- as.factor(data$init.placement)
+
+# If consensus is not reached it has value -1. Replace with NA
+data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
+
+# If no consensus was reached replace ccounts with NA
+data[ , 29:40 ][ data[ , 29:40 ] == -1 ] <- NA
+
+# Replaces everything, not good
+#data[] <- lapply(data, function(x){replace(x, x == -1, 20000)})
+
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)
+# Add this if wanna see by cluster as well.
+data$clbr <- cut(data$init.ccount, breaks=c(0,1,5, 10, 20, 30))
+
+
+###########################
+# Select ALPHA
+###########################
+
+dataAlpha <- data[data$alpha == 0.01,]
+dataAlpha <- data[data$alpha == 0.5,]
+dataAlpha <- data[data$alpha == 0.99,]
+dataAlpha <- data
+
+############
+# Divide Tau
+############
+
+data1 <- dataAlpha[dataAlpha$tau == 1,]
+data50 <- dataAlpha[dataAlpha$tau == 50,]
+
+###########################
+# Select Dist: ALL / vs 0.4
+###########################
+# TAU = 1
+mydata <- data1[data1$init.placement == 0.4,]
+mydata <- data1
+# TAU = 50
+mydata <- data50[data50$init.placement == 0.4,]
+mydata <- data50
+##################
+
+
+title <- "Number of clusters vs progress and time to reach a consensus"
+p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(init.placement  ~ R, labeller = myLabeller)
+p
+
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1.jpg"),
+       width=10, height=20, dpi=300)
+
+
+
+title <- "Number of clusters vs progress and time to reach a consensus"
+p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(alpha  ~ R, labeller = myLabeller)
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_all.jpg"),
+       width=10, height=12, dpi=300)
+
+
+
+
+# Add this if wanna see by cluster as well.
+mydata$clbr <- cut(mydata$init.ccount, breaks=c(0,1,5, 10, 20, 30))
+
+if (exists("summaryData")) {
+  rm(summaryData)
+}
+if (exists("summaryNew")) {
+  rm(summaryNew)
+}
+counter <- 1
+for (c in seq(10,100,10)) {
+  myVar <- c(paste0('consensus', c))
+  # Remove clbr if not needed
+  summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
+  names(summaryNew) <- sub(myVar, "time", names(summaryNew))
+  summaryNew$share <- c
+  if (exists("summaryData")) {
+    newRowNums <- c(counter:(nrow(summaryNew)+counter-1)); newRowNums
+    rownames(summaryNew) <- newRowNums
+    summaryData <- rbind(summaryData, summaryNew)
+  } else {
+    summaryData <- summaryNew
+  }
+  counter <- counter + nrow(summaryNew)
+}
+
+
+title <- 'Temporal evolution of consensus building \n by number of initial clusters'
+p <- ggplot(summaryData, aes(x = share, weight=time, group=R, fill=R))
+p <- p + geom_bar(aes(y=time), stat = "identity", position = "dodge")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), position = "dodge")
+p <- p + xlab('Share of Consensus') + ylab('Time Passed')
+# Remove clbr if not needed
+p <- p + facet_grid(.~clbr)
+p + ggtitle(title)  + myThemeMod + theme(legend.position = c(1.1, 0.5),
+                                         plot.margin = unit(c(10,30,10,10),"mm"),
+                                         axis.text.x = element_text(size=15))
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.jpg"),
+       width=10, height=12, dpi=300)
+
+
+mydata.summary <- summarySE(mydata, "consensus75", c("init.ccount", "init.placement"), na.rm = TRUE)
+
+title <- "The effect of progress and clustering on consensus"
+p <- ggplot(mydata.summary, aes(init.ccount, consensus75))
+p <- p + geom_point(aes(color = as.factor(init.placement)), size=4)
+p <- p + geom_line(aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+#p <- p + facet_grid(alpha~.)
+#p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
+                            legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(vjust=3, size=16,face="bold"),
+                            legend.text = element_text(size=14),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key =  element_rect(fill = "white", colour = NA)
+                            )
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_consensus_by_progress.jpg"),
+       width=10, height=12, dpi=300)
+
+mydata003 <- mydata[mydata$R == 0.03,]
+mydata003$moreThan9 <- mydata003$init.ccount > 9
+
+title <- "Only R = 0.03. Smoothed functions."
+p <- ggplot(mydata003, aes(init.ccount, consensus75))
+p <- p + geom_smooth(alpha=0.5, aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p
+
+
+title <- "Only R = 0.03. More than 9 clusters?"
+p <- ggplot(mydata003, aes(init.ccount, consensus75))
+p <- p + geom_smooth(alpha=0.5, method="lm", aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + facet_grid( ~ moreThan9, labeller = myLabeller)
+p
+
+
+
+## NEW PLOTS
+
+
+mydata.summary <- summarySE(mydata, "ccount25", c("init.ccount", "init.placement"), na.rm = TRUE)
+
+title <- "The effect of progress and clustering on consensus"
+p <- ggplot(mydata.summary, aes(init.ccount, ccount25))
+p <- p + geom_point(aes(color = as.factor(init.placement)), size=4)
+p <- p + geom_line(aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+#p <- p + facet_grid(alpha~.)
+#p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
+                            legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(vjust=3, size=16,face="bold"),
+                            legend.text = element_text(size=14),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key =  element_rect(fill = "white", colour = NA)
+                            )
+p
+
+mydata.summary <- summarySE(mydata, "ccount80", c("R", "init.ccount", "init.placement"), na.rm = TRUE)
+
+title <- "The effect of progress and clustering on consensus"
+p <- ggplot(mydata.summary[mydata.summary$R == 0.03,], aes(as.factor(init.placement), ccount80))
+p <- p + geom_boxplot(aes(color = as.factor(init.placement)), size=4)
+#p <- p + geom_line(aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial Distance from Truth") + ylab("Number of Clusters at 25")
+#p <- p + facet_grid(alpha~.)
+#p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p +  theme(
+                            legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(vjust=3, size=16,face="bold"),
+                            legend.text = element_text(size=14),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key =  element_rect(fill = "white", colour = NA)
+                            )
+p

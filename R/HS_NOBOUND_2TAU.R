@@ -253,16 +253,27 @@ clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
 
 cl <- rbind(cl, clTau1)
 
+cl$alphabrk <- cut(cl$alpha, seq(0,1,0.05))
+
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R", "tau"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alphabrk", "R", "tau"), na.rm=TRUE)
+
+# Reverse the order of a discrete-valued axis
+# Get the levels of the factor
+flevels <- levels(summaryCl$alphabrk)
+# Reverse the order
+flevels <- rev(flevels)
+
 
 title <- 'Cluster counts vs Strength of social influence'
-p <- ggplot(summaryCl[summaryCl$tau %in% c(1,10,50,100),], aes((1 - alpha), count, color = as.factor(tau)))
+p <- ggplot(summaryCl[summaryCl$tau %in% c(1,10,50,100),],
+            aes(alphabrk, count, color = as.factor(tau), group = as.factor(tau)))
 p <- p + geom_point() + geom_line()
 p <- p + facet_grid(~ R, labeller = myLabeller)
 #p <- p + ylim(0,29)
-p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 #xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + scale_x_discrete(limits=flevels, labels = c("0", "0.25", "0.5", "0.75", "1"))
 p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
@@ -286,23 +297,50 @@ ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
 
+# does not work
+myalphas <- c(0.01, seq(0.1,0.9,0.1),0.99)
+# works
+myalphas <- c(0.01, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.99)
+
+summaryFt <- summarySE(cl[cl$t == 2000 &
+                          cl$alpha %in% myalphas &
+                          cl$tau %in% c(1,10,50,100)
+                          ,], c("fromtruth.avg"), c("alpha", "R", "tau"), na.rm=TRUE)
+
+#original
 title <- 'Distance from truth vs Strength of social influence'
-p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
-p <- p + geom_errorbar(limitsFt)
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg,
+                           color = as.factor(tau), group = as.factor(tau)))
+p <- p + geom_point() + geom_line(alpha = 0.5) + geom_errorbar(limitsFt, width = 0.01)
 p <- p + facet_grid(~ R, labeller = myLabeller)
 #xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
 p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
 #p <- p + ylim(0,0.3)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+#p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+
+title <- 'Distance from truth vs Strength of social influence'
+p <- ggplot(summaryFt[summaryFt$tau %in% c(1,10,50,100),],
+            aes(alphabrk, fromtruth.avg, color = as.factor(tau), group = as.factor(tau)))
+p <- p + geom_point() + geom_line()
+p <- p + facet_grid(~ R, labeller = myLabeller)
+#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
+p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
+#p <- p + ylim(0,0.3)
+#p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
 ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_ft.svg"),
        plot = p, width=10, height=5, dpi=300)
+
+
+
 
 # Save all Taus Cl
 taus <- 1:100
