@@ -887,3 +887,224 @@ p <- p +  theme(
                             legend.key =  element_rect(fill = "white", colour = NA)
                             )
 p
+
+#########################
+### Clusters vs Progress: RBANDS
+#########################
+
+DIR <- 'clusters_vs_progress_nobound_rbands/'
+
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+## IMG DIR
+
+IMGPATH <- paste0(DUMPDIR, "imgs/NOBOUND/")
+# Create IMG dir if not existing
+if (!file.exists(IMGPATH)) {
+  dir.create(file.path(IMGPATH))
+}
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+data$init.placement <- as.factor(data$init.placement)
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)
+
+# If consensus is not reached it has value -1. Replace with NA
+data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- 20000
+
+# If no consensus was reached replace ccounts with NA
+data[ , 29:40 ][ data[ , 29:40 ] == -1 ] <- NA
+
+# If consensus is not reached it has value -1. Replace with NA
+#data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+
+data$band <- as.factor(data$init.band.i)
+data$bandbr <- cut(data$init.band.i, breaks=c(0,0.3, 0.5, 0.7, 0.9, 1))
+
+# SELECT ALPHA
+##############
+dataAlpha <- data[data$alpha == 0.01,]
+dataAlpha <- data[data$alpha == 0.5,]
+dataAlpha <- data[data$alpha == 0.99,]
+dataAlpha <- data
+
+
+dataNA <- data[!complete.cases(data),]
+
+dataNA[] <- lapply(dataNA, function(x){replace(x, x == -1, NA)})
+
+
+# Converting all consensus shares and all clusters counts to two columns
+mydata <- dataAlpha
+colnamesData <- colnames(mydata)
+
+data.subset <- subset(mydata, select=colnamesData[seq(1,27)])
+data.melted <- melt(data.subset, id=colnamesData[seq(1,14)])
+
+data.melted.names <- colnames(data.melted)
+data.melted.names[15] <- "consensus.share"
+data.melted.names[16] <- "time"
+colnames(data.melted) <- data.melted.names
+
+data.melted$consensus.share <- substring(data.melted$consensus.share, 10)
+data.melted$consensus.share <- as.factor(data.melted$consensus.share)
+
+
+data.subset <- subset(data, select=colnamesData[c(seq(1,14),seq(28,40))])
+data.melted2 <- melt(data.subset, id=colnamesData[seq(1,14)])
+
+data.melted2.names <- colnames(data.melted2)
+data.melted2.names[15] <- "consensus.share"
+data.melted2.names[16] <- "ccount"
+colnames(data.melted2) <- data.melted2.names
+
+data.melted2 <- subset(data.melted2, select=data.melted2.names[c(2,3,15,16)])
+data.melted2$consensus.share <- substring(data.melted2$consensus.share, 7)
+data.melted2$consensus.share <- as.factor(data.melted2$consensus.share)
+
+
+data.melted <- merge(data.melted, data.melted2, id=c("simcount","run","consensus.share"))
+
+
+mydata <- data.melted[data.melted$consensus.share != 1 &
+                      data.melted$consensus.share != 10 &
+                      data.melted$consensus.share != 100 &
+                      data.melted$consensus.share != 25 &
+                      data.melted$consensus.share != 75
+                      ,]
+
+mydata <- summarySE(mydata, "ccount", c("consensus.share", "init.band.i", "R"), na.rm = TRUE)
+
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount, color = consensus.share))
+p <- p + geom_point(size=5)
+p <- p + geom_line(size=2, alpha=0.5)
+p <- p + geom_errorbar(width=0.02, aes(ymin=ccount-ci,ymax=ccount+ci))
+#p <- p + geom_smooth(alpha=0.5, color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + ggtitle(title) # + myThemeMod
+p <- p + scale_y_discrete(breaks=seq(1,20,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount, color = consensus.share))
+p <- p + geom_smooth(method="lm", se=FALSE, size=2)
+p <- p + xlab("Initial Distance from Truth") + ylab("Avg. Number of Clusters")
+p <- p + myThemeMod
+p <- p + scale_y_discrete(breaks=seq(1,20,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p <- p + scale_color_hue(name="Share of\nconsensus")
+p <- p +  theme(legend.position = c(0.3, 0.9), legend.direction = "horizontal",
+                legend.background = element_rect(fill = "white", colour = "grey"),
+                legend.title = element_text(vjust=3, size=16,face="bold"),
+                legend.text = element_text(size=14),
+                legend.key.width = unit(1.5, "cm"),
+                strip.background = element_blank(),
+                legend.key =  element_rect(fill = "white", colour = NA)
+                )
+p <- p + guides(col=guide_legend(ncol=4))
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_by_progress_lm.jpg"),
+       width=12, height=10, dpi=300)
+
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount, color = consensus.share))
+p <- p + geom_point(size=5)
+p <- p + geom_line(size=2, alpha=0.5)
+p <- p + geom_errorbar(width=0.02, aes(ymin=ccount-ci,ymax=ccount+ci))
+#p <- p + geom_smooth(alpha=0.5, color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + ggtitle(title) # + myThemeMod
+p <- p + scale_y_discrete(breaks=seq(1,20,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+
+mydata = data[data$alpha == 0.5,]
+if (exists("summaryData")) {
+  rm(summaryData)
+}
+if (exists("summaryNew")) {
+  rm(summaryNew)
+}
+counter <- 1
+for (c in seq(10,100,10)) {
+  myVar <- c(paste0('consensus', c))
+  # Remove clbr if not needed
+  summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'bandbr'), na.rm=TRUE)
+  names(summaryNew) <- sub(myVar, "time", names(summaryNew))
+  summaryNew$share <- c
+  if (exists("summaryData")) {
+    newRowNums <- c(counter:(nrow(summaryNew)+counter-1)); newRowNums
+    rownames(summaryNew) <- newRowNums
+    summaryData <- rbind(summaryData, summaryNew)
+  } else {
+    summaryData <- summaryNew
+  }
+  counter <- counter + nrow(summaryNew)
+}
+                       
+title <- 'Temporal evolution of consensus building \n by initial distance from truth'
+p <- ggplot(summaryData, aes(x = share, weight=time, group=R, fill=R))
+p <- p + geom_bar(aes(y=time), stat = "identity", position = "dodge")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), position = "dodge")
+p <- p + xlab('AvgShare of Consensus') + ylab('Avg. Time Passed')
+# Comment bandbr if not needed
+p <- p + facet_grid(.~bandbr)
+p <- p + ggtitle(title)  + myThemeMod + theme(legend.position = c(1.1, 0.5),
+                                              plot.margin = unit(c(10,30,10,10),"mm"),
+                                              axis.text.x = element_text(size=15),
+                                              strip.background = element_blank())
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/temporal_evo_consensus_by_initial_distance.jpg"),
+       width=10, height=8, dpi=300)
+
+
+mydata <- data[data$alpha == 0.5,]
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount25, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + scale_y_discrete(breaks=seq(1,20,1))
+p <- p + facet_grid(.  ~ R, labeller = myLabeller)
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress.svg"),
+       width=10, height=10, dpi=300)
+
+mydata <- data[data$alpha == 0.5,]
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(as.factor(init.band.i), ccount50, color = R))
+p <- p + geom_boxplot(size=2)
+#p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + scale_y_discrete(breaks=seq(1,15,1))
+p <- p + facet_grid(R ~ ., labeller = myLabeller)
+p <- p + theme(axis.text.x = element_text(angle = 90))
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_boxplot.svg"),
+       width=10, height=10, dpi=300)
+
+
+mydata <- data
+title <- "Number of clusters vs progress"
+p <- ggplot(mydata, aes(init.band.i, ccount50, color = R))
+p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+p <- p + xlab("Initial distance from truth") + ylab("Number of clusters")
+p <- p + myThemeMod + ggtitle(title)
+p <- p + facet_grid(alpha  ~ R, labeller = myLabeller)
+p <- p + theme(axis.text.x = element_text(angle = 90))
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alpha.svg"),
+       width=10, height=10, dpi=300)
