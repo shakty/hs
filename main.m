@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'TAUEFFECT';
+simName = 'NEWVIDEOS';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -44,12 +44,12 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = [10];
+vScalings = [1];
 n_agents = 100;
 
 % Influence
-alphas = 0.99;
-Rs = 0.3;
+alphas = 0.01;
+Rs = 0.03;
 
 % Noise
 sigmas = 0.01;
@@ -63,6 +63,10 @@ attrtype = 2;
 forces_on_v = 0;
 
 plottype = 3;
+
+% Boundaries
+
+boundaries = 0;
 
 % Initial positions
 
@@ -94,7 +98,7 @@ bandAreas = -1; % [0.4;0.5]; %computeRBands(0.1, 0.1, 0.5) % last band is slighl
 
 % Seed
 seedtype = 0; % 0 = fixed
-seed = 814724; %randi(1000000); % 819325;
+seed = randi(1000000); % 819325;
 batchSeed = randi(1000000); % 819325;
 
 %% Creating simName and Struct
@@ -136,7 +140,8 @@ simParamsStruct = struct( ...
                 'seedtype', seedtype, ...
                 'seed', seed, ...
                 'batchSeed', batchSeed, ...
-                'forces_on_v', forces_on_v ...
+                'forces_on_v', forces_on_v, ...
+                'boundaries', boundaries ...
             );
 
 

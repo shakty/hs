@@ -116,6 +116,9 @@ for i1=1:size(params.dts)
     for i20=1:size(params.epsilons,2)
         epsilon = params.epsilons(i20);
         
+    for i21=1:size(params.boundaries,2)
+        boundaries = params.boundaries(i21);
+        
         for rCount=1:params.nRuns
           
             % Defining seed
@@ -170,6 +173,7 @@ for i1=1:size(params.dts)
             fprintf('%+15s = %d\n', 'Noise type', noisetype);
             fprintf('%+15s = %d\n', 'Plot type', params.plottype);
             fprintf('%+15s = %d\n', 'Forces on V', forces_on_v);
+            fprintf('%+15s = %d\n', 'Boundaries', boundaries);
             fprintf('%+15s = %d\n','Seed', seed);            
             fprintf('------------------------------------\n');
 
@@ -208,7 +212,8 @@ for i1=1:size(params.dts)
                 'noisetype', noisetype, ...
                 'attrtype', attrtype, ...
                 'forces_on_v', forces_on_v, ...
-                'seed', seed ...
+                'seed', seed, ...
+                'boundaries', boundaries ...
             );
             
             simulation(paramsObj);
@@ -218,6 +223,7 @@ for i1=1:size(params.dts)
         end % End n runs with identical param set
              
         simCount=simCount+1; %updating the simulations count
+    end
     end
     end
     end

@@ -1,4 +1,4 @@
-function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
+function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMITS)
     close all;
     
     path2file = [ dirIn fileIn ];
@@ -22,7 +22,10 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         plottype = plot_cross;
     
     elseif nargin < 5
-        SHOW_POTENTIAL = 0;
+        SHOW_POTENTIAL = 0;    
+    
+    elseif nargin < 6
+        LIMITS = 1;
     end
     
     DEBUG = 0; % not used for now
@@ -215,8 +218,11 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL)
         
         hold off;
         
-        %xlim([0 ideas_space_size])
-        %ylim([0 ideas_space_size]);
+        if (LIMITS)
+            xlim([0 ideas_space_size])
+            ylim([0 ideas_space_size]);
+        end
+        
         % TODO move the title in the first frame
         paramString{1} = [attrName ' - T: ' int2str(j)];
         title(paramString);

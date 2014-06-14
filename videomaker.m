@@ -70,7 +70,7 @@ videoSubDir = [ MYDIR '/' ];
 VIDEODIR = '/home/stefano/hs/videos/LAST/';
 SAVE_VIDEO = 0;
 SHOW_POTENTIAL = 0;
-plottype = 3;
+plottype = 0;
 SINGLE = 1;
 
 % PLOT TYPE
@@ -378,17 +378,48 @@ simName = 'TAUEFFECT-2014-5-27-8-54/';  % t = 1, vscale  = 10, no noise no bound
 
 simName = 'TAUEFFECT-2014-5-27-8-59/';  % t = 1, vscale  = 10, no noise no boundaries, alpha = .99
 
+% NEW VIDEOS - NO BOUNDARIES
+
+
+% PANEL A: was quick convergence
+
+simName = 'NEWVIDEOS-2014-6-14-12-37/'; % with b: convergence near truth (Tau = 1)
+simName = 'NEWVIDEOS-2014-6-14-12-30/'; % without b: convergence near truth (Tau = 1)
+
+% PANEL B: was convergence far away (Tau = 10)
+
+simName = 'NEWVIDEOS-2014-6-14-12-21/'; % with b: convergence far away 
+simName = 'NEWVIDEOS-2014-6-14-12-3/'; % without b: convergence far away - a bit more far away
+% (need to check if this is consistent)
+
+% PANEL C: covergence mediated by clustering
+
+simName = 'NEWVIDEOS-2014-6-14-12-49/'; % with b: 4 big clusters, no conv
+simName = 'NEWVIDEOS-2014-6-14-12-56/'; % without b: simliar, but some agents are outside
+
+% PANEL D: Many small clusters
+
+simName = 'NEWVIDEOS-2014-6-14-13-10/'; % with b: many small clusters
+simName = 'NEWVIDEOS-2014-6-14-13-3/'; % without b: many small clusters
+
+% PANEL E: Many many small clusters
+
+simName = 'NEWVIDEOS-2014-6-14-13-18/'; % with b: many small clusters
+simName = 'NEWVIDEOS-2014-6-14-13-22/'; % without b: small clusters
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
 myFile = '1-1'; % 1521
+
+LIMITS = 1;
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];
     if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
         mkdir([VIDEODIR videoSubDir]);
     end
-    makevideo(dumpDir, myFile, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
+    makevideo(dumpDir, myFile, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL, LIMITS);
     return
 end
 
@@ -403,7 +434,7 @@ for i=1:length(myFiles)
         mkdir([VIDEODIR videoSubDir]);
     end
 
-    makevideo(dumpDir, myFiles{i}, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL);
+    makevideo(dumpDir, myFiles{i}, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL, LIMITS);
 end
 
 toc
