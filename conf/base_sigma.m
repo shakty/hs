@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_nobound_2';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'scan_tau_again2';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -31,7 +31,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 50;             % Number of simulation-runs with same param set
+nRuns = 10;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [1]; 		% coupling coefficient (divisor)
+taus = [0.5:0.01:1, 1.5:0.1:5]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
@@ -79,9 +79,9 @@ sigmas = [0.01]; % 0.01; % Std. deviation of white noise term
 vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [1:30];    	% number of clusters of the initial positions
+nClusters = 0; %[1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = [0.1:0.1:1];
+clustersInCircleOfRadius = -1; %[0.1:0.1:1];
 
 % -1 no bands
 bandAreas = -1; %computeRBands(0.1, 0.1, 1); % last band is slighlty smaller (0.09819; is right)
@@ -101,12 +101,8 @@ truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 truths = [0.5; 0.5];
 
 
-% BOUNDARY CONDITIONS (not used yet)
-bBounce = 0;
-bStop   = 1;
-bTorus  = 2;
-boundaryCondition = bBounce;
-
+% BOUNDARY CONDITIONS
+boundaries = [0 1]; % 0,1 no bound, bounce bound
 
 % TRUTH ATTRACTION FORCE TYPE
 attr_zero = 0;
@@ -194,7 +190,8 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(vScalings,2)*size(nClusters,NC_DIM)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
                 size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
-                size(clustersInCircleOfRadius,2)*size(bandAreas,2);
+                size(clustersInCircleOfRadius,2)*size(bandAreas,2)*...
+                size(boundaries,2);
             
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
