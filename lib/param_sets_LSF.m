@@ -1,15 +1,5 @@
 function param_sets_LSF(params)
 
-% SEED TYPE
-seed_fixed = 0;
-seed_random = 1;
-seed_machinetime = 2;
-
-if (params.seedtype ~= seed_fixed)
-    s = RandStream('mcg16807','Seed', params.batchSeed);
-    RandStream.setGlobalStream(s);
-end 
-
 path(path,'util/'); % Help functions
 path(path,'lib/'); % Help functions
 
@@ -27,30 +17,12 @@ taskCount = 1;
 % Container = container of many tasks.
 jobCount = 1;
 
-logFolder = ['log/' params.simName];
-mkdir(logFolder); % The name is unique under the dump directory.
-dumpFolder = [ params.dumpDir params.simName];
-
-% Local
-% sched = parcluster();
-% sched = findResource('scheduler', 'type', 'local');
-
-% Remote.
-parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
-sched = findResource('scheduler','type','lsf');
-% sched=parcluster('BrutusLSF8h');
-submitArgs = [' -W 36:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
-set(sched, 'SubmitArguments',submitArgs);
-set(sched, 'DataLocation', [logFolder '/']);
-
-j = createJob(sched);
-
 nCombinations = size(params.dts,2)*size(params.n_agents,2)*size(params.ideas_space_sizes,2)*...
                 size(params.ideas_space_dims,2)*size(params.As,2)*size(params.Bs,2)*size(params.ks,2)*...
                 size(params.d0s,2)*size(params.d1s,2)*size(params.alphas,2)*size(params.taus,2)*size(params.Rs,2)*...
                 size(params.sigmas,2)*size(params.v_scalings,2)*size(params.nof_clusters,2)*...
                 size(params.clusterTightness,2)*size(params.truths,2)*size(params.forces_on_v,2) *...
-                size(params.epsilons,2);
+                size(params.epsilons,2)*size(params.boundaries,2);
 
 % Total number of combinations is multiplied by either:
 
@@ -73,6 +45,37 @@ if (size(params.nof_clusters, 1) == 1)
 else
     NC_DIM = 3;
 end
+
+% SEED TYPE
+seed_fixed = 0;
+seed_random = 1;
+seed_machinetime = 2;
+
+if (params.seedtype ~= seed_fixed)
+    s = RandStream('mcg16807','Seed', params.batchSeed);
+    RandStream.setGlobalStream(s);
+end 
+
+
+% Make log folder etc.
+logFolder = ['log/' params.simName];
+mkdir(logFolder); % The name is unique under the dump directory.
+dumpFolder = [ params.dumpDir params.simName];
+
+% Local
+% sched = parcluster();
+% sched = findResource('scheduler', 'type', 'local');
+
+% Remote.
+parallel.importProfile('/cluster/apps/matlab/support/BrutusLSF8h.settings')
+sched = findResource('scheduler','type','lsf');
+% sched=parcluster('BrutusLSF8h');
+submitArgs = [' -W 36:00 -R "rusage[mem=8000]" -o ' logFolder '/' params.simName '.log'];
+set(sched, 'SubmitArguments',submitArgs);
+set(sched, 'DataLocation', [logFolder '/']);
+
+j = createJob(sched);
+
 
 % Nest several loops to simulate parameter sets.
 for i1=1:size(params.dts)

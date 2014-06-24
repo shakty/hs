@@ -835,3 +835,109 @@ p <- p + geom_jitter(aes(fromtruth.avg, count, color = tau))
 p <- p + geom_smooth(aes(fromtruth.avg, count), method="loess") #glm, gam, loess,rlm
 p <- p + facet_grid(R~init.vscaling)
 p
+
+
+
+# TAU SCAN 2
+
+
+## TAU ##
+
+cl <- loadData(DUMPDIR, 'scan_tau_again2/')
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "init.vscaling"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl, aes(tau, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+# To be taken from TAU 20000
+ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+# Scatter fromtruth count by tau
+
+summaryCl <- summarySE(cl, c("count"), c("tau", "R", "t", "init.vscaling"), na.rm=TRUE)
+summaryCl2 <- summarySE(cl, c("fromtruth.avg"), c("tau", "R", "t", "init.vscaling"), na.rm=TRUE)
+summaryCl2 <- rename(summaryCl2, c("se" = "se.fromtruth.avg"))
+summaryCl2$sd <- NULL
+summaryCl2$ci <- NULL
+summaryCl2$N <- NULL
+summaryCl3 <- merge(summaryCl, summaryCl2, by=c("tau","R","t","init.vscaling"))
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$init.vscaling == 1,], aes(fromtruth.avg, count))
+p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
+p <- p + xlab('Distance from truth') + ylab('Number of clusters')
+p <- p + ggtitle(title)
+#p <- p + facet_grid(init.vscaling ~ .)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+# 2 POINTS, AVG
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$tau == 1 & summaryCl3$init.vscaling == 1,], aes(count, fromtruth.avg))
+p <- p + geom_point(aes(color=as.factor(R)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+# POINTS ALL TAU = 1 INITV = 1
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1 & cl$tau == 1,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(size=tau, color=as.factor(R))))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+# ALL POINTS. VINIT = 1
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(size=tau, color=as.factor(R)))
+#p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+#p <- p + facet_grid(init.vscaling ~ .)
+p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(aes(color=(tau)))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+p <- p + facet_grid( R ~ init.vscaling, margins=T)
+#p <- p + scale_color_hue(name="Influence\nradius size")
+#p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+
+
+title <- 'Cluster counts and distance from truth'
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(init.vscaling, tau))
+p <- p + geom_jitter(aes(color=fromtruth.avg))
+p <- p + xlab('Number of clusters') + ylab('Distance from truth')
+p <- p + ggtitle(title)
+
+3p <- p + scale_color_hue(name="Influence\nradius size")
+p <- p + scale_size_continuous(name="Truth\nstrength")
+p
+
+9
+p <- p + myThemeMod
+p

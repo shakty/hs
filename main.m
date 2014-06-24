@@ -104,6 +104,10 @@ batchSeed = randi(1000000); % 819325;
 %% Creating simName and Struct
 simName = createSimName(simName,DUMP,dumpDir, 1);
 
+% Testing.
+% load('conf/NEW2/scan_tau_again2/scan_tau_again2_s1')
+% DUMP
+
 simParamsStruct = struct( ...
                 'dumpDir', dumpDir, ...
                 'simName', simName, ...
