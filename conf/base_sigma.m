@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'scan_tau_again2';
+simName = 'scan_R_again2';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -53,7 +53,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.5];  % weighting of velocity terms
-Rs     = [0.03 0.3]; % cut-off radius
+Rs     = [0.01:0.01:1]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [0.5:0.01:1, 1.5:0.1:5]; 		% coupling coefficient (divisor)
+taus = 1; %[0.5:0.01:1, 1.5:0.1:5]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = [0.1]; % 0.1; % Std. deviation of white noise term
@@ -100,9 +100,8 @@ truths = [repmat(hGrid,1,nPointsGrid); vGrid];
 
 truths = [0.5; 0.5];
 
-
 % BOUNDARY CONDITIONS
-boundaries = [0 1]; % 0,1 no bound, bounce bound
+boundaries = [0]; % 0,1 no bound, bounce bound
 
 % TRUTH ATTRACTION FORCE TYPE
 attr_zero = 0;

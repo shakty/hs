@@ -486,7 +486,8 @@ ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.svg"),
 
 cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
 
-summaryCl <- summarySE(cl[cl$t == 20000,], c("count"), c("tau", "R"), na.rm=TRUE)
+T = 2000
+summaryCl <- summarySE(cl[cl$t == T,], c("count"), c("tau", "R"), na.rm=TRUE)
 
 title <- 'Cluster counts by strength of the truth'
 p <- ggplot(summaryCl, aes((100 - tau), count))
@@ -873,8 +874,8 @@ summaryCl3 <- merge(summaryCl, summaryCl2, by=c("tau","R","t","init.vscaling"))
 
 
 title <- 'Cluster counts and distance from truth'
-p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$init.vscaling == 1,], aes(fromtruth.avg, count))
-p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
+p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(fromtruth.avg, count))
+p <- p + geom_jitter(aes(color=as.factor(R)))
 p <- p + xlab('Distance from truth') + ylab('Number of clusters')
 p <- p + ggtitle(title)
 #p <- p + facet_grid(init.vscaling ~ .)
@@ -882,62 +883,44 @@ p <- p + scale_color_hue(name="Influence\nradius size")
 p <- p + scale_size_continuous(name="Truth\nstrength")
 p
 
-# 2 POINTS, AVG
-title <- 'Cluster counts and distance from truth'
-p <- ggplot(summaryCl3[summaryCl3$t == 2000 & summaryCl3$tau == 1 & summaryCl3$init.vscaling == 1,], aes(count, fromtruth.avg))
-p <- p + geom_point(aes(color=as.factor(R)))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
-p <- p + ggtitle(title)
-p <- p + scale_color_hue(name="Influence\nradius size")
-p <- p + scale_size_continuous(name="Truth\nstrength")
+
+## TAU 2000 NO BOUND
+
+cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryCl, aes(1-tau/100, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.011))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+xlabText <- expression(paste('Strength of Attraction to Ground Truth 1/',tau))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p + scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
+labels = c("0.01", "0.25", "0.5", "0.75", "1"))
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+legend.position = "none"
+)
 p
 
+ggsave(filename = paste0(IMGPATH, "scan_tau_nobound_cc.svg"),
+plot = p, width=10, height=5, dpi=300)
 
-# POINTS ALL TAU = 1 INITV = 1
-title <- 'Cluster counts and distance from truth'
-p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1 & cl$tau == 1,], aes(count, fromtruth.avg))
-p <- p + geom_jitter(aes(size=tau, color=as.factor(R))))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
-p <- p + ggtitle(title)
-p <- p + scale_color_hue(name="Influence\nradius size")
-p <- p + scale_size_continuous(name="Truth\nstrength")
+## FT
+
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes(1-tau/100, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+xlabText <- expression(paste('Strength of Attraction to Ground Truth 1/',tau))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
+labels = c("0.1", "0.25", "0.5", "0.75", "1"))
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+legend.position = "none")
 p
 
-# ALL POINTS. VINIT = 1
-title <- 'Cluster counts and distance from truth'
-p <- ggplot(cl[cl$t == 2000 & cl$init.vscaling == 1,], aes(count, fromtruth.avg))
-p <- p + geom_jitter(aes(size=tau, color=as.factor(R)))
-#p <- p + geom_jitter(aes(size=(1/tau), color=as.factor(R)))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
-p <- p + ggtitle(title)
-#p <- p + facet_grid(init.vscaling ~ .)
-p <- p + scale_color_hue(name="Influence\nradius size")
-p <- p + scale_size_continuous(name="Truth\nstrength")
-p
-
-
-title <- 'Cluster counts and distance from truth'
-p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(count, fromtruth.avg))
-p <- p + geom_jitter(aes(color=(tau)))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
-p <- p + ggtitle(title)
-p <- p + facet_grid( R ~ init.vscaling, margins=T)
-#p <- p + scale_color_hue(name="Influence\nradius size")
-#p <- p + scale_size_continuous(name="Truth\nstrength")
-p
-
-
-
-title <- 'Cluster counts and distance from truth'
-p <- ggplot(summaryCl3[summaryCl3$t == 2000,], aes(init.vscaling, tau))
-p <- p + geom_jitter(aes(color=fromtruth.avg))
-p <- p + xlab('Number of clusters') + ylab('Distance from truth')
-p <- p + ggtitle(title)
-
-3p <- p + scale_color_hue(name="Influence\nradius size")
-p <- p + scale_size_continuous(name="Truth\nstrength")
-p
-
-9
-p <- p + myThemeMod
-p
+ggsave(filename = paste0(IMGPATH, "scan_tau_nobound_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)

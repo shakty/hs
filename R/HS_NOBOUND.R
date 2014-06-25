@@ -123,18 +123,20 @@ clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
 
 cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
 
+# Only TAU = 1
+cl <- clTau1
 
 # CL
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
 
 
-title <- 'Cluster counts by radius of influence'
 p <- ggplot(summaryCl, aes(R, count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
 p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
 p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
-p <- p + xlab('Radius of Influence') + ylab('Avg. Number of Clusters')
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 p <- p  + myThemeMod
 p
 
@@ -143,15 +145,15 @@ ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_cc.svg"),
 
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
 
-title <- 'Distance from truth by radius of influence'
 p <- ggplot(summaryFt, aes(R, fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
 p <- p + geom_errorbar(limitsFt)
 p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
 p <- p + annotate("text", x = 0.55, y = 0.22, label = "Convergence Zone", size=8)
-p <- p + xlab('Radius of Influence') + ylab('Avg. Distance from Truth')
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod 
 p
@@ -1108,3 +1110,24 @@ p
 
 ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alpha.svg"),
        width=10, height=10, dpi=300)
+
+
+
+## TAU 2 ##
+
+cl <- loadData(DUMPDIR, 'scan_tau_again2/')
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "boundaries"), na.rm=TRUE)
+
+title <- 'Cluster counts by strength of the truth'
+p <- ggplot(summaryCl[summaryCl$boundaries == 1,], aes(tau, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+# To be taken from TAU 20000
+#ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
+#       plot = p, width=10, height=5, dpi=300)

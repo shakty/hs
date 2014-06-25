@@ -82,10 +82,10 @@ theme_white <- function() {
 
 
 
-myLabeller <- function(var, value){
+myLabeller <- function(var, value) {
   value <- as.character(value)
   if (var == "R") {
-    value[value== 0.03] <- "Small radius (R = 0.03)"
+    value[value== 0.03] <- "Small Radius (R = 0.03)"
     value[value== 0.3] <- "Large Radius (R = 0.3)"
   } 
   return(value)
@@ -128,6 +128,36 @@ clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
 cl <- rbind(cl,clTau1)
 #cl <- rbind(cl[cl$tau == 50,], clTau1[clTau1$alpha == 0.5,])
 
+
+
+##############
+# CL
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R", "taubrk"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl, aes(R, count, color=taubrk, group = taubrk))
+p <- p + geom_point(size=3)
+p <- p + geom_line(alpha=0.2, size=3)
+p <- p + geom_errorbar(limits)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            #legend.position = c(0.5,0.5),
+                            legend.text = element_text(size=18),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key = element_rect(fill = "white", colour = NA))
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_R_cc_2.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+##########
 
 # CL
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R", "tau"), na.rm=TRUE)
@@ -180,6 +210,34 @@ ggsave(filename = paste0(IMGPATH, "nobound_R_tau_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 
+##############
+# FT
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
+
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R", "taubrk"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes(R, fromtruth.avg, color=taubrk, group = taubrk))
+p <- p + geom_point(size=3, alpha=0.5)
+p <- p + geom_line(alpha=0.2)
+p <- p + geom_errorbar(limitsFt)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5),
+                            legend.text = element_text(size=18),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key = element_rect(fill = "white", colour = NA))
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_R_ft_2.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+##########
+
 # FT
 summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R", "tau"), na.rm=TRUE)
 summaryFt.50 <- summarySE(cl[cl$t == 2000 & cl$tau == 50 & cl$R <= 0.3,], c("fromtruth.avg"), c("R", "tau"), na.rm=TRUE)
@@ -201,6 +259,30 @@ p
 ggsave(filename = paste0(IMGPATH, "nobound_R_tau_ft.svg"),
        plot = p, width=10, height=5, dpi=300)
 
+
+#### FT
+
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
+
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R", "taubrk"), na.rm=TRUE)
+
+
+p <- ggplot(summaryFt, aes(R, fromtruth.avg, color=taubrk, group = taubrk))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limitsFt)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Interaction Radius ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5))
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_R_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)
 
 
 title <- 'Cluster counts by radius of influence'
@@ -256,44 +338,39 @@ cl <- rbind(cl, clTau1)
 cl$alphabrk <- cut(cl$alpha, seq(0,1,0.05))
 
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alphabrk", "R", "tau"), na.rm=TRUE)
 
+# summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alphabrk", "R", "tau"), na.rm=TRUE)
 # Reverse the order of a discrete-valued axis
 # Get the levels of the factor
-flevels <- levels(summaryCl$alphabrk)
+# flevels <- levels(summaryCl$alphabrk)
 # Reverse the order
-flevels <- rev(flevels)
+# flevels <- rev(flevels)
 
-
-title <- 'Cluster counts vs Strength of social influence'
-p <- ggplot(summaryCl[summaryCl$tau %in% c(1,10,50,100),],
-            aes(alphabrk, count, color = as.factor(tau), group = as.factor(tau)))
-p <- p + geom_point() + geom_line()
-p <- p + facet_grid(~ R, labeller = myLabeller)
-#p <- p + ylim(0,29)
-#p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + scale_x_discrete(limits=flevels, labels = c("0", "0.25", "0.5", "0.75", "1"))
-p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
-p <- p + myThemeMod + theme(strip.background = element_blank())
-p
+myalphas <- c(0.01, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 0.99)
 
 # CL
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R"), na.rm=TRUE)
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R", "taubrk"), na.rm=TRUE)
 
 title <- 'Cluster counts vs Strength of social influence'
-p <- ggplot(summaryCl, aes((1 - alpha), count))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- ggplot(summaryCl, aes((1 - alpha), count, color=taubrk, group = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
 p <- p + geom_errorbar(limits)
-p <- p + facet_grid(~ R, labeller = myLabeller)
-#p <- p + ylim(0,29)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
-p <- p + myThemeMod + theme(strip.background = element_blank())
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5))
 p
 
-ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_alpha_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
@@ -307,6 +384,28 @@ summaryFt <- summarySE(cl[cl$t == 2000 &
                           cl$alpha %in% myalphas &
                           cl$tau %in% c(1,10,50,100)
                           ,], c("fromtruth.avg"), c("alpha", "R", "tau"), na.rm=TRUE)
+
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "taubrk"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg, color=taubrk, group = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5)
+                            )
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_alpha_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)
 
 #original
 title <- 'Distance from truth vs Strength of social influence'
@@ -491,20 +590,35 @@ clTau1 <- loadData(DUMPDIR, 'nobound_noises_tau1/', 1)
 
 cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
 
-summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
 
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R", "taubrk"), na.rm=TRUE)
+
+
+# Only for epsilon = 1
 title <- 'Cluster counts vs Angular noise and \nPosition noise'
-p <- ggplot(summaryCl, aes(sigma, count))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
-p <- p + geom_errorbar(limits)
-p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Angular Noise') + ylab('Number of Clusters')
-#p <- p + scale_x_continuous(labels = c("0", "0.02", "0.04", "0.06", "0.08", "0.1"),
-#                            breaks = seq(0,0.1,0.02))
+p <- ggplot(summaryCl[summaryCl$epsilon == 0.1,], aes(sigma, count, group = taubrk, color = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_point(size=3)
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limits, width=0.005)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
-p <- p + myThemeMod + theme(strip.background = element_blank())
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.text = element_text(size=18),
+                            legend.position = c(0.7,0.8)
+                            )
+#p <- p + guides(col=guide_legend(ncol=4))
 p
 
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_alpha_cc_epsilon01.svg"),
+       plot = p, width=10, height=5, dpi=300)
 
 # Unfortunately, have to use this weird way of setting the labels, because facet labeller
 # has a problem with the expression method.
@@ -517,7 +631,7 @@ grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon,
 grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
 grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
 
-svg(filename = paste0(IMGPATH, "nobound_noises_cc.svg"),
+svg(filename = paste0(IMGPATH, "nobound_interaction_tau_noises_cc.svg"),
      width=10, height=10)
 grid.newpage()
 grid.draw(grob)
@@ -525,7 +639,54 @@ dev.off()
 
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilon", "R", "taubrk"), na.rm=TRUE)
+
+
+p <- ggplot(summaryFt[summaryFt$epsilon == 0.1,], aes(sigma, fromtruth.avg, group = taubrk, color = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_point(size=3)
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limitsFt, width=0.005)
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+p <- p + scale_y_continuous(breaks=c(0,2,4), labels = c("0", "2", "4"))
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5)
+                            )
+#p <- p + guides(col=guide_legend(ncol=4))
+p
+
+
+
+ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_noises_ft_epsilon01.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[22]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0"))
+grob[["grobs"]][[23]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.1"))
+grob[["grobs"]][[24]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.2"))
+grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.3"))
+grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
+grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
+
+svg(filename = paste0(IMGPATH, "nobound_interaction_tau_noises_ft.svg"),
+     width=10, height=10)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
+
+
+
+###
 
 title <- 'Distance from truth vs Angular noise and \nPosition noise'
 p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
