@@ -407,12 +407,18 @@ simName = 'NEWVIDEOS-2014-6-14-13-3/'; % without b: many small clusters
 simName = 'NEWVIDEOS-2014-6-14-13-18/'; % with b: many small clusters
 simName = 'NEWVIDEOS-2014-6-14-13-22/'; % without b: small clusters
 
+% Interaction tau noise
+% tried different level of angular noise
+simName = 'interactionTauNoise-2014-6-26-11-43/'; % tau=1 sigma=0.3 has most clusters. Maybe it's the right angular noise to escape the clusters. 
+simName = 'interactionTauNoise-2014-6-26-12-15/';
+
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '1-1'; % 1521
+myFile = '5-1'; % 1521
 
-LIMITS = 1;
+LIMITS = 0;
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];

@@ -26,7 +26,7 @@ compLSF = 2;
 load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0_s0'])
 
 %% Modifying params locally
-simName = 'NEWVIDEOS';
+simName = 'interactionTauNoise';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
 VIDEO = 0;
@@ -44,20 +44,20 @@ ideas_space_sizes = [1];
 ideas_space_dims = [2];
 
 % Scaling and nAgents
-vScalings = [1];
+vScalings = [10];
 n_agents = 100;
 
 % Influence
-alphas = 0.01;
+alphas = 0.5;
 Rs = 0.03;
 
 % Noise
-sigmas = 0.01;
+sigmas = [0 0.01 0.03 0.1 0.5];
 epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 1;
+taus = 21;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;

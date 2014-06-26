@@ -212,19 +212,19 @@ system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
 cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
 clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
 cl <- rbind(cl, clTau1)
+# Only tau 1
+cl <- clTau1
 
 # CL
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R"), na.rm=TRUE)
 
-title <- 'Cluster counts vs Strength of social influence'
 p <- ggplot(summaryCl, aes((1 - alpha), count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(~ R, labeller = myLabeller)
-#p <- p + ylim(0,29)
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
-#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab('Strength of Social Influence') + ylab('Number of Clusters')
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
@@ -232,16 +232,14 @@ ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
 
-title <- 'Distance from truth vs Strength of social influence'
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
 p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(~ R, labeller = myLabeller)
-#xlabText <- expression(paste('Strength of social influence (1-',alpha,')'))
-p <- p + xlab("Strength of social influence") + ylab('Avg. Distance from Truth')
-#p <- p + ylim(0,0.3)
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
 p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 p <- p + myThemeMod + theme(strip.background = element_blank())
@@ -398,15 +396,17 @@ cl <- loadData(DUMPDIR, 'nobound_noises_tau/', 1)
 clTau1 <- loadData(DUMPDIR, 'nobound_noises_tau1/', 1)
 
 cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+# Only Tau 1
+cl <- clTau1
 
-summaryCl <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
-title <- 'Cluster counts vs Angular noise and \nPosition noise'
 p <- ggplot(summaryCl, aes(sigma, count))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Angular Noise') + ylab('Number of Clusters')
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 #p <- p + scale_x_continuous(labels = c("0", "0.02", "0.04", "0.06", "0.08", "0.1"),
 #                            breaks = seq(0,0.1,0.02))
 p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
@@ -433,14 +433,14 @@ dev.off()
 
 
 # FT
-summaryFt <- summarySE(cl[cl$t == 2000 & cl$tau == 1,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
 
-title <- 'Distance from truth vs Angular noise and \nPosition noise'
 p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
 p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
 p <- p + geom_errorbar(limitsFt)
 p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
-p <- p + xlab('Angular Noise') + ylab('Avg. Distance from Truth')
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
 p <- p + scale_fill_continuous(name="Distance\nfrom truth")
 #p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
 #p <- p + scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15))
@@ -1131,3 +1131,54 @@ p
 # To be taken from TAU 20000
 #ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
 #       plot = p, width=10, height=5, dpi=300)
+
+## R 2 ##
+
+cl <- loadData(DUMPDIR, 'scan_R_again2/')
+
+clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
+clTau1$boundaries <- 0
+
+cl <- clTau1
+
+cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+
+# To be taken from TAU 20000
+#ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
+#       plot = p, width=10, height=5, dpi=300)
+
+# CL
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("R"), na.rm=TRUE)
+
+
+p <- ggplot(summaryCl, aes(R, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p  + myThemeMod
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_cc.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+# FT
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("R"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes(R, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(limitsFt)
+p <- p + geom_vline(xintercept = XINTERCEPT, colour="red", linetype = "longdash", size = 1)
+p <- p + annotate("text", x = 0.55, y = 0.22, label = "Convergence Zone", size=8)
+xlabText <- expression(paste('Radius of Influence ',R))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + myThemeMod 
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
