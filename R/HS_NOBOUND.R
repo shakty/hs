@@ -731,6 +731,8 @@ mydata <- data50[data50$init.placement == 0.4,]
 mydata <- data50
 ##################
 
+### Exclude init.placement < 0.2
+mydata <- mydata[mydata$init.placement >= 0.2,]
 
 title <- "Number of clusters vs progress and time to reach a consensus"
 p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
@@ -804,27 +806,30 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.jpg"),
        width=10, height=12, dpi=300)
 
 
-mydata.summary <- summarySE(mydata, "consensus75", c("init.ccount", "init.placement"), na.rm = TRUE)
+mydata.summary <- summarySE(mydata, "consensus75", c("R", "alpha", "init.ccount", "init.placement"), na.rm = TRUE)
+
+mydata.summary <- mydata.summary[mydata.summary$init.placement %in% seq(0.2,1,0.1),]
 
 title <- "The effect of progress and clustering on consensus"
 p <- ggplot(mydata.summary, aes(init.ccount, consensus75))
-p <- p + geom_point(aes(color = as.factor(init.placement)), size=4)
-p <- p + geom_line(aes(color = as.factor(init.placement)))
-p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
-#p <- p + facet_grid(alpha~.)
+p <- p + geom_point(aes(color = as.factor(init.placement)), size=3)
+p <- p + geom_line(aes(color = as.factor(init.placement)), alpha=0.5)
+p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
+p <- p + facet_grid(alpha~R, labeller=myLabeller)
 #p <- p + ggtitle(title)
-p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + scale_color_hue(name="Initial\nDistance\nfrom Truth")
 p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
                             legend.background = element_rect(fill = "white", colour = "grey"),
                             legend.title = element_text(vjust=3, size=16,face="bold"),
                             legend.text = element_text(size=14),
                             legend.key.width = unit(1.5, "cm"),
-                            legend.key =  element_rect(fill = "white", colour = NA)
+                            legend.key =  element_rect(fill = "white", colour = NA),
+                            strip.background = element_blank()
                             )
 p
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_consensus_by_progress.jpg"),
-       width=10, height=12, dpi=300)
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_tau1_consensus_by_progress.svg"),
+       width=10, height=10, dpi=300)
 
 mydata003 <- mydata[mydata$R == 0.03,]
 mydata003$moreThan9 <- mydata003$init.ccount > 9
@@ -871,10 +876,10 @@ p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
                             )
 p
 
-mydata.summary <- summarySE(mydata, "ccount80", c("R", "init.ccount", "init.placement"), na.rm = TRUE)
+mydata.summary <- summarySE(mydata, "ccount30", c("R", "init.ccount", "init.placement"), na.rm = TRUE)
 
 title <- "The effect of progress and clustering on consensus"
-p <- ggplot(mydata.summary[mydata.summary$R == 0.03,], aes(as.factor(init.placement), ccount80))
+p <- ggplot(mydata.summary[mydata.summary$R == 0.3,], aes(as.factor(init.placement), ccount30))
 p <- p + geom_boxplot(aes(color = as.factor(init.placement)), size=4)
 #p <- p + geom_line(aes(color = as.factor(init.placement)))
 p <- p + xlab("Initial Distance from Truth") + ylab("Number of Clusters at 25")
@@ -882,13 +887,25 @@ p <- p + xlab("Initial Distance from Truth") + ylab("Number of Clusters at 25")
 #p <- p + ggtitle(title)
 p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
 p <- p +  theme(
-                            legend.background = element_rect(fill = "white", colour = "grey"),
-                            legend.title = element_text(vjust=3, size=16,face="bold"),
-                            legend.text = element_text(size=14),
-                            legend.key.width = unit(1.5, "cm"),
-                            legend.key =  element_rect(fill = "white", colour = NA)
-                            )
+                legend.background = element_rect(fill = "white", colour = "grey"),
+                legend.title = element_text(vjust=3, size=16,face="bold"),
+                legend.text = element_text(size=14),
+                legend.key.width = unit(1.5, "cm"),
+                legend.key =  element_rect(fill = "white", colour = NA)
+                )
 p
+
+## Regressions
+
+fit001 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.01,])
+fit05 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5,])
+fit099 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.99,])
+summary(fit099)
+
+plot(fit099)
+
+texreg(list(fit001,fit05,fit099))
+
 
 #########################
 ### Clusters vs Progress: RBANDS
