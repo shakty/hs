@@ -85,9 +85,21 @@ theme_white <- function() {
 myLabeller <- function(var, value){
   value <- as.character(value)
   if (var == "R") {
-    value[value== 0.03] <- "Small radius (R = 0.03)"
-    value[value== 0.3] <- "Large Radius (R = 0.3)"
-  } 
+    value[value == 0.03] <- "Small radius (R = 0.03)"
+    value[value == 0.3] <- "Large Radius (R = 0.3)"
+  } else if (var == "clbr") {
+    value[value == "(0,1]"] <- "1\ncluster"
+    value[value == "(1,5]"] <- "2-5\nclusters"
+    value[value == "(5,10]"] <- "6-10\nclusters"
+    value[value == "(10,20]"] <- "11-20\nclusters"
+    value[value == "(20,30]"] <- "21-30\nclusters"
+  }
+  return(value)
+}
+
+nClustersLabeller <- function(var, value){
+  value <- as.character(value)
+   
   return(value)
 }
 
@@ -691,6 +703,8 @@ data$init.placement[data$init.placement == -1] <- 0
 
 # If consensus is not reached it has value -1. Replace with NA
 data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
+# 20.000
+data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- 20000
 
 # If no consensus was reached replace ccounts with NA
 data[ , 29:40 ][ data[ , 29:40 ] == -1 ] <- NA
@@ -721,26 +735,29 @@ data1 <- dataAlpha[dataAlpha$tau == 1,]
 data50 <- dataAlpha[dataAlpha$tau == 50,]
 
 ###########################
-# Select Dist: ALL / vs 0.4
+# Select Dist: ALL / vs 0.5
 ###########################
 # TAU = 1
-mydata <- data1[data1$init.placement == 0.4,]
+mydata <- data1[data1$init.placement == 1,]
 mydata <- data1
 # TAU = 50
-mydata <- data50[data50$init.placement == 0.4,]
+mydata <- data50[data50$init.placement == 1,]
 mydata <- data50
 ##################
 
 ### Exclude init.placement < 0.2
 mydata <- mydata[mydata$init.placement >= 0.2,]
 
-title <- "Number of clusters vs progress and time to reach a consensus"
-p <- ggplot(mydata, aes(init.ccount, consensus75, color = R))
-p <- p + geom_jitter(size=2)
-p <- p + geom_smooth(alpha=0.5, method="lm", color="black")
+
+mydata <- mydata[mydata$init.placement %in% seq(0.2,0.9,0.1),]
+
+
+p <- ggplot(mydata, aes(init.ccount, consensus75, color = as.factor(init.placement)))
+#p <- p + geom_jitter(size=2)
+p <- p + geom_smooth(alpha=0.5, method="lm")
 p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
-p <- p + myThemeMod + ggtitle(title)
-p <- p + facet_grid(init.placement  ~ R, labeller = myLabeller)
+#p <- p + myThemeMod
+p <- p + facet_grid(.~ R, labeller = myLabeller)
 p
 
 
@@ -791,19 +808,31 @@ for (c in seq(10,100,10)) {
 }
 
 
-title <- 'Temporal evolution of consensus building \n by number of initial clusters'
-p <- ggplot(summaryData, aes(x = share, weight=time, group=R, fill=R))
-p <- p + geom_bar(aes(y=time), stat = "identity", position = "dodge")
-p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), position = "dodge")
-p <- p + xlab('Share of Consensus') + ylab('Time Passed')
-# Remove clbr if not needed
-p <- p + facet_grid(.~clbr)
-p + ggtitle(title)  + myThemeMod + theme(legend.position = c(1.1, 0.5),
-                                         plot.margin = unit(c(10,30,10,10),"mm"),
-                                         axis.text.x = element_text(size=15))
+summaryData$R <- as.factor(summaryData$R)
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.jpg"),
-       width=10, height=12, dpi=300)
+summaryDataR003 <- summaryData[summaryData$R == 0.03,]
+summaryDataR03 <- summaryData[summaryData$R == 0.3,]
+
+title <- 'Temporal evolution of consensus building \n by number of initial clusters'
+p <- ggplot(summaryDataR003, aes(x = share, weight=time, fill=R))
+p <- p + geom_bar(aes(y=time), stat = "identity")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), width = 5)
+p <- p + geom_bar(data = summaryDataR03, aes(y=time), stat = "identity")
+p <- p + geom_errorbar(data = summaryDataR03, aes(ymax = time + se, ymin = time - se), width=5)
+p <- p + xlab('Share of Consensus') + ylab('Avg. Time Passed')
+# Remove clbr if not needed
+p <- p + facet_grid(.~clbr, labeller = myLabeller)
+p <- p + scale_fill_discrete(name="Radius of\nInfluence")
+p  + myThemeMod + theme(legend.background = element_rect(fill = "white",
+                          colour = "grey"),
+                        legend.position = c(1.1, 0.5),
+                        plot.margin = unit(c(10,30,10,10),"mm"),
+                        axis.text.x = element_text(size=15),
+                        strip.background = element_blank())
+p <- p + guides(col=guide_legend(ncol=2))
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
+       width=12, height=8, dpi=300)
 
 
 mydata.summary <- summarySE(mydata, "consensus75", c("R", "alpha", "init.ccount", "init.placement"), na.rm = TRUE)
@@ -829,7 +858,7 @@ p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
 p
 
 ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_tau1_consensus_by_progress.svg"),
-       width=10, height=10, dpi=300)
+       width=10, height=7, dpi=300)
 
 mydata003 <- mydata[mydata$R == 0.03,]
 mydata003$moreThan9 <- mydata003$init.ccount > 9
