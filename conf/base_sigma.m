@@ -10,7 +10,7 @@ path(path,'../util/'); % Help functions
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
 simName = 'clusters_vs_progress_nobound_again';
-dumpDir = '/cluster/work/scr3/balistef/';
+dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
