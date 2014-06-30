@@ -1161,7 +1161,7 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alph
 
 ## TAU 2 ##
 
-cl <- loadData(DUMPDIR, 'scan_tau_again2/')
+cl <- loadData(DUMPDIR, 'scan_tau_again2/', 1)
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "boundaries"), na.rm=TRUE)
 
@@ -1180,14 +1180,15 @@ p
 
 ## R 2 ##
 
-cl <- loadData(DUMPDIR, 'scan_R_again2/')
+cl2 <- loadData(DUMPDIR, 'scan_R_again2/', 1)
+cl3 <- loadData(DUMPDIR, 'scan_R_again3/', 1)
 
 clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
 clTau1$boundaries <- 0
 
 cl <- clTau1
 
-cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+cl <- rbind(cl2, cl3, clTau1[clTau1$alpha == 0.5,])
 
 # To be taken from TAU 20000
 #ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
@@ -1227,4 +1228,137 @@ p
 
 ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_ft.svg"),
        plot = p, width=10, height=5, dpi=300)
+
+## alpha 2 ##
+
+cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+
+
+cl <- rbind(cl, clTau1)
+# Only tau 1
+cl <- clTau1
+
+
+clTauAgain <- loadData(DUMPDIR, 'scan_alpha_again3/', 1)
+
+clTau1$boundaries <- 0
+cl <-  rbind(clTauAgain, clTau1)
+
+cl <- clTauAgain
+
+# CL
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryCl, aes((1 - alpha), count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(~ R, labeller = myLabeller)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+# FT
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(~ R, labeller = myLabeller)
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
+
+## NOISES ##
+############
+
+clTauAgain <- loadData(DUMPDIR, 'scan_noises_again2/', 1)
+  
+clTau1 <- loadData(DUMPDIR, 'nobound_noises_tau1/', 1)
+
+clTau1$boundaries <- 0
+cl <- rbind(clTauAgain, clTau1[clTau1$alpha == 0.5,])
+
+                        
+# cl <- clTauAgain
+                
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryCl, aes(sigma, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+#p <- p + scale_x_continuous(labels = c("0", "0.02", "0.04", "0.06", "0.08", "0.1"),
+#                            breaks = seq(0,0.1,0.02))
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+p <- p + myThemeMod + theme(strip.background = element_blank())
+p
+
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[22]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0"))
+grob[["grobs"]][[23]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.1"))
+grob[["grobs"]][[24]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.2"))
+grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.3"))
+grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
+grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
+
+svg(filename = paste0(IMGPATH, "nobound_noises_cc.svg"),
+     width=10, height=10)
+grid.newpage()
+grid.draw(grob)
+dev.off()
+
+
+# FT
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("sigma", "epsilon", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes(sigma, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg))
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(epsilon ~ R, labeller = myLabeller)
+xlabText <- expression(paste('Angular Noise ',sigma))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+#p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05", "0.075", "0.1"))
+#p <- p + scale_y_continuous(breaks = c(0, 0.05, 0.1, 0.15))
+p <- p + scale_x_continuous(labels = c("0", "0.025", "0.05","0.075", "0.1"))
+p <- p + myThemeMod +  theme(strip.background = element_blank())
+#p <- p + theme(axis.text.y = element_text(size=18))
+p
+
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[22]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0"))
+grob[["grobs"]][[23]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.1"))
+grob[["grobs"]][[24]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.2"))
+grob[["grobs"]][[25]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.3"))
+grob[["grobs"]][[26]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.4"))
+grob[["grobs"]][[27]][["children"]][[2]][["label"]] <- expression(paste(epsilon," = 0.5"))
+
+svg(filename = paste0(IMGPATH, "nobound_noises_ft.svg"),
+     width=10, height=10)
+grid.newpage()
+grid.draw(grob)
+dev.off()
 

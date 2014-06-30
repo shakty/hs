@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'scan_noises_again2';
+simName = 'scan_tau_again3';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -67,13 +67,13 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = 1; %[0.5:0.01:1, 1.5:0.1:5]; 		% coupling coefficient (divisor)
+taus = [1:1:100]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
-epsilons = [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
+epsilons = 0.1; % [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
 
 % NOISE on APPROACH (INDIVIDUALIZATION) (direction)
-sigmas = [0:0.01:0.1]; % 0.01; % Std. deviation of white noise term
+sigmas = 0.01; % [0:0.01:0.1]; % 0.01; % Std. deviation of white noise term
 
 % INITIIAL VELOCITIES OF SCIENTISTS
 vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
