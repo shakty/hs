@@ -29,8 +29,8 @@ load([confDir 'NEW/attrLinear_nv_rndseed_rndseq_tm_Rleft_n100_fv0/attrLinear_nv_
 simName = 'interactionTauNoise';
 dumpDir = '/opt/MATLAB_WORKSPACE/hs/test/'; 
 
-VIDEO = 0;
-DUMP = 1;
+VIDEO = 1;
+DUMP = 0;
 COMPUTATION = 0;
 plottype = 0;
 SHOW_POTENTIAL = 0;
@@ -49,20 +49,20 @@ n_agents = 100;
 
 % Influence
 alphas = 0.5;
-Rs = 0.03;
+Rs = 0.3;
 
 % Noise
-sigmas = [0 0.01 0.03 0.1 0.5];
+sigmas = 0.01;
 epsilons = 0.1;
 noisetype = 4;
 
 % Truth
-taus = 21;
+taus = 1;
 truths = [0.5; 0.5];
 attrtype = 2;
 forces_on_v = 0;
 
-plottype = 3;
+plottype = 0;
 
 % Boundaries
 
@@ -78,7 +78,7 @@ boundaries = 0;
 %  - the coordinates of the centers of the clusters
 %  - the number of clusters (1..n), centers placed randomly
 %  - be equal to 0, no clusters, either init options considered
-nClusters = 0; % [30]; 
+nClusters = 3; % [30]; 
 
 % Clustered
 
@@ -87,7 +87,7 @@ clusterTightness = [0.05];
 % Can be:
 %  - equal to -1, centers are placed randomly
 %  - equal to (0..n) centers are placed on a radius equal to that.
-clustersInCircleOfRadius = -1; % [0.1:0.05:0.5]; %-1; % [-1 0.4];
+clustersInCircleOfRadius = 1; %[0.1:0.05:0.5]; %-1; % [-1 0.4];
 
 % Bands
 % Agents are placed randomly within a circular area (band) of area equal to

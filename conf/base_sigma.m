@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'scan_tau_again3';
-dumpDir = '/cluster/work/scr2/balistef/';
+simName = 'clusters_vs_progress_nobound_again';
+dumpDir = '/cluster/work/scr3/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -31,7 +31,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 90;             % Number of simulation-runs with same param set
+nRuns = 50;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [20];          % running time
@@ -52,7 +52,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.5];  % weighting of velocity terms
+alphas = [0.01 0.5 0.99];  % weighting of velocity terms
 Rs     = [0.03 0.3]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
@@ -67,7 +67,7 @@ d1s    = [1];       	% Express the range of the interaction force (exponent divi
 
 
 % HOW EASY IS TO FIND THE TRUTH (
-taus = [1:1:100]; 		% coupling coefficient (divisor)
+taus = [1]; 		% coupling coefficient (divisor)
 
 % MEASURAMENT NOISE (position)
 epsilons = 0.1; % [0:0.1:0.5]; % 0.1; % Std. deviation of white noise term
@@ -79,9 +79,9 @@ sigmas = 0.01; % [0:0.01:0.1]; % 0.01; % Std. deviation of white noise term
 vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = 0; %[1:30];    	% number of clusters of the initial positions
+nClusters = [1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = -1; %[0.1:0.1:1];
+clustersInCircleOfRadius = [0.1:0.05:1]; %-1; %[0.1:0.1:1];
 
 % -1 no bands
 bandAreas = -1; %computeRBands(0.1, 0.1, 1); % last band is slighlty smaller (0.09819; is right)
@@ -188,10 +188,16 @@ nCombinations = size(dts,2)*size(n_agents,2)*size(ideas_space_sizes,2)*...
                 size(d0s,2)*size(d1s,2)*size(alphas,2)*size(taus,2)*size(Rs,2)*...
                 size(vScalings,2)*size(nClusters,NC_DIM)*...
                 size(clusterTightness,2)*size(truths,2)*size(attrtype,2)*...
-                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...
-                size(clustersInCircleOfRadius,2)*size(bandAreas,2)*...
+                size(noisetype,2)*size(forces_on_v,2)*size(epsilons,2)*...                
                 size(boundaries,2);
             
+% The number of bands.
+if (size(nClusters, 1) == 1 && nClusters(1,1) == 0)
+    nCombinations = nCombinations * size(bandAreas, 2);
+% The number of clusters.
+else
+    nCombinations = nCombinations * size(clustersInCircleOfRadius, 2);
+end          
                 
 fprintf('%u levels of Sigma\n',  size(sigmas,2));           
 fprintf('Total number of simulations = %u x %u: = %u\n', nRuns, nCombinations, nRuns*nCombinations);

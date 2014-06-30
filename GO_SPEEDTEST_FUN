@@ -1,1 +1,1 @@
-matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr2/balistef/NEW2/scan_tau_again3/')"
+matlab -nodisplay -singleCompThread -r "speedtest_fun('/cluster/work/scr3/balistef/NEW2/clusters_vs_progress_nobound_again/')"

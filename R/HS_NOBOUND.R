@@ -97,12 +97,6 @@ myLabeller <- function(var, value){
   return(value)
 }
 
-nClustersLabeller <- function(var, value){
-  value <- as.character(value)
-   
-  return(value)
-}
-
 myThemeMod <- theme(legend.position = "none",
                     axis.title.x = element_text(vjust=-1, size=24),
                     axis.title.y = element_text(vjust=-0.1, size=24),
@@ -748,8 +742,17 @@ mydata <- data50
 ### Exclude init.placement < 0.2
 mydata <- mydata[mydata$init.placement >= 0.2,]
 
+### Adapta alpha to formulation in the paper
+mydata$alpha2 <- mydata$alpha
 
-mydata <- mydata[mydata$init.placement %in% seq(0.2,0.9,0.1),]
+alpha001 <- mydata$alpha == 0.01
+alpha099 <- mydata$alpha == 0.99
+
+mydata[alpha001,]$alpha2 <- 0.99
+mydata[alpha099,]$alpha2 <- 0.01
+
+
+#mydata <- mydata[mydata$init.placement %in% seq(0.2,0.9,0.1),]
 
 
 p <- ggplot(mydata, aes(init.ccount, consensus75, color = as.factor(init.placement)))
@@ -835,30 +838,41 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
        width=12, height=8, dpi=300)
 
 
-mydata.summary <- summarySE(mydata, "consensus75", c("R", "alpha", "init.ccount", "init.placement"), na.rm = TRUE)
+mydata.summary <- summarySE(mydata, "consensus75", c("R", "alpha2", "init.ccount", "init.placement"), na.rm = TRUE)
 
 mydata.summary <- mydata.summary[mydata.summary$init.placement %in% seq(0.2,1,0.1),]
 
 title <- "The effect of progress and clustering on consensus"
 p <- ggplot(mydata.summary, aes(init.ccount, consensus75))
-p <- p + geom_point(aes(color = as.factor(init.placement)), size=3)
-p <- p + geom_line(aes(color = as.factor(init.placement)), alpha=0.5)
+p <- p + geom_jitter(aes(color = init.placement), size=2)
+#p <- p + geom_line(aes(color = init.placement), alpha=0.5)
 p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
-p <- p + facet_grid(alpha~R, labeller=myLabeller)
-#p <- p + ggtitle(title)
-p <- p + scale_color_hue(name="Initial\nDistance\nfrom Truth")
-p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
-                            legend.background = element_rect(fill = "white", colour = "grey"),
-                            legend.title = element_text(vjust=3, size=16,face="bold"),
-                            legend.text = element_text(size=14),
-                            legend.key.width = unit(1.5, "cm"),
+p <- p + geom_smooth(color="red", alpha = 0.2, method="lm")
+p <- p + facet_grid(alpha2~R, labeller=myLabeller)
+p <- p + scale_color_gradient(name="Initial Distance\nfrom Truth")
+p <- p + myThemeMod + theme(legend.position = c(0.15, 0.80),
+                            #legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(size=18,face="bold"),
+                            legend.text = element_text(size=16),
+                            legend.key.height = unit(0.7, "cm"),
                             legend.key =  element_rect(fill = "white", colour = NA),
                             strip.background = element_blank()
                             )
 p
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_tau1_consensus_by_progress.svg"),
-       width=10, height=7, dpi=300)
+# Unfortunately, have to use this weird way of setting the labels, because facet labeller
+# has a problem with the expression method.
+grob <- ggplotGrob(p)
+
+grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.01"))
+grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
+grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
+
+svg(filename = paste0(IMGPATH, "SPEEDTEST/st_tau1_consensus_by_progress_by_alpha.svg"),
+    width=10, height=10)
+grid.newpage()
+grid.draw(grob)
+dev.off()
 
 mydata003 <- mydata[mydata$R == 0.03,]
 mydata003$moreThan9 <- mydata003$init.ccount > 9
@@ -926,10 +940,30 @@ p
 
 ## Regressions
 
-fit001 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.01,])
-fit05 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5,])
-fit099 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.99,])
-summary(fit099)
+fit001 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.03,]); summary(fit001)
+fit05 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.03,]); summary(fit05)
+fit099 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.3,]); summary(fit099)
+
+
+# high social influence
+fit001b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.03,]); summary(fit001b)
+
+# medium social influence
+fit05b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.03,]); summary(fit05b)
+
+#bogus
+fit099b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.99 & mydata$R == 0.03,]); summary(fit099b)
+
+
+fit05bRbig <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.3,]); summary(fit05bRbig)
+
+# init.dist = 1
+fit05bRbigInit1 <- lm(consensus75 ~ init.ccount, data = mydata[mydata$init.placement == 0.6 & mydata$alpha == 0.5 & mydata$R == 0.3,]); summary(fit05bRbigInit1)
+
+# init.dist = 1
+fit05bRbigInit1 <- lm(consensus75 ~ init.ccount, data = mydata[mydata$init.placement == 0.2 & mydata$alpha == 0.5 & mydata$R == 0.3,]); summary(fit05bRbigInit1)
+
+
 
 plot(fit099)
 
@@ -1163,20 +1197,47 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alph
 
 cl <- loadData(DUMPDIR, 'scan_tau_again2/', 1)
 
-summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R", "boundaries"), na.rm=TRUE)
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
 
-title <- 'Cluster counts by strength of the truth'
-p <- ggplot(summaryCl[summaryCl$boundaries == 1,], aes(tau, count))
-p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count))
+cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
+
+summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryCl, aes(1-tau/100, count))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.011))
 p <- p + geom_errorbar(limits)
 p <- p + facet_grid(.~ R, labeller = myLabeller)
-p <- p + xlab('Truth strength in percentage') + ylab('Cluster counts')
-p <- p + myThemeMod + theme(strip.background = element_blank())
+xlabText <- expression(paste('Strength of Attraction to Ground Truth 1/',tau))
+p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+p <- p + scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
+labels = c("0.01", "0.25", "0.5", "0.75", "1"))
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+legend.position = "none"
+)
 p
 
-# To be taken from TAU 20000
-#ggsave(filename = paste0(IMGPATH, "scan_tau_upto_10.jpg"),
-#       plot = p, width=10, height=5, dpi=300)
+ggsave(filename = paste0(IMGPATH, "scan_tau_nobound_cc.svg"),
+plot = p, width=10, height=5, dpi=300)
+
+## FT
+
+summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("tau", "R"), na.rm=TRUE)
+
+p <- ggplot(summaryFt, aes(1-tau/100, fromtruth.avg))
+p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(.~ R, labeller = myLabeller)
+xlabText <- expression(paste('Strength of Attraction to Ground Truth 1/',tau))
+p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+p <- p + scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
+labels = c("0.1", "0.25", "0.5", "0.75", "1"))
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+legend.position = "none")
+p
+
+ggsave(filename = paste0(IMGPATH, "scan_tau_nobound_ft.svg"),
+       plot = p, width=10, height=5, dpi=300)
+
 
 ## R 2 ##
 

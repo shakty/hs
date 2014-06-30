@@ -1,6 +1,6 @@
 function [agents_pos] = initial_pos_clustered(nof_clusters, ...
     clusterTightness, n_agents, ideas_space_size, ideas_space_dim, ...
-    clustersInCircleOfRadius, bandArea, truth)
+    clustersInCircleOfRadius, bandArea, truth, boundaries)
 
     % nof_clusters can be:
     %
@@ -84,21 +84,21 @@ function [agents_pos] = initial_pos_clustered(nof_clusters, ...
         end
         
     end
-    
-    
+       
     % For all settings:
-    
-    % in case agents are positioned outside of feasible area: 
-    % position them on the border
-    dimHa = agents_pos(1,:) < 0;
-    dimHb = agents_pos(1,:) > ideas_space_size;
-    dimH = bitor(dimHa, dimHb);
-    agents_pos(1,dimH) = round(agents_pos(1,dimH));
-    dimVa = agents_pos(2,:) > ideas_space_size;
-    dimVb = agents_pos(2,:) < 0;
-    dimV = bitor(dimVa, dimVb);
-    agents_pos(2,dimV) = round(agents_pos(2,dimV));
-    %plot(agents_pos(1,:), agents_pos(2,:),'.');
+    if (boundaries ~= 0)
+        % in case agents are positioned outside of feasible area: 
+        % position them on the border
+        dimHa = agents_pos(1,:) < 0;
+        dimHb = agents_pos(1,:) > ideas_space_size;
+        dimH = bitor(dimHa, dimHb);
+        agents_pos(1,dimH) = round(agents_pos(1,dimH));
+        dimVa = agents_pos(2,:) > ideas_space_size;
+        dimVb = agents_pos(2,:) < 0;
+        dimV = bitor(dimVa, dimVb);
+        agents_pos(2,dimV) = round(agents_pos(2,dimV));
+        %plot(agents_pos(1,:), agents_pos(2,:),'.');
+    end
     
 end
 
