@@ -1,1 +1,1 @@
-bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/clusters_vs_progress_nobound_again/','clusters_vs_progress_nobound_again_s1','296005')"
+bsub -J hs_chain -N matlab -nodisplay -singleCompThread -r "main_fun('conf/','NEW2/clusters_vs_progress_nobound_again/','clusters_vs_progress_nobound_again_s1','502377')"

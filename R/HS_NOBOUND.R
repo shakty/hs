@@ -1197,9 +1197,13 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alph
 
 cl <- loadData(DUMPDIR, 'scan_tau_again2/', 1)
 
-clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
-
 cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
+
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+clTau1$boundaries <- 0
+
+clAgain3 <- loadData(DUMPDIR, 'scan_tau_again3/', 1)
+
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R"), na.rm=TRUE)
 

@@ -66,7 +66,7 @@ plottype = 0;
 
 % Boundaries
 
-boundaries = 0;
+boundaries = 1;
 
 % Initial positions
 
@@ -78,7 +78,7 @@ boundaries = 0;
 %  - the coordinates of the centers of the clusters
 %  - the number of clusters (1..n), centers placed randomly
 %  - be equal to 0, no clusters, either init options considered
-nClusters = 3; % [30]; 
+nClusters = 30; % [30]; 
 
 % Clustered
 
@@ -87,7 +87,7 @@ clusterTightness = [0.05];
 % Can be:
 %  - equal to -1, centers are placed randomly
 %  - equal to (0..n) centers are placed on a radius equal to that.
-clustersInCircleOfRadius = 1; %[0.1:0.05:0.5]; %-1; % [-1 0.4];
+clustersInCircleOfRadius = 0.5; %[0.1:0.05:0.5]; %-1; % [-1 0.4];
 
 % Bands
 % Agents are placed randomly within a circular area (band) of area equal to
