@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_nobound_again';
+simName = 'clusters_vs_progress_nobound_again2';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -81,7 +81,7 @@ vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling
 % INITIAL POSITIONS OF SCIENTISTS
 nClusters = [1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
-clustersInCircleOfRadius = [0.5:0.05:1]; %-1; %[0.1:0.1:1];
+clustersInCircleOfRadius = [0.2:0.05:0.45]; %-1; %[0.1:0.1:1];
 
 % -1 no bands
 bandAreas = -1; %computeRBands(0.1, 0.1, 1); % last band is slighlty smaller (0.09819; is right)

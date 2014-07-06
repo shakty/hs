@@ -685,11 +685,20 @@ library(lattice)
 library(rgl)
 
 DIR <- 'clusters_vs_progress_nobound/'
-
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
 
-data <- read.table('speedtest.csv', head = T, sep = ",")
+data.old <- read.table('speedtest.csv', head = T, sep = ",")
+
+DIR <- 'clusters_vs_progress_nobound_again/'
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+
+data.new <- read.table('speedtest.csv', head = T, sep = ",")
+
+data.old.subset <- data.old[data.old$tau == 1 & data.old$init.placement < 0.5,]
+
+data <- rbind(, data.new)
 
 # Replace -1 in init.placement with 0
 data$init.placement[data$init.placement == -1] <- 0
@@ -1204,6 +1213,7 @@ clTau1$boundaries <- 0
 
 clAgain3 <- loadData(DUMPDIR, 'scan_tau_again3/', 1)
 
+cl <- rbind(clTau1, clAgain3)
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R"), na.rm=TRUE)
 
@@ -1214,7 +1224,7 @@ p <- p + facet_grid(.~ R, labeller = myLabeller)
 xlabText <- expression(paste('Strength of Attraction to Ground Truth 1/',tau))
 p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 p <- p + scale_x_continuous(breaks=c(0, 0.25, 0.5, 0.75, 1),
-labels = c("0.01", "0.25", "0.5", "0.75", "1"))
+labels = c("0.1", "0.25", "0.5", "0.75", "1"))
 p <- p + myThemeMod + theme(strip.background = element_blank(),
 legend.position = "none"
 )
