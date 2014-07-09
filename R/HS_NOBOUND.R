@@ -1,5 +1,6 @@
 # HS analysis
 source("/opt/MATLAB_WORKSPACE/hs/R/init.R")
+library(scales)
 
 # DUMPDIR 
 DUMPDIR <- '/home/stefano/Documents/mypapers/swarm_science/data/'
@@ -75,42 +76,40 @@ loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
 
   return(clu)
 }
-
+#
 theme_white <- function() {
   theme_update(panel.background = element_blank())
 }
-
-
-
+#
 myLabeller <- function(var, value){
   value <- as.character(value)
   if (var == "R") {
     value[value == 0.03] <- "Small radius (R = 0.03)"
     value[value == 0.3] <- "Large Radius (R = 0.3)"
   } else if (var == "clbr") {
-    value[value == "(0,1]"] <- "1\ncluster"
-    value[value == "(1,5]"] <- "2-5\nclusters"
+    value[value == "(0,1]"] <- "1 cluster"
+    value[value == "(1,5]"] <- "2-5 clusters"
     value[value == "(5,10]"] <- "6-10\nclusters"
     value[value == "(10,20]"] <- "11-20\nclusters"
     value[value == "(20,30]"] <- "21-30\nclusters"
   }
   return(value)
 }
-
+#
 myThemeMod <- theme(legend.position = "none",
                     axis.title.x = element_text(vjust=-1, size=24),
                     axis.title.y = element_text(vjust=-0.1, size=24),
                     plot.margin=unit(c(10,10,10,10),"mm"),                    
                     plot.title = element_text(vjust=3, size=24,face="bold")
                     )
-
+#
 limits <- aes(ymax = count + se, ymin = count - se)
 limitsFt <- aes(ymax = fromtruth.avg + se, ymin = fromtruth.avg - se)
 limitsCI <- aes(ymax = count + ci, ymin = count - ci)
-
+#
 theme_set(theme_bw(base_size = 30))
 theme_white()
-
+#
 XINTERCEPT <- 0.15
 
 ## IMG DIR
@@ -690,6 +689,8 @@ setwd(PATH)
 
 data.old <- read.table('speedtest.csv', head = T, sep = ",")
 
+data <- data.old[data.old$init.placement < 0.5,]
+
 DIR <- 'clusters_vs_progress_nobound_again/'
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
@@ -698,7 +699,9 @@ data.new <- read.table('speedtest.csv', head = T, sep = ",")
 
 data.old.subset <- data.old[data.old$tau == 1 & data.old$init.placement < 0.5,]
 
-data <- rbind(, data.new)
+data <- rbind(data.old.subset, data.new)
+
+data <- data.new
 
 # Replace -1 in init.placement with 0
 data$init.placement[data$init.placement == -1] <- 0
@@ -728,6 +731,7 @@ data$clbr <- cut(data$init.ccount, breaks=c(0,1,5, 10, 20, 30))
 dataAlpha <- data[data$alpha == 0.01,]
 dataAlpha <- data[data$alpha == 0.5,]
 dataAlpha <- data[data$alpha == 0.99,]
+
 dataAlpha <- data
 
 ############
@@ -735,6 +739,7 @@ dataAlpha <- data
 ############
 
 data1 <- dataAlpha[dataAlpha$tau == 1,]
+
 data50 <- dataAlpha[dataAlpha$tau == 50,]
 
 ###########################
@@ -742,7 +747,9 @@ data50 <- dataAlpha[dataAlpha$tau == 50,]
 ###########################
 # TAU = 1
 mydata <- data1[data1$init.placement == 1,]
+
 mydata <- data1
+
 # TAU = 50
 mydata <- data50[data50$init.placement == 1,]
 mydata <- data50
@@ -753,10 +760,8 @@ mydata <- mydata[mydata$init.placement >= 0.2,]
 
 ### Adapta alpha to formulation in the paper
 mydata$alpha2 <- mydata$alpha
-
 alpha001 <- mydata$alpha == 0.01
 alpha099 <- mydata$alpha == 0.99
-
 mydata[alpha001,]$alpha2 <- 0.99
 mydata[alpha099,]$alpha2 <- 0.01
 
@@ -805,8 +810,10 @@ if (exists("summaryNew")) {
 counter <- 1
 for (c in seq(10,100,10)) {
   myVar <- c(paste0('consensus', c))
-  # Remove clbr if not needed
+  # A
   summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
+  # B
+  #summaryNew <- summarySE(mydata[mydata$alpha == 0.01,], c(myVar), c('R', 'init.ccount', 'init.placement'), na.rm=TRUE)
   names(summaryNew) <- sub(myVar, "time", names(summaryNew))
   summaryNew$share <- c
   if (exists("summaryData")) {
@@ -819,12 +826,12 @@ for (c in seq(10,100,10)) {
   counter <- counter + nrow(summaryNew)
 }
 
-
 summaryData$R <- as.factor(summaryData$R)
-
 summaryDataR003 <- summaryData[summaryData$R == 0.03,]
 summaryDataR03 <- summaryData[summaryData$R == 0.3,]
 
+
+# To produce use A (see above)
 title <- 'Temporal evolution of consensus building \n by number of initial clusters'
 p <- ggplot(summaryDataR003, aes(x = share, weight=time, fill=R))
 p <- p + geom_bar(aes(y=time), stat = "identity")
@@ -835,21 +842,90 @@ p <- p + xlab('Share of Consensus') + ylab('Avg. Time Passed')
 # Remove clbr if not needed
 p <- p + facet_grid(.~clbr, labeller = myLabeller)
 p <- p + scale_fill_discrete(name="Radius of\nInfluence")
+#p <- p + scale_x_discrete(labels=(0,0.25,0.5,0.75,1))
+p <- p  + myThemeMod + theme(
+                        legend.background = element_rect(fill=alpha('white', 0.4)),
+                        legend.position = c(0.2, 0.8),
+                        plot.margin = unit(c(10,30,10,10),"mm"),
+                        axis.text.x = element_text(size=15),
+                        strip.background = element_blank())
+p <- p + guides(col=guide_legend(ncol=2))
+p
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
+       width=12, height=8, dpi=300)
+
+
+# To produce use B (see above)
+title <- 'Temporal evolution of consensus building \n by number of initial clusters'
+p <- ggplot(summaryDataR03[summaryDataR03$init.placement == 1,], aes(x = share, weight=time, fill=R))
+p <- p + geom_bar(aes(y=time), stat = "identity")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), width = 5)
+p <- p + xlab('Share of Consensus') + ylab('Avg. Time Passed')
+# Remove clbr if not needed
+p <- p + facet_wrap(~init.ccount)
+p <- p + scale_fill_discrete(name="Radius of\nInfluence")
 p  + myThemeMod + theme(legend.background = element_rect(fill = "white",
                           colour = "grey"),
                         legend.position = c(1.1, 0.5),
                         plot.margin = unit(c(10,30,10,10),"mm"),
                         axis.text.x = element_text(size=15),
                         strip.background = element_blank())
-p <- p + guides(col=guide_legend(ncol=2))
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
-       width=12, height=8, dpi=300)
+# To produce use B (see above)
+# Reversing init.ccount and share
+SHARE = 90
+R003 <- summaryDataR003[summaryDataR003$share == SHARE,]
+R03 <- summaryDataR03[summaryDataR03$share == SHARE,]
+p <- ggplot(R03, aes(x = init.ccount, weight=time))
+p <- p + geom_bar(aes(y=time), stat = "identity", position="dodge")
+p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se))
+p <- p + geom_smooth(aes(y=time))
+p <- p + xlab('Number of Initial Clusters') + ylab('Avg. Time Passed')
+# Remove clbr if not needed
+p <- p + facet_wrap(~init.placement)
+p <- p + scale_fill_discrete(name="Radius of\nInfluence")
+p  + myThemeMod + theme(legend.background = element_rect(fill = "white",
+                          colour = "grey"),
+                        legend.position = c(1.1, 0.5),
+                        plot.margin = unit(c(10,30,10,10),"mm"),
+                        axis.text.x = element_text(size=15),
+                        strip.background = element_blank())
+
+
+p <- ggplot(R003[R003$init.placement %in% c(0.1,0.15,0.5),], aes(x = init.ccount, time, color=init.placement))
+p <- p + geom_point(aes(ymax = time + se, ymin = time - se), alpha = 0.5)
+p <- p + geom_smooth(aes(group=init.placement))
+p <- p + xlab('Number of Initial Clusters') + ylab('Avg. Time Passed')
+#p <- p + facet_wrap(~init.placement)
+p <- p + scale_fill_discrete(name="Radius of\nInfluence")
+p  + myThemeMod + theme(legend.background = element_rect(fill = "white",
+                          colour = "grey"),
+                        legend.position = c(1.1, 0.5),
+                        plot.margin = unit(c(10,30,10,10),"mm"),
+                        axis.text.x = element_text(size=15),
+                        strip.background = element_blank())
+
+R03b <- R03[R03$init.placement %in% c(0.2,0.7,0.9,1),]
+R003b <- R003[R003$init.placement %in% c(0.1,0.15,0.2,1),]
+
+p <- ggplot(R03b, aes(x = init.ccount, time, color=as.factor(init.placement)))
+p <- p + geom_point(alpha = 0.5)
+p <- p + geom_smooth(aes(group=init.placement), se = FALSE)
+p <- p + xlab('Number of Initial Clusters') + ylab('Avg. Time Passed')
+#p <- p + facet_wrap(~init.placement)
+p <- p + scale_color_discrete(name="Initial Distance\nFrom Truth")
+p  + myThemeMod + theme(legend.background = element_rect(fill=alpha('white', 0.4)),
+                        legend.position = c(0.3, 0.8),
+                        plot.margin = unit(c(10,30,10,10),"mm"),
+                        legend.key.width = unit(1,"cm"),
+                        legend.key.height = unit(1,"cm"),
+                        axis.text.x = element_text(size=15),
+                        strip.background = element_blank())
 
 
 mydata.summary <- summarySE(mydata, "consensus75", c("R", "alpha2", "init.ccount", "init.placement"), na.rm = TRUE)
-
-mydata.summary <- mydata.summary[mydata.summary$init.placement %in% seq(0.2,1,0.1),]
+#mydata.summary <- mydata.summary[mydata.summary$init.placement %in% seq(0.2,1,0.1),]
 
 title <- "The effect of progress and clustering on consensus"
 p <- ggplot(mydata.summary, aes(init.ccount, consensus75))
@@ -859,11 +935,63 @@ p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
 p <- p + geom_smooth(color="red", alpha = 0.2, method="lm")
 p <- p + facet_grid(alpha2~R, labeller=myLabeller)
 p <- p + scale_color_gradient(name="Initial Distance\nfrom Truth")
-p <- p + myThemeMod + theme(legend.position = c(0.15, 0.80),
+p <- p + myThemeMod + theme(legend.position = "right", #c(0.15, 0.80),
                             #legend.background = element_rect(fill = "white", colour = "grey"),
                             legend.title = element_text(size=18,face="bold"),
                             legend.text = element_text(size=16),
                             legend.key.height = unit(0.7, "cm"),
+                            legend.key =  element_rect(fill = "white", colour = NA),
+                            strip.background = element_blank()
+                            )
+p
+
+
+mydata.subset <- mydata.summary[mydata.summary$R == 0.03 & mydata.summary$init.placement %in% c(0.1,0.15,0.2,0.5) & mydata.summary$init.ccount < 30 & mydata.summary$alpha == 0.99,]
+
+mydata.subset <- mydata.summary[mydata.summary$init.placement %in% c(0.8,0.85,0.9,0.95,1) & mydata.summary$init.ccount < 16,]
+
+mydata.subset <- mydata.summary[mydata.summary$init.placement %in% c(0.1,0.15,0.2) & mydata.summary$init.ccount < 16,]
+
+mydata.subset <- mydata.summary[mydata.summary$init.ccount > 15,]
+mydata.subset011 <- mydata.summary[mydata.summary$init.ccount > 15 & mydata.summary$init.placement %in% c(0.1,1),]
+
+
+# high social influence, small R, c < 16, d = 1
+fit99 <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.03 & mydata$init.placement == 1,]); summary(fit99)
+
+# Medium social influence, small R, c < 16, d = 1
+fit5 <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.03 & mydata$init.placement == 1,]); summary(fit5)
+
+# High social influence, big R, c < 16, d = 1
+fit99b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.3 & mydata$init.placement == 1,]); summary(fit99b)
+
+# Medium social influence, big R, c < 16, d = 1
+fit5b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.3 & mydata$init.placement == 1,]); summary(fit5b)
+
+# Low social influence, big R, c < 16, d = 1
+fit01b <- lm(consensus75 ~ init.ccount, data = mydata[mydata$alpha == 0.99 & mydata$R == 0.3 & mydata$init.placement == 1,]); summary(fit01b)
+
+
+title <- "The effect of progress and clustering on consensus"
+p <- ggplot(mydata.subset, aes(init.ccount, consensus75, group=init.placement))
+p <- p + geom_jitter(size=2)
+#p <- p + geom_line(aes(color = init.placement), alpha=0.5)
+p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
+p <- p + geom_smooth(data = mydata.subset011,
+                     size = 1.1, alpha = 0.2,
+                     se=FALSE, method="lm",
+                     #linetype = "dashed",
+                     aes(color = as.factor(init.placement)))
+p <- p + facet_grid(alpha2~R, labeller=myLabeller)
+p <- p + scale_color_discrete(name="Initial Distance\nfrom Truth")
+p <- p + scale_x_continuous(breaks=c(1,5,10,15))
+p <- p + myThemeMod + theme(legend.position = c(0.15, 0.80),
+                            legend.background = element_rect(fill=alpha('white', 0.4)),
+                            #legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(size=18,face="bold"),
+                            legend.text = element_text(size=18),
+                            legend.key.height = unit(0.7, "cm"),
+                            legend.key.width = unit(1, "cm"),
                             legend.key =  element_rect(fill = "white", colour = NA),
                             strip.background = element_blank()
                             )
@@ -877,7 +1005,7 @@ grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," 
 grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
 grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
 
-svg(filename = paste0(IMGPATH, "SPEEDTEST/st_tau1_consensus_by_progress_by_alpha.svg"),
+svg(filename = paste0(IMGPATH, "SPEEDTEST/non_overlapping_clusters.svg"),
     width=10, height=10)
 grid.newpage()
 grid.draw(grob)
@@ -906,7 +1034,7 @@ p
 
 
 
-## NEW PLOTS
+## NEW PLOTS (old)
 
 
 mydata.summary <- summarySE(mydata, "ccount25", c("init.ccount", "init.placement"), na.rm = TRUE)
@@ -932,7 +1060,7 @@ mydata.summary <- summarySE(mydata, "ccount30", c("R", "init.ccount", "init.plac
 
 title <- "The effect of progress and clustering on consensus"
 p <- ggplot(mydata.summary[mydata.summary$R == 0.3,], aes(as.factor(init.placement), ccount30))
-p <- p + geom_boxplot(aes(color = as.factor(init.placement)), size=4)
+p <- p + geom_boxplot(aes(color = as.factor(init.placement)), size=2)
 #p <- p + geom_line(aes(color = as.factor(init.placement)))
 p <- p + xlab("Initial Distance from Truth") + ylab("Number of Clusters at 25")
 #p <- p + facet_grid(alpha~.)
@@ -947,11 +1075,56 @@ p <- p +  theme(
                 )
 p
 
+## NEW PLOTS
+
+
+mydata.summary <- summarySE(mydata, "ccount50", c("init.ccount", "init.placement"), na.rm = TRUE)
+
+title <- "The effect of progress and clustering on consensus"
+p <- ggplot(mydata.summary, aes(init.ccount, ccount50))
+p <- p + geom_point(aes(color = as.factor(init.placement)), size=4)
+p <- p + geom_line(aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
+#p <- p + facet_grid(alpha~.)
+#p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p + myThemeMod + theme(legend.position = c(0.8, 0.3),
+                            legend.background = element_rect(fill = "white", colour = "grey"),
+                            legend.title = element_text(vjust=3, size=16,face="bold"),
+                            legend.text = element_text(size=14),
+                            legend.key.width = unit(1.5, "cm"),
+                            legend.key =  element_rect(fill = "white", colour = NA)
+                            )
+p
+
+mydata.summary <- summarySE(mydata, "ccount50", c("alpha", "R", "init.ccount", "init.placement", "clbr"), na.rm = TRUE)
+
+title <- "Number of clusters by distance from truth and initial number of clusters"
+p <- ggplot(mydata.summary[mydata.summary$R == 0.03,], aes(as.factor(init.placement), ccount50))
+p <- p + geom_boxplot(aes(color = as.factor(init.placement)))
+#p <- p + geom_line(aes(color = as.factor(init.placement)))
+p <- p + xlab("Initial Distance from Truth") + ylab("Avg. Number of Clusters")
+p <- p + facet_wrap(~clbr, ncol=5)
+#p <- p + ggtitle(title)
+p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
+p <- p +  theme(
+                legend.background = element_rect(fill = "white", colour = "grey"),
+                legend.title = element_text(vjust=3, size=16,face="bold"),
+                legend.text = element_text(size=14),
+                legend.key.width = unit(1.5, "cm"),
+                legend.key =  element_rect(fill = "white", colour = NA)
+                )
+p
+
+na50 <- mydata[is.na(mydata$ccount50) & mydata$alpha != 0.99,]
+
+
 ## Regressions
 
 fit001 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.03,]); summary(fit001)
 fit05 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.03,]); summary(fit05)
-fit099 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.5 & mydata$R == 0.3,]); summary(fit099)
+
+fit099 <- lm(consensus75 ~ ccount30, data = mydata[mydata$alpha == 0.01 & mydata$R == 0.3,]); summary(fit099)
 
 
 # high social influence
