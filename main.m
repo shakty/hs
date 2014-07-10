@@ -87,7 +87,7 @@ clusterTightness = [0.05];
 % Can be:
 %  - equal to -1, centers are placed randomly
 %  - equal to (0..n) centers are placed on a radius equal to that.
-clustersInCircleOfRadius = 0.5; %[0.1:0.05:0.5]; %-1; % [-1 0.4];
+clustersInCircleOfRadius = 0.2; %[0.1:0.05:0.5]; %-1; % [-1 0.4];
 
 % Bands
 % Agents are placed randomly within a circular area (band) of area equal to
