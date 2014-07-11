@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_nobound_biggap';
+simName = 'clusters_vs_progress_nobound_biggap003';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -53,7 +53,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01 0.5 0.99];  % weighting of velocity terms
-Rs     = [0.3]; % cut-off radius
+Rs     = [0.03]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
