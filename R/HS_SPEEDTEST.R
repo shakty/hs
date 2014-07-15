@@ -52,8 +52,26 @@ data <- read.table('speedtest.csv', head = T, sep = ",")
 data$smallR <- as.numeric(data$R <= 0.1)
 data$bigR <- as.numeric(data$R > 0.1)
 
+
+# IT WAS:
 # If consensus is not reached it has value -1. Replace with NA
-data[] <- lapply(data, function(x){replace(x, x == -1, NA)}) 
+#data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+
+# IT IS NOW:
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+#data$init.placement <- as.factor(data$init.placement)
+# If consensus is not reached it has value -1. Replace with NA
+#data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
+# 20.000
+data[ , 15:28 ][ data[ , 11:22 ] == -1 ] <- 20000
+# If no consensus was reached replace ccounts with NA
+data[ , 29:40 ][ data[ , 23:34 ] == -1 ] <- NA
+# Replaces everything, not good
+#data[] <- lapply(data, function(x){replace(x, x == -1, 20000)})
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)
+
   
 mean(data[data$smallR == 1,]$consensus100, na.rm=TRUE)
 mean(data[data$smallR == 0,]$consensus100, na.rm=TRUE)

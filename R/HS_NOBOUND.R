@@ -125,7 +125,7 @@ p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
 p <- p + myThemeMod + theme(strip.background = element_blank())
 p
 
-ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc.svg"),
+ggsave(filename = paste0(IMGPATH, "nobound_alpha_tau1_cc_TITLE_FIX.svg"),
        plot = p, width=10, height=5, dpi=300)
 
 # FT
@@ -587,12 +587,16 @@ data.new <- read.table('speedtest.csv', head = T, sep = ",")
 data.old.subset <- data.old[data.old$tau == 1 & data.old$init.placement < 0.5,]
 data <- rbind(data.old.subset, data.new)
 
+DIR <- 'clusters_vs_progress_nobound_biggap/'
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+data <- read.table('speedtest.csv', head = T, sep = ",")
+
 #data <- data.new
 
 # Replace -1 in init.placement with 0
 data$init.placement[data$init.placement == -1] <- 0
 #data$init.placement <- as.factor(data$init.placement)
-
 # If consensus is not reached it has value -1. Replace with NA
 #data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
 # 20.000
@@ -629,9 +633,10 @@ data50 <- dataAlpha[dataAlpha$tau == 50,]
 # Select Dist: ALL / vs 0.5
 ###########################
 # TAU = 1
-mydata <- data1[data1$init.placement == 1,]
 
 mydata <- data1
+
+mydata <- data1[data1$init.placement == 1,]
 
 # TAU = 50
 mydata <- data50[data50$init.placement == 1,]
@@ -648,13 +653,15 @@ alpha099 <- mydata$alpha == 0.99
 mydata[alpha001,]$alpha2 <- 0.99
 mydata[alpha099,]$alpha2 <- 0.01
 
+limitPlacement <- sort(unique(mydata$init.placement))[2]
 
 #mydata <- mydata[mydata$init.placement %in% seq(0.2,0.9,0.1),]
 
 
-p <- ggplot(mydata, aes(init.ccount, consensus75, color = as.factor(init.placement)))
-#p <- p + geom_jitter(alpha = 0.05, color="grey")
-p <- p + geom_smooth(alpha=0.5, method="lm", se=FALSE, size = 2)
+
+p <- ggplot(mydata[mydata$init.placement == 1.5892,], aes(init.ccount, consensus75, color = as.factor(init.placement)))
+p <- p + geom_jitter(alpha = 0.5, color="grey")
+p <- p + geom_smooth(alpha=0.5, method="lm", size = 2)
 p <- p + xlab("Initial number of clusters") + ylab("Time to Consensus")
 #p <- p + myThemeMod
 p <- p + facet_grid(.~ R, labeller = myLabeller)
@@ -694,9 +701,11 @@ counter <- 1
 for (c in seq(10,100,10)) {
   myVar <- c(paste0('consensus', c))
   # A
-  summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
+  #summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
   # B
   #summaryNew <- summarySE(mydata[mydata$alpha == 0.01,], c(myVar), c('R', 'init.ccount', 'init.placement'), na.rm=TRUE)
+  # C
+  summaryNew <- summarySE(mydata[mydata$alpha != 0.99 & mydata$init.placement > limitPlacement,], c(myVar), c('R', 'init.ccount'), na.rm=TRUE)
   names(summaryNew) <- sub(myVar, "time", names(summaryNew))
   summaryNew$share <- c
   if (exists("summaryData")) {
@@ -709,7 +718,7 @@ for (c in seq(10,100,10)) {
   counter <- counter + nrow(summaryNew)
 }
 
-summaryData$R <- as.factor(summaryData$R)
+summaryData$R <- factor(summaryData$R, levels = c("0.03","0.3"))
 summaryDataR003 <- summaryData[summaryData$R == 0.03,]
 summaryDataR03 <- summaryData[summaryData$R == 0.3,]
 
@@ -741,7 +750,7 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
 
 # To produce use B (see above)
 title <- 'Temporal evolution of consensus building \n by number of initial clusters'
-p <- ggplot(summaryDataR003[summaryDataR003$init.placement == 1,], aes(x = share, weight=time, fill=R))
+p <- ggplot(summaryData, aes(x = share, weight=time, fill=R))
 p <- p + geom_bar(aes(y=time), stat = "identity")
 p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), width = 5)
 p <- p + xlab('Share of Consensus') + ylab('Avg. Time Passed')
@@ -761,13 +770,15 @@ SHARE = 90
 R003 <- summaryDataR003[summaryDataR003$share == SHARE & summaryDataR003$init.placement < 0.3,]
 R03 <- summaryDataR03[summaryDataR03$share == SHARE & summaryDataR003$init.placement %in% c(0.7,0.8,0.9,1),]
 
+R03 <- summaryDataR03[summaryDataR03$share == SHARE,]
+
 p <- ggplot(R03, aes(x = init.ccount, weight=time))
 p <- p + geom_bar(aes(y=time), stat = "identity", position="dodge")
 p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se))
 p <- p + geom_smooth(aes(y=time), size = 1.5, color = "red")
 p <- p + xlab('Number of Initial Clusters') + ylab('Avg. Time Passed')
 # Remove clbr if not needed
-p <- p + facet_wrap(~init.placement)
+#p <- p + facet_wrap(~init.placement)
 p <- p + scale_fill_discrete(name="Radius of\nInfluence")
 p  + myThemeMod + theme(legend.background = element_rect(fill = "white",
                           colour = "grey"),
@@ -842,7 +853,8 @@ mydata.subset <- mydata.summary[mydata.summary$init.placement %in% c(0.8,0.85,0.
 mydata.subset <- mydata.summary[mydata.summary$init.placement %in% c(0.1,0.15,0.2) & mydata.summary$init.ccount < 16,]
 
 mydata.subset <- mydata.summary[mydata.summary$init.ccount < 16,]
-mydata.subset011 <- mydata.summary[mydata.summary$init.ccount < 16 & mydata.summary$init.placement %in% c(0.1,1),]
+extremes <- c(min(mydata$init.placement),max(mydata$init.placement))
+mydata.subset011 <- mydata.summary[mydata.summary$init.ccount < 16 & mydata.summary$init.placement %in% extremes,]
 
 mydata.subset011b <- mydata.summary[mydata.summary$init.placement %in% c(0.1,0.5,0.7, 0.9,1),]
 
@@ -896,10 +908,13 @@ p
 
 
 # test
+myBreaks = c(1.4892, 1.5892, 1.6892, 1.7892, 1.8892, 1.9892, 2.0892, 2.1892, 2.2892)
 title <- "The effect of progress and clustering on consensus"
-p <- ggplot(mydata.summary[mydata.summary$R == 0.3,], aes(init.ccount, consensus75, group=init.placement))
-p <- p + geom_jitter(size=2, alpha=0.2)
-#p <- p + geom_line(aes(color = init.placement), alpha=0.5)
+p <- ggplot(mydata.summary[mydata.summary$R == 0.3 & mydata.summary$init.placement %in% myBreaks
+                           mydata.summary$,], aes(init.ccount, consensus75, group=init.placement))
+#p <- p + geom_point(size=2, alpha=0.2)
+#p <- p + geom_line(alpha=0.5)
+p <- p + geom_smooth(aes(color=as.factor(init.placement)), se=FALSE, method="lm")
 p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
 p <- p + geom_smooth(data = mydata.subset011b[mydata.subset011b$R == 0.3,],
                      size = 1.1, alpha = 0.2,
@@ -909,6 +924,8 @@ p <- p + geom_smooth(data = mydata.subset011b[mydata.subset011b$R == 0.3,],
 p <- p + facet_grid(alpha2~R, labeller=myLabeller)
 p <- p + scale_color_discrete(name="Initial Distance\nfrom Truth")
 #p <- p + scale_x_continuous(breaks=c(1,5,10,15))
+p
+
 p <- p + myThemeMod + theme(legend.position = c(0.15, 0.80),
                             legend.background = element_rect(fill=alpha('white', 0.4)),
                             #legend.background = element_rect(fill = "white", colour = "grey"),
@@ -925,15 +942,26 @@ p
 
 # [mydata.subset011$R == 0.3,]
 
+mydata.subset <- mydata.summary[mydata.summary$init.ccount < 16,]
+extremes <- c(min(mydata$init.placement),max(mydata$init.placement))
+mydata.subset011 <- mydata.summary[mydata.summary$init.ccount < 16 & mydata.summary$init.placement %in% extremes,]
+
+
+mydata.subset <- mydata.summary[mydata.summary$init.ccount < 16 & mydata.summary$init.placement > limitPlacement,]
+extremes <- c(min(mydata.subset$init.placement),max(mydata.subset$init.placement))
+mydata.subset011 <- mydata.summary[mydata.summary$init.ccount < 16 & mydata.summary$init.placement %in% extremes,]
+
+# Fake small R
+mydata.subset <- rbind(mydata.subset, c(0.03, 0.01, NA, NA, NA, NA, NA, NA, NA))
+
 title <- "The effect of progress and clustering on consensus"
-p <- ggplot(mydata.subset, aes(init.ccount, consensus75, group=init.placement))
+p <- ggplot(mydata.subset, aes(init.ccount, consensus75))
 p <- p + geom_jitter(size=2)
 #p <- p + geom_line(aes(color = init.placement), alpha=0.5)
 p <- p + xlab("Initial Number of Clusters") + ylab("Avg. Time to Consensus")
 p <- p + geom_smooth(data = mydata.subset011,
                      size = 1.1, alpha = 0.2,
                      se=FALSE, method="lm",
-                     #linetype = "dashed",
                      aes(color = as.factor(init.placement)))
 p <- p + facet_grid(alpha2~R, labeller=myLabeller)
 p <- p + scale_color_discrete(name="Initial Distance\nfrom Truth")
@@ -958,8 +986,11 @@ grob[["grobs"]][[13]][["children"]][[2]][["label"]] <- expression(paste(alpha," 
 grob[["grobs"]][[14]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.5"))
 grob[["grobs"]][[15]][["children"]][[2]][["label"]] <- expression(paste(alpha," = 0.99"))
 
-svg(filename = paste0(IMGPATH, "SPEEDTEST/non_overlapping_clusters.svg"),
-    width=10, height=10)
+
+name <- "SPEEDTEST/non_overlapping_clusters.svg"
+name <- "SPEEDTEST/non_overlapping_clusters_biggap.svg"
+
+svg(filename = paste0(IMGPATH, name), width=10, height=10)
 grid.newpage()
 grid.draw(grob)
 dev.off()
@@ -996,7 +1027,7 @@ title <- "The effect of progress and clustering on consensus"
 p <- ggplot(mydata.summary, aes(init.ccount, ccount50))
 p <- p + geom_point(aes(color = as.factor(init.placement)), size=4)
 p <- p + geom_line(aes(color = as.factor(init.placement)))
-p <- p + xlab("Initial number of clusters") + ylab("Avg. Number of Clusters at Consensus Share 25%")
+p <- p + xlab("Initial number of clusters") + ylab("Avg. Number of Clusters at Consensus Share 50%")
 #p <- p + facet_grid(alpha~.)
 #p <- p + ggtitle(title)
 p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
@@ -1011,22 +1042,26 @@ p
 
 ## NEW PLOTS
 
-mydata.summary <- summarySE(mydata, "ccount25", c("alpha", "R", "init.ccount", "init.placement", "clbr"), na.rm = TRUE)
+mydata.summary <- summarySE(mydata, "ccount50", c("alpha", "R", "init.ccount", "init.placement", "clbr"), na.rm = TRUE)
 
 title <- "Number of clusters by distance from truth and initial number of clusters"
-p <- ggplot(mydata.summary[mydata.summary$R == 0.3 & mydata.summary$init.placement > 0.15 & mydata.summary$clbr != "(0,1]",], aes(as.factor(init.placement), ccount25, color=clbr))
+p <- ggplot(mydata.summary[mydata.summary$alpha != 0.01 & mydata.summary$R == 0.3 & mydata.summary$init.placement > limitPlacement & mydata.summary$clbr != "(0,1]",], aes(as.factor(init.placement), ccount50, color=as.factor(init.placement)))
 p <- p + geom_boxplot()
 p <- p + xlab("Initial Distance from Truth") + ylab("Avg. Number of Clusters at Consensus Share 50%")
-p <- p + facet_grid(~clbr, labeller = myLabeller)
+p <- p + facet_grid(clbr~., labeller = myLabeller)
 p <- p + scale_color_hue(name="Initial\ndistance\nfrom Truth")
-p <- p + scale_x_discrete(breaks = c(0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1))
+p <- p + scale_x_discrete(breaks = c(1.4892, 1.5892, 1.6892, 1.7892,
+                            1.8892, 1.9892, 2.0892, 2.1892, 2.2892),
+                          labels = c(1.48,1.58,1.68,1.78,1.88,1.98,2.08,2.18,2.28))
+p <- p + ylim(1,5.75)
+#p <- p + scale_x_discrete(breaks = c(0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1))
 p <- p + myThemeMod + theme(
                             strip.background = element_blank()
                             )
 p
 
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/progress_leads_to_clustering_boxplot.svg"),
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/progress_leads_to_clustering_boxplot_biggap_c50.svg"),
        width=10, height=10, dpi=300)
 
 na50 <- mydata[is.na(mydata$ccount50) & mydata$alpha != 0.99,]
@@ -1523,3 +1558,71 @@ grid.newpage()
 grid.draw(grob)
 dev.off()
 
+
+
+
+### Mediation and Moderation Analysis
+
+
+
+DIR <- 'speedtest_final_R_alpha/'
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+
+data <- read.table('speedtest.csv', head = T, sep = ",")
+
+data$smallR <- as.numeric(data$R <= 0.1)
+data$bigR <- as.numeric(data$R > 0.1)
+
+
+# IT WAS:
+# If consensus is not reached it has value -1. Replace with NA
+#data[] <- lapply(data, function(x){replace(x, x == -1, NA)})
+
+# IT IS NOW:
+# Replace -1 in init.placement with 0
+data$init.placement[data$init.placement == -1] <- 0
+#data$init.placement <- as.factor(data$init.placement)
+# If consensus is not reached it has value -1. Replace with NA
+#data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
+# 20.000
+data[ , 11:22 ][ data[ , 11:22 ] == -1 ] <- 20000
+# If no consensus was reached replace ccounts with NA
+data[ , 23:34 ][ data[ , 23:34 ] == -1 ] <- NA
+# Replaces everything, not good
+#data[] <- lapply(data, function(x){replace(x, x == -1, 20000)})
+data$R <- as.factor(data$R)
+data$alpha <- as.factor(data$alpha)
+
+
+mydata <- data[complete.cases(data[,c("consensus75","ccount50")]) & data$alpha ==0.5,]
+
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(consensus75 ~ smallR, data = mydata)
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(ccount50 ~ smallR, data = mydata)
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: R and alpha on consensus75
+
+fit1c <- lm(consensus75 ~ smallR + ccount50, data = mydata)
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="smallR", mediator="ccount50")
+
+summary(contcont)
+
+
+# Test whether progress causes the mediator
+
+fit1c <- lm(ccount50 ~ consensus75 + smallR, data = mydata)
+summary(fit1c)

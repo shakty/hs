@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'clusters_vs_progress_nobound_biggap003';
+simName = 'nobound_mediation_R_alpha';
 dumpDir = '/cluster/work/scr6/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -52,8 +52,8 @@ ideas_space_dims = [2]; % dimension of ideas space
 % ks the bigger the less groups
 
 % VELOCITY 
-alphas = [0.01 0.5 0.99];  % weighting of velocity terms
-Rs     = [0.03]; % cut-off radius
+alphas = [0.01:0.01:0.99];  % weighting of velocity terms
+Rs     = [0.01:0.01:1]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 
@@ -79,7 +79,7 @@ sigmas = 0.01; % [0:0.01:0.1]; % 0.01; % Std. deviation of white noise term
 vScalings = [1]; % [0.01:0.01:1]; % [0.2, 1, 2, 5, 10]; %[0.2:0.2:10]; % Scaling factor for initial (random) velocities
 
 % INITIAL POSITIONS OF SCIENTISTS
-nClusters = [1:30];    	% number of clusters of the initial positions
+nClusters = 0; %[1:30];    	% number of clusters of the initial positions
 clusterTightness = [0.05]; % Tightness of clusters
 
 
@@ -90,7 +90,7 @@ myBiggerRadii = ((myGaps * 30) + 0.3*30 ) ./ (2*pi);
 
 % Now Big R has the same distance between the interaction radii than small
 % R for [0.1:0.1:1];
-clustersInCircleOfRadius = myBiggerRadii; %-1; %[0.1:0.1:1];
+clustersInCircleOfRadius = -1; %myBiggerRadii; %-1; %[0.1:0.1:1];
 
 % -1 no bands
 bandAreas = -1; %computeRBands(0.1, 0.1, 1); % last band is slighlty smaller (0.09819; is right)

@@ -73,12 +73,13 @@ loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
 theme_white <- function() {
   theme_update(panel.background = element_blank())
 }
+
 #
 myLabeller <- function(var, value){
   value <- as.character(value)
   if (var == "R") {
-    value[value == 0.03] <- "Small Radius (R = 0.03)"
-    value[value == 0.3] <- "Large Radius (R = 0.3)"
+    value[value == 0.03] <- "Small Radius R = 0.03"
+    value[value == 0.3] <- "Large Radius R = 0.3"
   } else if (var == "clbr") {
     value[value == "(0,1]"] <- "1 cluster"
     value[value == "(1,5]"] <- "2-5 clusters"
