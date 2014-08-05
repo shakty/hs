@@ -1,4 +1,4 @@
-function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMITS)
+function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMITS, PAUSE)
     close all;
     
     path2file = [ dirIn fileIn ];
@@ -202,7 +202,7 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMI
             % no rescaling
             quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j), 0);
             %quiver(agents(1,:),agents(2,:),v(1,:,j),v(2,:,j));
-            mean(abs(colnorm(v(:,:,j),2)))
+            % mean(abs(colnorm(v(:,:,j),2)));
         end
         
         hold on;
@@ -219,7 +219,7 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMI
         hold off;
         
         if (LIMITS)
-            xlim([0 ideas_space_size])
+            xlim([0 ideas_space_size]);
             ylim([0 ideas_space_size]);
         end
         
@@ -243,15 +243,28 @@ function makevideo( dirIn, fileIn, MPEG, fileOut, plottype, SHOW_POTENTIAL, LIMI
             legend(energy);
         end
         
-        pause(0.01);
+        if (PAUSE ~= 0)
+            pause(PAUSE);
+        end
         
         % avg_v = mean(mean(abs(dump.agentsv(:,:,j))))
-        if (j == 2000) 
-            mov = mean(colnorm(dump.agentsv(:,:,j),2))        
-            dis = mean(colnorm(agents-(repmat(truth,1, 100)),2))
+        
+
+        mov = mean(colnorm(dump.agentsv(:,:,j),2));      
+        dis = mean(colnorm(agents-(repmat(truth,1, 100)),2));
+        movs(j) = mov;
+        diss(j) = dis;
+        
+        if (j == 2000)
+            mov
+            dis
         end
     end      
  
+    plot(1:size(diss,2),diss);
+  
+    plot(1:size(movs,2),movs);
+    
 %%    
     if (MPEG)
         % Close the video file.

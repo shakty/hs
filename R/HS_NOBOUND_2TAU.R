@@ -76,6 +76,65 @@ loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
   return(clu)
 }
 
+
+#############################
+loadDataAgents <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
+
+  INTERACTIVE = FALSE
+  PATH = paste0(DUMPDIR, DIR, "aggr/")
+  setwd(PATH)
+  IMGPATH <- paste0(PATH, "img/");
+
+  # Create IMG dir if not existing
+  if (!file.exists(IMGPATH)) {
+    dir.create(file.path(PATH, "/img/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth_tau/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth_tau/"))
+  }
+
+
+  ##########
+  # PARAMS #
+  ##########
+  params <- read.table('params.csv', head=TRUE, sep=",")
+  
+  params$simname <- as.factor(params$simname)
+  params$simcount <- as.factor(params$simcount)
+  params$run <- as.factor(params$run)
+  
+
+  params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
+                                     truth.x, truth.y, init.clusterradio,
+                                     init.nclusters,
+                                     d1, B, d0, A, k, spacesize, spacedim,
+                                     nagents, t.end, dt, timestamp))
+
+
+
+
+  macro <- read.table('agents.csv', head=TRUE, sep=",")
+
+
+  if (TWO_THOUSANDS) {
+    macro <- macro[macro$t == 2000,]
+  }
+  
+  clu <- merge(params, macro, by=c("simname","simcount", "run"))
+ 
+
+  clu$simname <- as.character(clu$simname)
+  clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
+  clu$simname <- as.factor(clu$simname)
+  clu$simcount <- as.factor(clu$simcount)
+
+  return(clu)
+}
+
+
 theme_white <- function() {
   theme_update(panel.background = element_blank())
 }
@@ -124,7 +183,6 @@ if (!file.exists(IMGPATH)) {
 cl <- loadData(DUMPDIR, 'nobound_R_tau/', 1)
 
 clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
-
 cl <- rbind(cl,clTau1)
 #cl <- rbind(cl[cl$tau == 50,], clTau1[clTau1$alpha == 0.5,])
 
@@ -184,7 +242,6 @@ p <- p + annotate("text", x = 0.55, y = 22, label = "Convergence Zone", size=8)
 p <- p + xlab('Radius of Influence') + ylab('Avg. Number of Clusters')
 p <- p  + myThemeMod
 p
-
 
 
 c1 <- "#54aef3ff"
@@ -330,12 +387,18 @@ nba.s <- ddply(nba.m, .(variable), transform,
 ###########
 
 cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
-
 clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
-
 cl <- rbind(cl, clTau1)
-
 cl$alphabrk <- cut(cl$alpha, seq(0,1,0.05))
+
+
+clA <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTau1A <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/', 1)
+clA <- rbind(clA, clTau1A)
+
+clA$alphabrk <- cut(clA$alpha, seq(0,1,0.05))
+clA$taubrk <- cut(clA$tau, c(0,1,5,20,100))
+#clA$alpha <- as.factor(clA$alpha)
 
 # CL
 
@@ -373,6 +436,276 @@ p
 ggsave(filename = paste0(IMGPATH, "nobound_interaction_tau_alpha_cc.svg"),
        plot = p, width=10, height=5, dpi=300)
 
+summaryClSizeAvg <- summarySE(cl[cl$t == 2000,], c("size.avg"), c("alpha", "R", "taubrk"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryClSizeAvg[summaryClSizeAvg$R == 0.03,], aes((1 - alpha), size.avg, color=taubrk, group = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(aes(ymin = size.avg - se, ymax = size.avg + se))
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Cluster Size')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5))
+p
+
+
+summaryClSizeSd <- summarySE(cl[cl$t == 2000,], c("size.sd"), c("alpha", "R", "taubrk"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryClSizeSd[summaryClSizeSd$R == 0.03,], aes((1 - alpha), size.sd, color=taubrk, group = taubrk))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(aes(ymin = size.sd - se, ymax = size.sd + se))
+p <- p + facet_grid(. ~ R, labeller = myLabeller)
+p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab(xlabText) + ylab('Avg. Cluster Size')
+p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = c(0.5,0.5))
+p
+
+# New test
+
+loadDataCustom <- function(DUMPDIR, DIR) {
+
+  INTERACTIVE = FALSE
+  PATH = paste0(DUMPDIR, DIR, "aggr/")
+  setwd(PATH)
+  IMGPATH <- paste0(PATH, "img/");
+
+  # Create IMG dir if not existing
+  if (!file.exists(IMGPATH)) {
+    dir.create(file.path(PATH, "/img/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth_tau/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth_tau/"))
+  }
+
+
+  ##########
+  # PARAMS #
+  ##########
+  params <- read.table('params.csv', head=TRUE, sep=",")
+  
+  params$simname <- as.factor(params$simname)
+  params$simcount <- as.factor(params$simcount)
+  params$run <- as.factor(params$run)
+  
+
+  params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
+                                     truth.x, truth.y, init.clusterradio,
+                                     init.nclusters,
+                                     d1, B, d0, A, k, spacesize, spacedim,
+                                     nagents, t.end, dt, timestamp))
+
+
+
+  params <- params[params$alpha %in% myalphas,]
+
+
+  macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+  
+  clu <- merge(params, macro, by=c("simname","simcount", "run"))
+ 
+  clu$simname <- as.character(clu$simname)
+  clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
+  clu$simname <- as.factor(clu$simname)
+  clu$simcount <- as.factor(clu$simcount)
+
+  return(clu)
+}
+
+cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau/')
+
+clTau1 <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/')
+
+cl <- clTau1
+
+cl <- rbind(cl, clTau1)
+
+cl$taubrk <- cut(cl$tau, c(0,1,5,20,100))
+
+cl$alpha <- as.factor(cl$alpha)
+
+summaryCl <- summarySE(cl, c("count"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl, aes(t, count, color=alpha, group = alpha))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limits)
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+#p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+#xlabText <- expression(paste('Strength of Social Influence ',alpha))
+p <- p + xlab("Time") + ylab('Avg. Number of Clusters')
+#p <- p + scale_color_hue(labels=c("1", "2-5", "6-20", "21-100"), name="Tau Levels")
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+
+summaryFt <- summarySE(cl, c("fromtruth.avg"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryFt[summaryFt$R == 0.03,], aes(t, fromtruth.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(size=1)
+#p <- p + geom_errorbar(limitsFt)
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summarySizeMax <- summarySE(cl, c("size.max"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summarySizeMax, aes(t, size.max, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(aes(ymin = size.max - se, ymax = size.max + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+
+summarySpeedAvg <- summarySE(cl, c("speed.avg"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summarySpeedAvg[summarySpeedAvg$R == 0.03,], aes(t, speed.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(size = 2)
+#p <- p + geom_errorbar(aes(ymin = speed.avg - se, ymax = speed.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+summaryMoveAvg <- summarySE(cl, c("a.move.avg"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryMoveAvg[summaryMoveAvg$R == 0.03 & summaryMoveAvg$alpha %in% c(0.01, 0.5, 0.99),], aes(t, a.move.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(size = 2)
+#p <- p + geom_errorbar(aes(ymin = speed.avg - se, ymax = speed.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summaryCount <- summarySE(cl, c("count"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryCount[summaryCount$R == 0.03 & summaryCount$alpha %in% c(0.01, 0.5, 0.99),], aes(t, count, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(size = 2)
+#p <- p + geom_errorbar(aes(ymin = speed.avg - se, ymax = speed.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+summarySizeAvg <- summarySE(cl[cl$tau == 1,], c("size.avg"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Cluster Size vs Strength of social influence'
+p <- ggplot(summarySizeAvg[summarySizeAvg$R == 0.03,], aes(t, size.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+#p <- p + geom_errorbar(aes(ymin = size.avg - se, ymax = size.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg Cluster Size')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summarySizeSd <- summarySE(cl[cl$tau == 50,], c("size.sd"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Cluster Size vs Strength of social influence'
+p <- ggplot(summarySizeSd[summarySizeSd$R == 0.03 & summarySizeSd$t < 2001,], aes(t, size.sd, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(size=1)
+#p <- p + geom_errorbar(aes(ymin = size.avg - se, ymax = size.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Std. Cluster Size')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summaryFtSd <- summarySE(cl, c("fromtruth.sd"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryFtSd, aes(t, fromtruth.sd, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(aes(ymin = fromtruth.sd - se, ymax = fromtruth.sd + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+
+summaryFtSd <- summarySE(cl, c("speed.avg"), c("alpha", "R", "taubrk", "t"), na.rm=TRUE)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryFtSd, aes(t, speed.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(aes(ymin = speed.avg - se, ymax = speed.avg + se))
+p <- p + facet_grid(R ~ taubrk, labeller = myLabeller)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+## End new test
+
 # FT
 
 # does not work
@@ -385,7 +718,7 @@ summaryFt <- summarySE(cl[cl$t == 2000 &
                           cl$tau %in% c(1,10,50,100)
                           ,], c("fromtruth.avg"), c("alpha", "R", "tau"), na.rm=TRUE)
 
-summaryFt <- summarySE(cl[cl$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "taubrk"), na.rm=TRUE)
+summaryFt <- summarySE(clA[clA$t == 2000,], c("fromtruth.avg"), c("alpha", "R", "taubrk"), na.rm=TRUE)
 
 p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg, color=taubrk, group = taubrk))
 #p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))

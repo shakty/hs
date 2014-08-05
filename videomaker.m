@@ -70,14 +70,8 @@ videoSubDir = [ MYDIR '/' ];
 VIDEODIR = '/home/stefano/hs/videos/LAST/';
 SAVE_VIDEO = 0;
 SHOW_POTENTIAL = 0;
-plottype = 0;
 SINGLE = 1;
 
-% PLOT TYPE
-% plot_cross = 0;
-% plot_number = 1;
-% plot_number_color = 2;
-% plot_arrow = 3;
 
 % SINGLE
 DUMPDIR = '/mnt/tmp/dump/NAV/';
@@ -413,19 +407,56 @@ simName = 'interactionTauNoise-2014-6-26-11-43/'; % tau=1 sigma=0.3 has most clu
 simName = 'interactionTauNoise-2014-6-26-12-15/';
 
 
+% Interaction tau alpha
+
+% small R, tau = 1
+
+% alpha = 0.01 (strong social influence)
+simName = 'NOB_TAU_ALPHA-2014-8-4-10-5/';
+
+% alpha = 0.5 (medium si)
+% simName = 'NOB_TAU_ALPHA-2014-8-4-10-19/';
+
+% small R, tau = 50
+
+% % alpha = 0.01 (strong social influence)
+% simName = 'NOB_TAU_ALPHA-2014-8-4-10-43/';
+% 
+% 
+% % alpha = 0.5 (medium si)
+% simName = 'NOB_TAU_ALPHA-2014-8-4-10-26/';
+% 
+% % alpha = 0.99 (low si)
+% simName = 'NOB_TAU_ALPHA-2014-8-4-14-27/';
+
+%%%%%%%%%%%%
+% Can be deleted (copies from above) 
+
+
+%%%%%%%%%%%%%
+
+plottype = 0;
+
+% PLOT TYPE
+% plot_cross = 0;
+% plot_number = 1;
+% plot_number_color = 2;
+% plot_arrow = 3;
+
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '5-1'; % 1521
+myFile = '1-1'; % 1521
 
-LIMITS = 0;
+LIMITS = 1;
+PAUSE = 0.4;
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];
     if (SAVE_VIDEO && exist([VIDEODIR videoSubDir],'dir') == 0)
         mkdir([VIDEODIR videoSubDir]);
     end
-    makevideo(dumpDir, myFile, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL, LIMITS);
+    makevideo(dumpDir, myFile, SAVE_VIDEO, videoFile, plottype, SHOW_POTENTIAL, LIMITS, PAUSE);
     return
 end
 

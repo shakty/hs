@@ -587,10 +587,26 @@ data.new <- read.table('speedtest.csv', head = T, sep = ",")
 data.old.subset <- data.old[data.old$tau == 1 & data.old$init.placement < 0.5,]
 data <- rbind(data.old.subset, data.new)
 
+
+## Mixin in
+dd <- data
+##
+
 DIR <- 'clusters_vs_progress_nobound_biggap/'
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
 data <- read.table('speedtest.csv', head = T, sep = ",")
+
+## Mixin in
+dd.new <- data
+data <- rbind(dd[dd$R == 0.03,], dd.new)
+##
+
+DIR <- 'clusters_vs_progress_nobound_biggap003/'
+PATH <- paste0(DUMPDIR, DIR, "aggr/")
+setwd(PATH)
+data <- read.table('speedtest.csv', head = T, sep = ",")
+
 
 #data <- data.new
 
@@ -701,11 +717,11 @@ counter <- 1
 for (c in seq(10,100,10)) {
   myVar <- c(paste0('consensus', c))
   # A
-  #summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
+  summaryNew <- summarySE(mydata[mydata$alpha != 0.99,], c(myVar), c('R', 'clbr'), na.rm=TRUE)
   # B
   #summaryNew <- summarySE(mydata[mydata$alpha == 0.01,], c(myVar), c('R', 'init.ccount', 'init.placement'), na.rm=TRUE)
   # C
-  summaryNew <- summarySE(mydata[mydata$alpha != 0.99 & mydata$init.placement > limitPlacement,], c(myVar), c('R', 'init.ccount'), na.rm=TRUE)
+  #summaryNew <- summarySE(mydata[mydata$alpha != 0.99 & mydata$init.placement > limitPlacement,], c(myVar), c('R', 'init.ccount'), na.rm=TRUE)
   names(summaryNew) <- sub(myVar, "time", names(summaryNew))
   summaryNew$share <- c
   if (exists("summaryData")) {
@@ -728,8 +744,8 @@ title <- 'Temporal evolution of consensus building \n by number of initial clust
 p <- ggplot(summaryDataR003, aes(x = share, weight=time, fill=R))
 p <- p + geom_bar(aes(y=time), stat = "identity")
 p <- p + geom_errorbar(aes(ymax = time + se, ymin = time - se), width = 5)
-p <- p + geom_bar(data = summaryDataR03, aes(y=time), stat = "identity")
-p <- p + geom_errorbar(data = summaryDataR03, aes(ymax = time + se, ymin = time - se), width=5)
+#p <- p + geom_bar(data = summaryDataR03, aes(y=time), stat = "identity")
+#p <- p + geom_errorbar(data = summaryDataR03, aes(ymax = time + se, ymin = time - se), width=5)
 p <- p + xlab('Share of Consensus') + ylab('Avg. Time Passed')
 # Remove clbr if not needed
 p <- p + facet_grid(.~clbr, labeller = myLabeller)
@@ -744,8 +760,9 @@ p <- p  + myThemeMod + theme(
 p <- p + guides(col=guide_legend(ncol=2))
 p
 
-ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo.svg"),
-       width=12, height=8, dpi=300)
+
+ggsave(filename = paste0(IMGPATH, "SPEEDTEST/st_alpha001tau1_temporal_evo_B.svg"),
+       width=12, height=6, dpi=300)
 
 
 # To produce use B (see above)
@@ -910,8 +927,7 @@ p
 # test
 myBreaks = c(1.4892, 1.5892, 1.6892, 1.7892, 1.8892, 1.9892, 2.0892, 2.1892, 2.2892)
 title <- "The effect of progress and clustering on consensus"
-p <- ggplot(mydata.summary[mydata.summary$R == 0.3 & mydata.summary$init.placement %in% myBreaks
-                           mydata.summary$,], aes(init.ccount, consensus75, group=init.placement))
+p <- ggplot(mydata.summary[mydata.summary$R == 0.03 & mydata.summary$init.placement %in% myBreaks, ], aes(init.ccount, consensus75, group=init.placement))
 #p <- p + geom_point(size=2, alpha=0.2)
 #p <- p + geom_line(alpha=0.5)
 p <- p + geom_smooth(aes(color=as.factor(init.placement)), se=FALSE, method="lm")
@@ -1045,7 +1061,7 @@ p
 mydata.summary <- summarySE(mydata, "ccount50", c("alpha", "R", "init.ccount", "init.placement", "clbr"), na.rm = TRUE)
 
 title <- "Number of clusters by distance from truth and initial number of clusters"
-p <- ggplot(mydata.summary[mydata.summary$alpha != 0.01 & mydata.summary$R == 0.3 & mydata.summary$init.placement > limitPlacement & mydata.summary$clbr != "(0,1]",], aes(as.factor(init.placement), ccount50, color=as.factor(init.placement)))
+p <- ggplot(mydata.summary[mydata.summary$alpha != 0.01 & mydata.summary$R == 0.03 & mydata.summary$init.placement > limitPlacement & mydata.summary$clbr != "(0,1]",], aes(as.factor(init.placement), ccount50, color=as.factor(init.placement)))
 p <- p + geom_boxplot()
 p <- p + xlab("Initial Distance from Truth") + ylab("Avg. Number of Clusters at Consensus Share 50%")
 p <- p + facet_grid(clbr~., labeller = myLabeller)
@@ -1563,14 +1579,13 @@ dev.off()
 
 ### Mediation and Moderation Analysis
 
-
-
 DIR <- 'speedtest_final_R_alpha/'
+
+DIR <- 'nobound_mediation_R_alpha/'
 PATH <- paste0(DUMPDIR, DIR, "aggr/")
 setwd(PATH)
 
 data <- read.table('speedtest.csv', head = T, sep = ",")
-
 data$smallR <- as.numeric(data$R <= 0.1)
 data$bigR <- as.numeric(data$R > 0.1)
 
@@ -1586,16 +1601,16 @@ data$init.placement[data$init.placement == -1] <- 0
 # If consensus is not reached it has value -1. Replace with NA
 #data[ , 15:28 ][ data[ , 15:28 ] == -1 ] <- NA
 # 20.000
-data[ , 11:22 ][ data[ , 11:22 ] == -1 ] <- 20000
+data[ , 15:27 ][ data[ , 15:27 ] == -1 ] <- 20000
 # If no consensus was reached replace ccounts with NA
-data[ , 23:34 ][ data[ , 23:34 ] == -1 ] <- NA
+data[ , 28:40 ][ data[ , 28:40 ] == -1 ] <- NA
 # Replaces everything, not good
 #data[] <- lapply(data, function(x){replace(x, x == -1, 20000)})
 data$R <- as.factor(data$R)
 data$alpha <- as.factor(data$alpha)
 
 
-mydata <- data[complete.cases(data[,c("consensus75","ccount50")]) & data$alpha ==0.5,]
+mydata <- data[complete.cases(data[,c("consensus75","ccount50")]) & data$alpha == 0.5,]
 
 
 # Step1 Regress INDEPENDENT on DEPENDENT
@@ -1626,3 +1641,500 @@ summary(contcont)
 
 fit1c <- lm(ccount50 ~ consensus75 + smallR, data = mydata)
 summary(fit1c)
+
+
+# All Experiment 1 data
+
+
+cl <- loadData(DUMPDIR, 'nobound_R_tau/', 1)
+clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 1)
+cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+clOld <- cl
+cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+cl <- rbind(cl, clTau1)
+# Only tau 1
+cl <- clTau1
+clOld <- rbind(cl, clOld)
+cl <- loadData(DUMPDIR, 'nobound_noises_tau/', 1)  
+clTau1 <- loadData(DUMPDIR, 'nobound_noises_tau1/', 1)
+cl <- rbind(cl, clTau1[clTau1$alpha == 0.5,])
+# Only Tau 1
+cl <- clTau1
+clOld <- rbind(cl, clOld)
+cl <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
+cl <- rbind(cl, clTau1)
+clOld <- rbind(cl, clOld)
+data <- clOld
+
+data$convZone <- ifelse(data$R < 0.11,0,1)
+data$taubrk <- cut(data$tau,c(0,1,20,50,100))
+data$alpha2 <- 1 - data$alpha
+
+p <- ggplot(data[data$t == 2000,], aes(count, fromtruth.avg, color=alpha2))
+p <- p + geom_jitter(alpha=0.5)
+p <- p + facet_grid(taubrk~convZone, labeller=myLabeller3)
+p <- p + xlab('Avg. Number of Clusters') + ylab('Avg. Distance from Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.position = "right")
+p
+
+p <- ggplot(data[data$t == 2000,], aes(count, fromtruth.avg))
+p <- p + geom_jitter(alpha=0.2)
+p <- p + geom_smooth(method="lm", se = FALSE)
+p <- p + xlab('Avg. Number of Clusters') + ylab('Avg. Distance from Truth')
+p <- p + ylim(0,max(data$fromtruth.avg)+0.5)
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.position = "right")
+p
+
+
+
+ggsave(filename = paste0(IMGPATH, "nobound_clusters_vs_progress.jpg"),
+       plot = p, dpi=300)
+
+
+xlabText <- expression(paste("Estimated passage of ",italic("Fish fish"),"in 2001"))
+
+
+
+# Mediation 2: R
+
+
+clTau1 <- loadData(DUMPDIR, 'nobound_R_tau1/', 0)
+data <- clTau1[clTau1$alpha == 0.5,]
+data$id <- paste(data$simcount, data$run, sep='.')
+data <- data[data$t %in% c(1000,2000),]
+data <- subset(data, select=c("id","R", "t", "count", "fromtruth.avg"))
+data1000 <- data[data$t == 1000,]
+colnames(data1000) <- c("id1000","R1000","t","count1000","progress1000")
+data1000$t <- NULL
+data2000 <- data[data$t == 2000,]
+colnames(data2000) <- c("id2000","R2000","t","count2000","progress2000")
+data2000$t <- NULL
+data2 <- cbind(data1000,data2000)
+data2$ok <- ifelse(data2$id1000 != data2$id2000, 0,1)
+data2 <- subset(data2, select=c("id2000","R2000","count1000","progress1000","count2000","progress2000"))
+colnames(data2) <- c("id","R","count1000","progress1000","count2000","progress2000")
+data2$smallR <- ifelse(data2$R <= 0.1, 1,0)
+
+# Small R
+# EFFECT 0.724
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ R, data = data2[data2$smallR == 1,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ R, data = data2[data2$smallR == 1,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR
+
+fit1c <- lm(progress2000 ~ R + count1000, data = data2[data2$smallR == 1,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="R", mediator="count1000")
+
+summary(contcont)
+
+# Big R
+# Effect 0.71, but much smaller than Small R
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ R, data = data2[data2$smallR == 0,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ R, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: 
+
+fit1c <- lm(progress2000 ~ R + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="R", mediator="count1000")
+summary(contcont)
+
+# All R
+# Effect 0.7
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ R, data = data2)
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ R, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR:
+
+fit1c <- lm(progress2000 ~ R + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="R", mediator="count1000")
+summary(contcont)
+
+
+# Mediation 2: alpha
+
+data <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 0)
+data$id <- paste(data$simcount, data$run, sep='.')
+data <- data[data$t %in% c(1000,2000),]
+data <- subset(data, select=c("id","alpha", "R", "t", "count", "fromtruth.avg"))
+data1000 <- data[data$t == 1000,]
+colnames(data1000) <- c("id1000","alpha1000","R1000","t","count1000","progress1000")
+data1000$t <- NULL
+data2000 <- data[data$t == 2000,]
+colnames(data2000) <- c("id2000","alpha2000","R2000","t","count2000","progress2000")
+data2000$t <- NULL
+data2 <- cbind(data1000,data2000)
+data2$ok <- ifelse(data2$id1000 != data2$id2000, 0,1)
+mean(data2$ok)
+data2 <- subset(data2, select=c("id2000","alpha2000","R2000","count1000","progress1000","count2000","progress2000"))
+colnames(data2) <- c("id","alpha","R","count1000","progress1000","count2000","progress2000")
+data2$smallR <- ifelse(data2$R <= 0.1, 1,0)
+
+# Small R
+# No mediation, the coefficient is not reduced in size.
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ alpha, data = data2[data2$smallR == 1,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ alpha, data = data2[data2$smallR == 1,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR:
+
+fit1c <- lm(progress2000 ~ alpha + count1000, data = data2[data2$smallR == 1,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="alpha", mediator="count1000")
+summary(contcont)
+
+# Big R
+# No mediation, no effect
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ alpha, data = data2[data2$smallR == 0,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ alpha, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR:
+
+fit1c <- lm(progress2000 ~ alpha + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="alpha", mediator="count1000")
+summary(contcont)
+
+# All R
+# No effect.
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ alpha, data = data2)
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ alpha, data = data2)
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: R and alpha on consensus75
+
+fit1c <- lm(progress2000 ~ alpha + count1000, data = data2)
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="alpha", mediator="count1000")
+summary(contcont)
+
+
+# Mediation 2: noises
+
+data <- loadData(DUMPDIR, 'nobound_noises_tau1/', 0)
+data$id <- paste(data$simcount, data$run, sep='.')
+data <- data[data$t %in% c(1000,2000),]
+data <- subset(data, select=c("id","epsilon", "sigma", "R", "t", "count", "fromtruth.avg"))
+data1000 <- data[data$t == 1000,]
+colnames(data1000) <- c("id1000","epsilon1000","sigma1000","R1000","t","count1000","progress1000")
+data1000$t <- NULL
+data2000 <- data[data$t == 2000,]
+colnames(data2000) <- c("id2000","epsilon2000","sigma2000","R2000","t","count2000","progress2000")
+data2000$t <- NULL
+data2 <- cbind(data1000,data2000)
+data2$ok <- ifelse(data2$id1000 != data2$id2000, 0,1)
+mean(data2$ok)
+data2 <- subset(data2, select=c("id2000","epsilon2000","sigma2000", "R2000","count1000","progress1000","count2000","progress2000"))
+colnames(data2) <- c("id","epsilon","sigma","R","count1000","progress1000","count2000","progress2000")
+data2$smallR <- ifelse(data2$R <= 0.1, 1,0)
+
+
+# EPSILON
+
+# Small R
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+# Not significant.
+fit1a <- lm(progress2000 ~ epsilon, data = data2[data2$smallR == 1,])
+summary(fit1a)
+
+# Big R
+# Minimal effect 0.09
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+# Not significant.
+fit1a <- lm(progress2000 ~ epsilon, data = data2[data2$smallR == 0,])
+summary(fit1a)
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ epsilon, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR:
+
+fit1c <- lm(progress2000 ~ epsilon + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="epsilon", mediator="count1000")
+summary(contcont)
+
+# Big R
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+# Not significant.
+fit1a <- lm(progress2000 ~ epsilon, data = data2)
+summary(fit1a)
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ epsilon, data = data2)
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR:
+
+fit1c <- lm(progress2000 ~ epsilon + count1000, data = data2)
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="epsilon", mediator="count1000")
+summary(contcont)
+
+# Small R
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ sigma, data = data2[data2$smallR == 1,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ sigma, data = data2[data2$smallR == 1,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: 
+
+fit1c <- lm(progress2000 ~ sigma + count1000, data = data2[data2$smallR == 1,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="sigma", mediator="count1000")
+summary(contcont)
+
+# Big R
+# No Effect
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ sigma, data = data2[data2$smallR == 0,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ sigma, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: 
+
+fit1c <- lm(progress2000 ~ sigma + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="sigma", mediator="count1000")
+summary(contcont)
+
+# All R
+# No Effect
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ sigma, data = data2)
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ sigma, data = data2)
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR: 
+
+fit1c <- lm(progress2000 ~ sigma + count1000, data = data2)
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="sigma", mediator="count1000")
+summary(contcont)
+
+# Mediation 2: tau
+
+
+# Need to load it in batches, otherwise I get memory error.
+cl2000 <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1, 2000)
+cl1000 <- loadData(DUMPDIR, 'nobound_alpha_tau/', 1, 1000)
+cl <- rbind(cl1000[cl2000$alpha == 0.5,], cl2000[cl2000$alpha == 0.5,])
+clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 0)
+data <- rbind(cl, clTau1[clTau1$alpha == 0.5 & clTau1$t %in% c(1000,2000),])
+data$id <- paste(data$simcount, data$run, sep='.')
+data <- data[data$t %in% c(1000,2000),]
+data <- subset(data, select=c("id","tau", "R", "t", "count", "fromtruth.avg"))
+data1000 <- data[data$t == 1000,]
+colnames(data1000) <- c("id1000","tau1000","R1000","t","count1000","progress1000")
+data1000$t <- NULL
+data2000 <- data[data$t == 2000,]
+colnames(data2000) <- c("id2000","tau2000","R2000","t","count2000","progress2000")
+data2000$t <- NULL
+data2 <- cbind(data1000,data2000)
+data2$ok <- ifelse(data2$id1000 != data2$id2000, 0,1)
+mean(data2$ok)
+data2 <- subset(data2, select=c("id2000","tau2000","R2000","count1000","progress1000","count2000","progress2000"))
+colnames(data2) <- c("id","tau","R","count1000","progress1000","count2000","progress2000")
+data2$smallR <- ifelse(data2$R <= 0.1, 1,0)
+
+# SMALL R
+# Little mediation 0.39
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ tau, data = data2[data2$smallR == 1,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ tau, data = data2[data2$smallR == 1,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR
+
+fit1c <- lm(progress2000 ~ tau + count1000, data = data2[data2$smallR == 1,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="tau", mediator="count1000")
+summary(contcont)
+
+# LARGE R
+# High mediation 0.77, but the effect is really small
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ tau, data = data2[data2$smallR == 0,])
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ tau, data = data2[data2$smallR == 0,])
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR
+
+fit1c <- lm(progress2000 ~ tau + count1000, data = data2[data2$smallR == 0,])
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="tau", mediator="count1000")
+summary(contcont)
+
+
+# ANY R
+# The effect even changes sign
+
+# Step1 Regress INDEPENDENT on DEPENDENT
+
+fit1a <- lm(progress2000 ~ tau, data = data2)
+summary(fit1a)
+
+
+# Step2 Regress MEDIATOR on INDEPENDENT 
+
+fit1b <- lm(count1000 ~ tau, data = data2)
+summary(fit1b)
+
+
+# Step3 Regress DEPENDENT on INDEPENDENT + MEDIATOR
+
+fit1c <- lm(progress2000 ~ tau + count1000, data = data2)
+summary(fit1c)
+
+
+# Estimation via quasi-Bayesian approximation
+contcont <- mediate(fit1b, fit1c, sims=500, treat="tau", mediator="count1000")
+summary(contcont)

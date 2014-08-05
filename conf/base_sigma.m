@@ -9,8 +9,8 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'nobound_mediation_R_alpha';
-dumpDir = '/cluster/work/scr6/balistef/';
+simName = 'nobound_alpha_20000';
+dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
 % folder analyze an old one without deleting its conf files.
@@ -31,10 +31,10 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 50;             % Number of simulation-runs with same param set
+nRuns = 10;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
-t_ends = [20];          % running time
+t_ends = [200];          % running time
 
 n_agents = [100];       % number of agents
 
@@ -53,7 +53,7 @@ ideas_space_dims = [2]; % dimension of ideas space
 
 % VELOCITY 
 alphas = [0.01:0.01:0.99];  % weighting of velocity terms
-Rs     = [0.01:0.01:1]; % cut-off radius
+Rs     = [0.03]; % cut-off radius
          
 % ATTRACTIVE AND REPULSIVE FORCES
 

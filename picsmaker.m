@@ -45,12 +45,8 @@ SIGMA = '_s1';
 % plot_number_color = 2;
 % plot_arrow = 3;
 
-SHOW_TITLE = 0;
-SHOW_AXIS = 0;
-SHOW_POTENTIAL = 0;
-plottype = 0;
 
-outDir = '/home/stefano/hs_writeup/imgs/new/snaps/';
+outDir = '/home/stefano/hs_writeup/imgs/new/snaps_test/';
 
 myDumpDirs = {};
 myDirs = {};
@@ -90,7 +86,7 @@ DUMP_DIR = '/mnt/tmp/dump/';
 DUMP_DIR = '/home/stefano/hs/';
 myDumpDirs{1} = 'test/';
 myFiles{1} = {'1-1.mat'};
-myDirs{1} = {'AAA-2014-2-7-9-39'};
+myDirs{1} = {'NOB_TAU_ALPHA-2014-8-4-10-43'};
 % 
 % % CLUSTERS 
 % DUMP_DIR = '/home/stefano/hs/';
@@ -134,6 +130,15 @@ WITH_SIGMA = 0;
 
 myFrames = [1, 200, 1000, 2000];
 
+myFrames = [20, 40, 50, 80, 100, 200, 1000, 2000];
+
+LIMITS = 0;
+
+SHOW_TITLE = 0;
+SHOW_AXIS = 1;
+SHOW_POTENTIAL = 0;
+plottype = 0;
+
 for j=1:length(myDirs)
     
     for h=1:length(myDirs{j})
@@ -157,7 +162,7 @@ for j=1:length(myDirs)
             end
             file = myFiles{j}{i};
             makepics(dumpDir, subDir, file, outSubDir, myFrames, plottype, ...
-                        SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS);
+                        SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS, LIMITS);
         end
     end
 end

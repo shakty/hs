@@ -11,7 +11,7 @@
 #   (20 * nCombinations of parameter sweep * levels of sigma)
 #
 #############################
-loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
+loadData <- function(DUMPDIR, DIR, LOAD_T = 0, T = 2000) {
 
   INTERACTIVE = FALSE
   PATH = paste0(DUMPDIR, DIR, "aggr/")
@@ -52,8 +52,8 @@ loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
   macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
 
 
-  if (TWO_THOUSANDS) {
-    macro <- macro[macro$t == 2000,]
+  if (LOAD_T) {
+    macro <- macro[macro$t == T,]
   }
   
   clu <- merge(params, macro, by=c("simname","simcount", "run"))
@@ -65,7 +65,85 @@ loadData <- function(DUMPDIR, DIR, TWO_THOUSANDS = 0) {
   clu$simcount <- as.factor(clu$simcount)
   #clu$t <- as.factor(clu$t)
 
-  cl <- clu[clu$t == 2000,]
+  cl <- clu[clu$t == T,]
+
+  return(clu)
+}
+#
+loadDataAgents <- function(DUMPDIR, DIR, LOAD_T = 0, T = 2000) {
+
+  INTERACTIVE = FALSE
+  PATH = paste0(DUMPDIR, DIR, "aggr/")
+  setwd(PATH)
+  IMGPATH <- paste0(PATH, "img/");
+
+  # Create IMG dir if not existing
+  if (!file.exists(IMGPATH)) {
+    dir.create(file.path(PATH, "/img/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth/"))
+  }
+  if (!file.exists(paste0(IMGPATH, "scatter_count_fromtruth_tau/"))) {
+    dir.create(file.path(IMGPATH, "scatter_count_fromtruth_tau/"))
+  }
+
+
+  ##########
+  # PARAMS #
+  ##########
+  params <- read.table('params.csv', head=TRUE, sep=",")
+  
+  params$simname <- as.factor(params$simname)
+  params$simcount <- as.factor(params$simcount)
+  params$run <- as.factor(params$run)
+  
+
+  params <- subset(params, select=-c(seed, attr_on_v, attrtype, noisetype,
+                                     truth.x, truth.y, init.clusterradio,
+                                     init.nclusters,
+                                     d1, B, d0, A, k, spacesize, spacedim,
+                                     nagents, t.end, dt, timestamp))
+
+
+  #########
+  # Macro #
+  #########
+  macro <- read.table('clusters_macro.csv', head=TRUE, sep=",")
+
+  if (LOAD_T) {
+    macro <- macro[macro$t == T,]
+  }
+
+  # Merging
+  clu <- merge(params, macro, by=c("simname","simcount", "run"))
+
+  ##########
+  # Agents #
+  ##########
+  agents <- read.table('agents.csv', head=TRUE, sep=",")
+
+  if (LOAD_T) {
+    agents <- agents[agents$t == T,]
+  }
+
+  agents <- subset(agents, select=-c(coverage, coverage.cum))
+  colnames(agents) <- c("simname", "simcount", "run", "t", "a.speed.avg",
+                        "a.speed.sd", "a.move.avg", "a.move.sd",
+                        "a.fromtruth.avg", "a.fromtruth.sd", "a.pdist.mean",
+                        "a.pdist.sd")
+
+  clu <- merge(clu, agents, by=c("simname","simcount", "run", "t"))
+  
+  clu$simname <- as.character(clu$simname)
+  clu$simname <- substr(clu$simname, nchar(clu$simname)-1, nchar(clu$simname))
+  clu$simname <- as.factor(clu$simname)
+  clu$simcount <- as.factor(clu$simcount)
+  #clu$t <- as.factor(clu$t)
+
+
+  
+  cl <- clu[clu$t == T,]
 
   return(clu)
 }
@@ -99,6 +177,15 @@ myLabeller2 <- function(var, value){
     value[value == "(5,10]"] <- "6-10 clusters"
     value[value == "(10,20]"] <- "11-20 clusters"
     value[value == "(20,30]"] <- "21-30 clusters"
+  }
+  return(value)
+}
+
+myLabeller3 <- function(var, value){
+  value <- as.character(value)
+  if (var == "convZone") {
+    value[value == 0] <- "R <= 1"
+    value[value == 1] <- "R > 1"
   }
   return(value)
 }

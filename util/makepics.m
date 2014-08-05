@@ -1,4 +1,4 @@
-function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS)
+function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_POTENTIAL, SHOW_TITLE, SHOW_AXIS, LIMITS)
     close all;
     
     path2file = [ dumpDirIn subDirIn '/' fileIn ];
@@ -210,8 +210,11 @@ function makepics( dumpDirIn, subDirIn, fileIn, dirOut, frames, plottype, SHOW_P
         
         hold off;
         
-        xlim([0 ideas_space_size])
-        ylim([0 ideas_space_size]);
+        if (LIMITS == 1)
+            xlim([0 ideas_space_size])
+            ylim([0 ideas_space_size]);
+        end
+        
         % TODO move the title in the first frame
         % paramString{1} = ['T: ' int2str(frame)];
         %title(paramString);
