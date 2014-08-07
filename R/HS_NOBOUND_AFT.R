@@ -1093,3 +1093,102 @@ p
 
 ggsave(filename = paste0(IMGPATH, "nobound_clusters_vs_progress.jpg"),
        plot = p, dpi=300)
+
+
+
+#### 20000
+
+
+cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_20000/')
+
+
+
+
+summaryFt <- summarySE(cl[cl$t == 20000,], c("a.fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+
+
+p
+
+
+
+# Save all Taus Cl
+taus <- seq(1000,20000,1000)
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$t == t,], c("a.fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("T: ", t)
+  p <- ggplot(summaryFt, aes((1 - alpha), a.fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=a.fromtruth.avg, width=0.01))
+  p <- p + geom_errorbar(limitsFtA)
+  p <- p + facet_grid(~ R, labeller = myLabeller)
+  xlabText <- expression(paste('Strength of Social Influence ', alpha))
+  p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title)
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha20000/ft/alpha_t_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+# Save all Taus Cl
+taus <- seq(1000,20000,1000)
+for (t in taus) {
+  summaryFt <- summarySE(cl[cl$t == t,], c("fromtruth.avg"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("T: ", t)
+  p <- ggplot(summaryFt, aes((1 - alpha), fromtruth.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=fromtruth.avg, width=0.01))
+  p <- p + geom_errorbar(limitsFt)
+  p <- p + facet_grid(~ R, labeller = myLabeller)
+  xlabText <- expression(paste('Strength of Social Influence ', alpha))
+  p <- p + xlab(xlabText) + ylab('Avg. Distance from Truth')
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  p <- p + scale_fill_continuous(name="Distance\nfrom truth")
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title)
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha20000/ft_clusters/alpha_t_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+# Save all Taus Cl
+taus <- seq(1000,20000,1000)
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$t == t,], c("count"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("T: ", t)
+  p <- ggplot(summaryCl, aes((1 - alpha), count))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=count, width=0.01))
+  p <- p + geom_errorbar(limits)
+  p <- p + facet_grid(~ R, labeller = myLabeller)
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  xlabText <- expression(paste('Strength of Social Influence ',alpha))
+  p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title)
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha20000/cl/alpha_t_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}
+
+# Save all Taus Cl
+taus <- seq(1000,20000,1000)
+for (t in taus) {
+  summaryCl <- summarySE(cl[cl$t == t,], c("size.avg"), c("alpha", "R"), na.rm=TRUE)
+  #
+  title <- paste0("T: ", t)
+  p <- ggplot(summaryCl, aes((1 - alpha), size.avg))
+  p <- p + geom_bar(stat = "identity", position="dodge", aes(fill=size.avg, width=0.01))
+  p <- p + geom_errorbar(aes(ymin = size.avg - se, ymax = size.avg + se))
+  p <- p + facet_grid(~ R, labeller = myLabeller)
+  p <- p + scale_x_continuous(labels = c("0", "0.25", "0.5", "0.75", "1"))
+  xlabText <- expression(paste('Strength of Social Influence ',alpha))
+  p <- p + xlab(xlabText) + ylab('Avg. Number of Clusters')
+  p <- p + myThemeMod + theme(strip.background = element_blank())
+  p <- p + ggtitle(title)
+  #
+  ggsave(filename=paste0(IMGPATH, "alpha20000/sizeavg/alpha_t_", sprintf("%04d", t), ".jpg"),
+         plot = p)
+}

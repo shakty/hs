@@ -9,7 +9,7 @@ path(path,'../util/'); % Help functions
 
 % always av1
 % attr  _ noise _ seedType _ update _  truth _ parameter sweep _ nAgents _ forceOnV _ size 
-simName = 'nobound_alpha_20000';
+simName = 'nobound_alpha_20000_again';
 dumpDir = '/cluster/work/scr2/balistef/';
 
 % we have two because we can save the new configuration in a separate
@@ -31,7 +31,7 @@ SHOW_POTENTIAL = 0;
 
 % MODEL Conf
 
-nRuns = 10;             % Number of simulation-runs with same param set
+nRuns = 40;             % Number of simulation-runs with same param set
 
 dts = [0.01];           % time_step
 t_ends = [200];          % running time
