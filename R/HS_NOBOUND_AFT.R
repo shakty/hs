@@ -23,8 +23,10 @@ limitsFtA <- aes(ymin = a.fromtruth.avg - se, ymax = a.fromtruth.avg + se)
 
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/', 1)
 clTau1$boundaries <- 0
+
 clAgain3 <- loadDataAgents(DUMPDIR, 'scan_tau_again3/', 1)
-cl <- rbind(clTau1, clAgain3)
+
+cl <- rbind(clTau1[clTau1$alpha == 0.5,], clAgain3)
 
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("tau", "R"), na.rm=TRUE)
 
@@ -113,21 +115,17 @@ ggsave(filename = paste0(IMGPATH, "nobound_R_tau1_ft.svg"),
 
 ## alpha 2 ##
 
-cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau/', 1)
+#cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau/', 1)
+
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/', 1)
-cl <- rbind(cl, clTau1)
-
-
-# Only tau 1
-cl <- clTau1
-
-
-clTauAgain <- loadData(DUMPDIR, 'scan_alpha_again3/', 1)
-
 clTau1$boundaries <- 0
+# Only tau 1
+#cl <- clTau1
+
+clTauAgain <- loadDataAgents(DUMPDIR, 'scan_alpha_again3/', 1)
 cl <-  rbind(clTauAgain, clTau1)
 
-cl <- clTauAgain
+# cl <- clTauAgain
 
 # CL
 summaryCl <- summarySE(cl[cl$t == 2000,], c("count"), c("alpha", "R"), na.rm=TRUE)
@@ -308,7 +306,7 @@ fit1c <- lm(ccount50 ~ consensus75 + smallR, data = mydata)
 summary(fit1c)
 
 
-# All Experiment 1 data
+# All Experiment 1 data (What is this???? Seems incorrect)
 
 
 cl <- loadData(DUMPDIR, 'nobound_R_tau/', 1)
@@ -1045,6 +1043,7 @@ system(paste0('ffmpeg -qscale 1 -r 2 -b 9600 -y -i ',
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/', 1)
 clTau1$boundaries <- 0
 clAgain3 <- loadDataAgents(DUMPDIR, 'scan_tau_again3/', 1)
+#cl <- rbind(clTau1[clTau1$alpha == 0.5,], clAgain3)
 cl <- rbind(clTau1, clAgain3)
 clOld <- cl
 # R
@@ -1052,18 +1051,21 @@ cl2 <- loadDataAgents(DUMPDIR, 'scan_R_again2/', 1)
 cl3 <- loadDataAgents(DUMPDIR, 'scan_R_again3/', 1)
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_R_tau1/', 1)
 clTau1$boundaries <- 0
-cl <- rbind(cl2, cl3, clTau1[clTau1$alpha == 0.5,])
-clOld <- cl(cl, clOld)
+#cl <- rbind(cl2, cl3, clTau1[clTau1$alpha == 0.5,])
+cl <- rbind(cl2, cl3, clTau1)
+clOld <- rbind(cl, clOld)
 # Alpha
-cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau/', 1)
+clTauAgain <- loadDataAgents(DUMPDIR, 'scan_alpha_again3/', 1)
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_alpha_tau1/', 1)
-cl <- rbind(cl, clTau1)
+clTau1$boundaries <- 0
+cl <- rbind(clTauAgain, clTau1)
 clOld <- rbind(cl, clOld)
 # Noises
 clTauAgain <- loadDataAgents(DUMPDIR, 'scan_noises_again2/', 1)
 clTau1 <- loadDataAgents(DUMPDIR, 'nobound_noises_tau1/', 1)
 clTau1$boundaries <- 0
-cl <- rbind(clTauAgain, clTau1[clTau1$alpha == 0.5,])
+#cl <- rbind(clTauAgain, clTau1[clTau1$alpha == 0.5,])
+cl <- rbind(clTauAgain)
 clOld <- rbind(cl, clOld)
 # All Experiment 1 data
 data <- clOld
@@ -1081,7 +1083,7 @@ p <- p + myThemeMod + theme(strip.background = element_blank(),
 p
 
 p <- ggplot(data[data$t == 2000,], aes(count, a.fromtruth.avg))
-p <- p + geom_jitter(alpha=0.2)
+p <- p + geom_jitter(alpha=0.8)
 p <- p + geom_smooth(method="lm", se = FALSE, size = 2)
 p <- p + xlab('Avg. Number of Clusters') + ylab('Avg. Distance from Truth')
 p <- p + ylim(0,max(data$fromtruth.avg)+0.5)
@@ -1091,7 +1093,7 @@ p
 
 
 
-ggsave(filename = paste0(IMGPATH, "nobound_clusters_vs_progress.jpg"),
+ggsave(filename = paste0(IMGPATH, "nobound_clusters_vs_progress_aft.jpg"),
        plot = p, dpi=300)
 
 
@@ -1192,3 +1194,105 @@ for (t in taus) {
   ggsave(filename=paste0(IMGPATH, "alpha20000/sizeavg/alpha_t_", sprintf("%04d", t), ".jpg"),
          plot = p)
 }
+
+
+
+#### 20000 - 500
+
+
+cl <- loadDataAgents(DUMPDIR, 'nobound_alpha_20000_500/')
+
+
+
+summaryCl <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("count"), c("alpha", "t"), na.rm=TRUE)
+summaryCl$alpha <- as.factor(summaryCl$alpha)
+
+title <- 'Cluster counts vs Strength of social influence'
+p <- ggplot(summaryCl, aes(t, count, color=alpha, group = alpha))
+#p <- p + geom_bar(stat = "identity", position="dodge", aes(group=taubrk, fill=count, width=0.01))
+p <- p + geom_point()
+p <- p + geom_line(alpha=0.5)
+p <- p + geom_errorbar(limits)
+p <- p + xlab("Time") + ylab('Avg. Number of Clusters')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+
+
+summaryFt <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("a.fromtruth.avg"), c("alpha", "t"), na.rm=TRUE)
+summaryFt$alpha <- as.factor(summaryFt$alpha)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryFt, aes(t, a.fromtruth.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line()
+p <- p + geom_errorbar(limitsFtA)
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summarySizeAvg <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("size.avg"), c("alpha", "t"), na.rm=TRUE)
+summarySizeAvg$alpha <- as.factor(summarySizeAvg$alpha)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summarySizeAvg, aes(t, size.avg, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line()
+p <- p + geom_errorbar(aes(ymin=size.avg - se, ymax = size.avg + se))
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summarySizeSd <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("size.sd"), c("alpha", "t"), na.rm=TRUE)
+summarySizeSd$alpha <- as.factor(summarySizeSd$alpha)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summarySizeSd, aes(t, size.sd, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line()
+p <- p + geom_errorbar(aes(ymin=size.sd - se, ymax = size.sd + se))
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summaryPDist.avg <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("a.pdist.mean"), c("alpha", "t"), na.rm=TRUE)
+summaryPDist.avg$alpha <- as.factor(summaryPDist.avg$alpha)
+
+title <- 'Avg Dist. From Truth vs Strength of social influence'
+p <- ggplot(summaryPDist.avg, aes(t, a.pdist.mean, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line()
+p <- p + geom_errorbar(aes(ymin=a.pdist.mean - se, ymax = a.pdist.mean + se))
+p <- p + xlab("Time") + ylab('Avg. Distance From Truth')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p
+
+summaryPDist.sd <- summarySE(cl[cl$alpha %in% c(0.01, 0.5, 0.99),], c("a.pdist.sd"), c("alpha", "t"), na.rm=TRUE)
+summaryPDist.sd$alpha <- as.factor(summaryPDist.sd$alpha)
+
+
+p <- ggplot(summaryPDist.sd, aes(t, a.pdist.sd, color=alpha, group = alpha))
+p <- p + geom_point()
+p <- p + geom_line()
+p <- p + geom_errorbar(aes(ymin=a.pdist.sd - se, ymax = a.pdist.sd + se))
+p <- p + xlab("Time") + ylab('Avg. Std. Pairwise Distance')
+p <- p + myThemeMod + theme(strip.background = element_blank(),
+                            legend.title = element_text(vjust=3,
+                              size=18, face="bold"),
+                            legend.position = "right")
+p

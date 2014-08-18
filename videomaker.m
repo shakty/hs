@@ -429,6 +429,12 @@ simName = 'NOB_TAU_ALPHA-2014-8-4-10-5/';
 % % alpha = 0.99 (low si)
 % simName = 'NOB_TAU_ALPHA-2014-8-4-14-27/';
 
+
+
+
+DUMPDIR = '/home/stefano/Documents/mypapers/swarm_science/data/nobound_alpha_20000/';
+simName = 'nobound_alpha_20000_s1/';
+
 %%%%%%%%%%%%
 % Can be deleted (copies from above) 
 
@@ -446,10 +452,10 @@ plottype = 0;
 dumpDir = [DUMPDIR simName];
 %myFile = '1291-1';
 
-myFile = '1-1'; % 1521
+myFile = '1-2'; % 1521
 
 LIMITS = 1;
-PAUSE = 0.4;
+PAUSE = 0.01;
 
 if (SINGLE)
     videoFile = [VIDEODIR videoSubDir myFile '.avi'];

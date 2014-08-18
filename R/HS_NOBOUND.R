@@ -1341,9 +1341,10 @@ ggsave(filename = paste0(IMGPATH, "SPEEDTEST_RBANDS/clusters_vs_progress_by_alph
 
 ## TAU 2 ##
 
-cl <- loadData(DUMPDIR, 'scan_tau_again2/', 1)
+# Old
+# cl <- loadData(DUMPDIR, 'scan_tau_again2/', 1)
+# cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
 
-cl <- loadData(DUMPDIR, 'final_tau_20000_nobound/', 1)
 
 clTau1 <- loadData(DUMPDIR, 'nobound_alpha_tau1/', 1)
 clTau1$boundaries <- 0
